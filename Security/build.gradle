@@ -1,0 +1,8 @@
+dependencies {
+    implementation project(":Core")
+
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
+    implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
+
+    testCompileOnly(project(':Core').sourceSets.test.output)
+}

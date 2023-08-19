@@ -1,0 +1,5 @@
+ext.set("mainClassName", 'com.github.pathfinder.configuration.ConfigurationApplication')
+
+dependencies {
+    implementation("org.springframework.cloud:spring-cloud-config-server:$springCloudConfigVersion")
+}

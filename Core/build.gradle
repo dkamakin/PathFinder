@@ -1,0 +1,5 @@
+dependencies {
+    def springTxVersion = "6.0.9"
+
+    implementation("org.springframework:spring-tx:$springTxVersion")
+}

@@ -1,0 +1,55 @@
+version: '3.8'
+
+services: # TODO security to a separate microservice
+  configuration:
+    build: ./Configuration
+    container_name: configuration
+    environment:
+      GIT_URI: ${SPRING_CLOUD_CONFIG_SERVER_GIT_URI}
+      PORT: ${CONFIGURATION_PORT}
+      CONFIG_KEY: ${CONFIG_KEY}
+      PASSPHRASE: ${PASSPHRASE}
+  searcher:
+    build: ./Searcher
+    container_name: searcher
+    environment:
+      CONFIG_URI: http://configuration:${CONFIGURATION_PORT}
+      PORT: ${SEARCHER_PORT}
+    ports:
+      - "${SEARCHER_PORT}:${SEARCHER_PORT}"
+  postgresql:
+    image: postgres:15.3
+    container_name: postgresql
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB_NAME}
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGPORT: ${POSTGRES_PORT}
+    restart: on-failure
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  neo4j:
+    image: neo4j:5.8.0
+    container_name: neo4j
+    environment:
+      NEO4J_AUTH: ${NEO4J_USERNAME}/${NEO4J_PASSWORD}
+      NEO4J_dbms_default__listen__address: neo4j
+      NEO4J_dbms_default__advertised__address: neo4j
+      NEO4J_dbms_connector_bolt_advertised__address: :${NEO4J_PORT}
+      NEO4J_server_config_strict__validation_enabled: false
+      NEO4J_initial_dbms_default__database: ${NEO4J_DB_NAME}
+    restart: on-failure
+  liquibase:
+    build: ./migration
+    container_name: liquibase
+    environment:
+      LIQUIBASE_PROJECT_DIR: ${HOME}/migration
+      LIQUIBASE_DATABASE_URL: jdbc:postgresql://postgresql:${POSTGRES_PORT}/${POSTGRES_DB_NAME}
+      LIQUIBASE_DATABASE_USERNAME: ${POSTGRES_USERNAME}
+      LIQUIBASE_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      postgresql:
+        condition: service_healthy
