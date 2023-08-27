@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class Mapper {
 
     public static UserDetails map(UserEntity entity) {
-        return new UserDto(entity.getName(), entity.getPassword());
+        return new UserDetailsImpl(entity.getName(), entity.getPassword());
     }
 
 }

@@ -1,14 +1,25 @@
 version: '3.8'
 
-services: # TODO security to a separate microservice
+services:
   configuration:
     build: ./Configuration
     container_name: configuration
     environment:
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+      RABBITMQ_ADDRESS: ${RABBITMQ_ADDRESS}
       GIT_URI: ${SPRING_CLOUD_CONFIG_SERVER_GIT_URI}
       PORT: ${CONFIGURATION_PORT}
       CONFIG_KEY: ${CONFIG_KEY}
       PASSPHRASE: ${PASSPHRASE}
+  security:
+    build: ./Security
+    container_name: security
+    environment:
+      CONFIG_URI: http://configuration:${CONFIGURATION_PORT}
+      PORT: ${SECURITY_PORT}
+    ports:
+      - "${SECURITY_PORT}:${SECURITY_PORT}"
   searcher:
     build: ./Searcher
     container_name: searcher
@@ -17,6 +28,12 @@ services: # TODO security to a separate microservice
       PORT: ${SEARCHER_PORT}
     ports:
       - "${SEARCHER_PORT}:${SEARCHER_PORT}"
+  rabbitmq:
+    image: rabbitmq:3.12.4-management-alpine
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
   postgresql:
     image: postgres:15.3
     container_name: postgresql

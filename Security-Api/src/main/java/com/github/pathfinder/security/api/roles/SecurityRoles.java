@@ -1,4 +1,4 @@
-package com.github.pathfinder.security.roles;
+package com.github.pathfinder.security.api.roles;
 
 public class SecurityRoles {
 

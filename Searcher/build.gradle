@@ -1,17 +1,11 @@
-plugins {
-    id("org.springdoc.openapi-gradle-plugin") version "1.7.0"
-}
-
 ext.set("mainClassName", 'com.github.pathfinder.PathFinderApplication')
 
 dependencies {
     def springSecurityTestVersion = "6.1.2"
 
-    implementation project(":Core")
-    implementation project(":Security")
+    api project(":Security-Api")
 
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocVersion")
     implementation("org.springframework.boot:spring-boot-starter-data-neo4j:$springBootVersion")
     implementation("org.springframework.cloud:spring-cloud-starter-config:$springCloudConfigVersion")

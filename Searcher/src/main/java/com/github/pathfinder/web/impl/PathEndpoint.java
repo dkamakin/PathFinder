@@ -1,7 +1,7 @@
 package com.github.pathfinder.web.impl;
 
 import com.github.pathfinder.core.aspect.Logged;
-import com.github.pathfinder.security.roles.SecurityRoles;
+import com.github.pathfinder.security.api.roles.SecurityRoles;
 import com.github.pathfinder.service.IPathService;
 import com.github.pathfinder.web.IPathEndpoint;
 import com.github.pathfinder.web.dto.path.FindPathDto;
@@ -19,8 +19,8 @@ public class PathEndpoint implements IPathEndpoint {
 
     private final IPathService pathService;
 
-    @Logged
     @Override
+    @Logged(arguments = {"request"})
     @Secured(SecurityRoles.PATH_SEARCH)
     public FoundPathDto find(@Valid @RequestBody FindPathDto request) {
         return DtoMapper.map(pathService.find(DtoMapper.map(request)));

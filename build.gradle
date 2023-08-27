@@ -3,6 +3,7 @@ plugins {
     id "org.springframework.boot" version "$springBootVersion"
     id "java"
     id "java-test-fixtures"
+    id "java-library"
 }
 
 group = 'com.github'
@@ -27,6 +28,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: "io.spring.dependency-management"
     apply plugin: "org.springframework.boot"
+    apply plugin: 'java-library'
 
     def lombokVersion = "1.18.28"
     def assertJVersion = "3.24.2"
@@ -36,6 +38,8 @@ subprojects {
     def testcontainersSpringVersion = "3.0.0-RC7"
     def testcontainersVersion = "1.18.3"
     def springRetryVersion = "2.0.2"
+    def springActuatorVersion = "3.1.3"
+    def springCloudBusVersion = "4.0.1"
 
     ext {
         mainClassName = ''
@@ -46,6 +50,8 @@ subprojects {
         implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
         implementation("org.springframework.boot:spring-boot-starter-aop:$springBootVersion")
         implementation("org.springframework.retry:spring-retry:$springRetryVersion")
+        implementation("org.springframework.boot:spring-boot-starter-actuator:$springActuatorVersion")
+        api("org.springframework.cloud:spring-cloud-starter-bus-amqp:$springCloudBusVersion")
 
         implementation("org.postgresql:postgresql:$postgresqlVersion")
 

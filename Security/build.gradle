@@ -1,8 +1,12 @@
-dependencies {
-    implementation project(":Core")
+ext.set("mainClassName", 'com.github.pathfinder.security.SecurityApplication')
 
+dependencies {
+    api project(":Security-Api")
+
+    implementation("org.springframework.amqp:spring-amqp:$springAmqpVersion")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
+    implementation("org.springframework.cloud:spring-cloud-starter-config:$springCloudConfigVersion")
 
     testCompileOnly(project(':Core').sourceSets.test.output)
 }

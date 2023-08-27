@@ -1,5 +1,11 @@
 dependencies {
     def springTxVersion = "6.0.9"
+    def apacheCommonsVersion = "3.13.0"
 
     implementation("org.springframework:spring-tx:$springTxVersion")
+    implementation("org.apache.commons:commons-lang3:$apacheCommonsVersion")
+}
+
+bootJar {
+    enabled = false
 }

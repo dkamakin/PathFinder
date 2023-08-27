@@ -1,0 +1,12 @@
+dependencies {
+    api project(":Messaging")
+    api project(":Core")
+
+    implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
+
+    testCompileOnly(project(':Core').sourceSets.test.output)
+}
+
+bootJar {
+    enabled = false
+}

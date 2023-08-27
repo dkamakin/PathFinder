@@ -1,5 +1,9 @@
 ext.set("mainClassName", 'com.github.pathfinder.configuration.ConfigurationApplication')
 
 dependencies {
+    def springMonitorVersion = "4.0.4"
+
+    implementation("org.springframework.cloud:spring-cloud-config-monitor:$springMonitorVersion")
+    implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit:$springMonitorVersion")
     implementation("org.springframework.cloud:spring-cloud-config-server:$springCloudConfigVersion")
 }

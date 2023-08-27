@@ -4,7 +4,7 @@ import com.github.pathfinder.configuration.SearcherWebMvcTest;
 import com.github.pathfinder.core.tools.JsonTools;
 import com.github.pathfinder.data.path.FindPathRequest;
 import com.github.pathfinder.data.path.FindPathResponse;
-import com.github.pathfinder.security.roles.SecurityRoles;
+import com.github.pathfinder.security.api.roles.SecurityRoles;
 import com.github.pathfinder.service.IPathService;
 import com.github.pathfinder.web.dto.CoordinateDto;
 import com.github.pathfinder.web.dto.HealthTypeDto;

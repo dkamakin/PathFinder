@@ -1,17 +1,17 @@
 package com.github.pathfinder.security.configuration;
 
+import com.github.pathfinder.core.configuration.CoreConfiguration;
+import com.github.pathfinder.security.api.configuration.SecurityApiConfiguration;
 import com.github.pathfinder.security.service.IUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 
 @Configuration
-@EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true)
+@Import({SecurityApiConfiguration.class, CoreConfiguration.class})
 public class SecurityConfiguration {
 
     @Bean

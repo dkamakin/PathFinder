@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Data
 @Getter
 @RequiredArgsConstructor
-public class UserDto implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
 
     private final String username;
     @ToString.Exclude

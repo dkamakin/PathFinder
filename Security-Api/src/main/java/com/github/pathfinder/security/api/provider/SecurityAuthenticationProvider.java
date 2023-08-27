@@ -1,6 +1,6 @@
-package com.github.pathfinder.security.configuration;
+package com.github.pathfinder.security.api.provider;
 
-import com.github.pathfinder.security.service.impl.UserService;
+import com.github.pathfinder.security.api.messaging.SecurityApi;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -8,30 +8,29 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * TODO: move token cache to the security microservice
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class SecurityAuthenticationProvider implements AuthenticationProvider {
 
-    private final UserService     userService;
-    private final PasswordEncoder passwordEncoder;
+    private final SecurityApi securityApi;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         log.info("authenticating {}", authentication.getName());
 
-        String providedRawPassword = authentication.getCredentials().toString();
-        String userPassword        = userService.loadUserByUsername(authentication.getName()).getPassword();
-
-        if (passwordEncoder.matches(providedRawPassword, userPassword)) {
+        if (securityApi.isValid(authentication.getName(), authentication.getCredentials().toString())) {
             log.info("successfully authenticated");
             return new UsernamePasswordAuthenticationToken(
                     authentication.getName(),
                     authentication.getCredentials(),
-                    authentication.getAuthorities());
+                    authentication.getAuthorities()
+            );
         }
 
         log.info("failed to authenticate");
@@ -42,4 +41,5 @@ public class SecurityAuthenticationProvider implements AuthenticationProvider {
     public boolean supports(Class<?> authentication) {
         return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
+
 }
