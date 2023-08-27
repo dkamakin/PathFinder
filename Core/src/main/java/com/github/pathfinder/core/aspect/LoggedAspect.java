@@ -86,9 +86,7 @@ public class LoggedAspect {
                 continue;
             }
 
-            result.append(name)
-                    .append("=")
-                    .append(arguments[i]);
+            result.append(name).append("=").append(arguments[i]);
 
             if (i != names.length - 1) {
                 result.append(", ");
