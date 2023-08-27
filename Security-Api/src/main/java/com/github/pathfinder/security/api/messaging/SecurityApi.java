@@ -15,7 +15,7 @@ public class SecurityApi {
     @Logged
     public boolean isValid(String username, String password) {
         return messageRouter
-                .message(SecurityQueues.SECURITY_QUEUE)
+                .message(SecurityQueue.SECURITY_QUEUE)
                 .with(new IsValidCredentialsMessage(username, password))
                 .sendAndReceive(Boolean.class);
     }
