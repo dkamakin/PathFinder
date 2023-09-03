@@ -10,8 +10,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Documented
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @AmqpListener(errorHandler = ErrorHandlers.RETHROWING_HANDLER, queues = SecurityQueueConfiguration.Token.QUEUE_NAME)
 public @interface SecurityAmqpListener {
 

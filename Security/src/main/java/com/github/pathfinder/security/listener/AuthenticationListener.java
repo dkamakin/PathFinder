@@ -22,7 +22,10 @@ public class AuthenticationListener {
     @AmqpHandler
     @Logged(logException = true)
     public UserInfo handle(GetUserInfoRequest request) {
-        return Mapper.userInfo(userService.read(request.token()).orElseThrow(UserNotFoundException::new));
+        return userService
+                .read(request.token())
+                .map(Mapper::userInfo)
+                .orElseThrow(UserNotFoundException::new);
     }
 
 }
