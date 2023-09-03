@@ -1,6 +1,6 @@
 package com.github.pathfinder.web.dto.path;
 
-import com.github.pathfinder.core.tools.NullHelper;
+import com.github.pathfinder.core.tools.impl.NullHelper;
 import com.github.pathfinder.web.dto.CoordinateDto;
 import com.github.pathfinder.web.dto.HealthTypeDto;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,6 +1,7 @@
 package com.github.pathfinder.core.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -12,7 +13,11 @@ public class CoreConfiguration {
 
     @Bean
     public ObjectMapper objectMapper() {
-        return new ObjectMapper();
+        var mapper = new ObjectMapper();
+
+        mapper.registerModule(new JavaTimeModule());
+
+        return mapper;
     }
 
 }

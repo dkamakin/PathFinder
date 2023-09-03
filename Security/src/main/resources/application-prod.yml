@@ -3,6 +3,7 @@ spring:
     name: security
   cloud:
     config:
+      fail-fast: true
       retry:
         initial-interval: 500
         max-attempts: 20

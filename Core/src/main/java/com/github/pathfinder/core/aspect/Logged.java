@@ -12,9 +12,9 @@ public @interface Logged {
 
     LogLevel logLevel() default LogLevel.INFO;
 
-    String[] arguments() default {};
+    String[] value() default {};
 
-    boolean ignoreReturnValue() default false;
+    boolean ignoreReturnValue() default true;
 
     boolean logException() default false;
 

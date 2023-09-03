@@ -17,7 +17,7 @@ public class SecurityTestDatabaseTemplate {
 
     public void cleanDatabase() {
         transactionTemplate.execute(status -> {
-            JdbcTestUtils.deleteFromTables(jdbcTemplate, UserEntity.Token.TABLE, UserRolesEntity.Token.TABLE);
+            JdbcTestUtils.deleteFromTables(jdbcTemplate, UserRolesEntity.Token.TABLE, UserEntity.Token.TABLE);
             return null;
         });
     }

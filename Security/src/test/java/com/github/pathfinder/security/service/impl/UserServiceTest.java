@@ -1,17 +1,22 @@
 package com.github.pathfinder.security.service.impl;
 
-import com.github.pathfinder.security.UserFixtures;
+import com.github.pathfinder.security.SecurityFixtures;
+import com.github.pathfinder.security.api.data.Token;
+import com.github.pathfinder.security.api.exception.UserAlreadyRegisteredException;
 import com.github.pathfinder.security.configuration.SecurityServiceDatabaseTest;
 import com.github.pathfinder.security.configuration.SecurityTestDatabaseTemplate;
-import com.github.pathfinder.security.exception.UserAlreadyRegisteredException;
+import com.github.pathfinder.security.data.user.UserTokenInfo;
+import com.github.pathfinder.security.service.ITokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @SecurityServiceDatabaseTest
 @Import(UserService.class)
@@ -19,6 +24,9 @@ class UserServiceTest {
 
     @Autowired
     UserService userService;
+
+    @MockBean
+    ITokenService tokenService;
 
     @Autowired
     SecurityTestDatabaseTemplate securityTestDatabaseTemplate;
@@ -28,68 +36,64 @@ class UserServiceTest {
         securityTestDatabaseTemplate.cleanDatabase();
     }
 
-    @Test
-    void create_UserNotPresent_SaveUserEntity() {
-        var user = UserFixtures.USER_DETAILS;
-
-        assertThat(userService.userExists(user.getUsername())).isFalse();
-
-        userService.createUser(user);
-
-        assertThat(userService.userExists(user.getUsername())).isTrue();
+    void whenNeedToReadToken(Token token, UserTokenInfo expected) {
+        doReturn(expected).when(tokenService).userInfo(token);
     }
 
     @Test
-    void createUser_UserPresent_UserAlreadyRegisteredException() {
-        var user = UserFixtures.USER_DETAILS;
+    void read_UserIsNotPresentInDatabase_EmptyResult() {
+        var username = SecurityFixtures.USERNAME;
 
-        userService.createUser(user);
-
-        assertThat(userService.userExists(user.getUsername())).isTrue();
-
-        assertThatThrownBy(() -> userService.createUser(user)).isInstanceOf(UserAlreadyRegisteredException.class);
+        assertThat(userService.read(username)).isEmpty();
     }
 
     @Test
-    void loadUserByUsername_UserNotPresent_UsernameNotFoundException() {
-        var user     = UserFixtures.USER_DETAILS;
-        var username = user.getUsername();
+    void read_UserIsPresentInDatabase_ReturnUser() {
+        var user     = SecurityFixtures.USER;
+        var expected = user.username();
 
-        assertThat(userService.userExists(user.getUsername())).isFalse();
+        assertThat(userService.read(expected)).isEmpty();
 
-        assertThatThrownBy(() -> userService.loadUserByUsername(username)).isInstanceOf(
-                UsernameNotFoundException.class);
+        userService.save(user);
+
+        assertThat(userService.read(expected))
+                .get()
+                .matches(actual -> actual.username().equals(expected));
     }
 
     @Test
-    void loadUserByUsername_UserPresent_ReturnUserDetails() {
-        var user = UserFixtures.USER_DETAILS;
+    void read_TokenIssuedToExistingUser_ReturnUserInfo() {
+        var user     = SecurityFixtures.USER;
+        var expected = user.username();
+        var token    = SecurityFixtures.TOKEN;
 
-        userService.createUser(user);
+        whenNeedToReadToken(token, new UserTokenInfo(user.username()));
 
-        var actual = userService.loadUserByUsername(user.getUsername());
+        assertThat(userService.read(token)).isEmpty();
 
-        assertThat(actual).isEqualTo(user);
+        userService.save(user);
+
+        assertThat(userService.read(token))
+                .get()
+                .matches(actual -> actual.username().equals(expected));
+
+        verify(tokenService, times(2)).userInfo(token);
     }
 
     @Test
-    void updatePassword_UserNotPresent_UsernameNotFoundException() {
-        var user = UserFixtures.USER_DETAILS;
+    void save_UserAlreadyPresentInDatabase_UserAlreadyRegisteredException() {
+        var user     = SecurityFixtures.USER;
+        var expected = user.username();
 
-        assertThatThrownBy(() -> userService.updatePassword(user, "newPassword"))
-                .isInstanceOf(UsernameNotFoundException.class);
-    }
+        assertThat(userService.read(expected)).isEmpty();
 
-    @Test
-    void updatePassword_UserPresent_ReturnUserDetails() {
-        var user        = UserFixtures.USER_DETAILS;
-        var newPassword = "newPassword";
+        userService.save(user);
 
-        userService.createUser(user);
+        assertThatThrownBy(() -> userService.save(user)).isInstanceOf(UserAlreadyRegisteredException.class);
 
-        var actual = userService.updatePassword(user, newPassword);
-
-        assertThat(actual).extracting(UserDetails::getPassword).isEqualTo(newPassword);
+        assertThat(userService.read(expected))
+                .get()
+                .matches(actual -> actual.username().equals(expected));
     }
 
 }

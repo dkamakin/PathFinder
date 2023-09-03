@@ -1,19 +1,21 @@
 package com.github.pathfinder.security.database.entity;
 
+import com.github.pathfinder.security.data.user.UserConstant;
 import com.google.common.base.Objects;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import java.util.function.Consumer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @ToString
@@ -24,12 +26,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class UserEntity {
 
     public static final class Token {
+
         public static final String TABLE        = "USERS";
         public static final String ID           = "ID";
         public static final String NAME         = "NAME";
         public static final String PASSWORD     = "PASSWORD";
-        public static final String ID_GENERATOR = "ID_GENERATOR";
-        public static final String ID_SEQUENCE  = "ID_SEQUENCE";
+        public static final String ID_GENERATOR = "USER_ID_GENERATOR";
+        public static final String ID_SEQUENCE  = "USER_ID_SEQUENCE";
+    }
+
+    public static final class Constant {
+
+        public static final int NAME_MAX_LENGTH     = UserConstant.NAME_MAX_LENGTH;
+        public static final int PASSWORD_MAX_LENGTH = 100;
     }
 
     @Id
@@ -38,25 +47,20 @@ public class UserEntity {
     @SequenceGenerator(name = Token.ID_GENERATOR, sequenceName = Token.ID_SEQUENCE, allocationSize = 1)
     private Long id;
 
-    @Column(name = Token.NAME, nullable = false, unique = true)
+    @Column(name = Token.NAME, nullable = false, unique = true, length = Constant.NAME_MAX_LENGTH)
     private String name;
 
     @ToString.Exclude
-    @Column(name = Token.PASSWORD, nullable = false)
+    @Column(name = Token.PASSWORD, nullable = false, length = Constant.PASSWORD_MAX_LENGTH)
     private String password;
 
-    public UserEntity(UserDetails userDetails) {
-        this.name = userDetails.getUsername();
-        this.password = userDetails.getPassword();
-    }
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private UserRolesEntity roles;
 
-    public UserEntity setPassword(String password) {
-        return setAndReturnThis(password, x -> this.password = password);
-    }
-
-    private <T> UserEntity setAndReturnThis(T value, Consumer<T> valueConsumer) {
-        valueConsumer.accept(value);
-        return this;
+    public UserEntity(String name, String password, UserRolesEntity roles) {
+        this.name     = name;
+        this.password = password;
+        this.roles    = roles;
     }
 
     @Override

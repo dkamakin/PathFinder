@@ -1,7 +1,7 @@
 package com.github.pathfinder.core.aspect;
 
 import com.github.pathfinder.core.interfaces.IThrowingSupplier;
-import com.github.pathfinder.core.tools.MethodTimer;
+import com.github.pathfinder.core.tools.impl.MethodTimer;
 import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
@@ -24,8 +24,8 @@ public class LoggedAspect {
 
         logger.accept("Executing: {}", joinPoint.getSignature().toShortString());
 
-        if (ArrayUtils.isNotEmpty(annotation.arguments())) {
-            logger.accept(formatArguments(annotation.arguments(), joinPoint.getArgs()));
+        if (ArrayUtils.isNotEmpty(annotation.value())) {
+            logger.accept(formatArguments(annotation.value(), joinPoint.getArgs()));
         }
 
         var result = proceed(joinPoint::proceed, annotation, logger);
@@ -48,7 +48,7 @@ public class LoggedAspect {
             }
         } catch (Throwable e) {
             if (annotation.logException()) {
-                log.error("Exception caught", e);
+                log.error("Method threw an exception", e);
             }
 
             throw e;

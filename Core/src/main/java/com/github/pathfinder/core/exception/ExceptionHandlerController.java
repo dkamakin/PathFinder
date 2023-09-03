@@ -8,21 +8,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
-@RestController
-@ControllerAdvice
+@RestControllerAdvice
 public class ExceptionHandlerController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleMethodArgumentNotValid(MethodArgumentNotValidException exception) {
-        log(exception);
-        return exception.getBindingResult().getAllErrors().stream()
+        return exception
+                .getBindingResult()
+                .getAllErrors()
+                .stream()
                 .collect(Collectors.toMap(this::fieldError, this::messageError));
     }
 
@@ -43,16 +43,21 @@ public class ExceptionHandlerController {
             case CONFLICT -> HttpStatus.CONFLICT;
             case NOT_FOUND -> HttpStatus.NOT_FOUND;
             case BAD_REQUEST -> HttpStatus.BAD_REQUEST;
+            case UNAUTHORIZED -> HttpStatus.UNAUTHORIZED;
+            case FORBIDDEN -> HttpStatus.FORBIDDEN;
             default -> HttpStatus.INTERNAL_SERVER_ERROR;
         };
     }
 
     private ResponseEntity<ErrorMessage> entity(ServiceException exception) {
-        return entity(status(exception.errorCode()), exception.reason(), exception.getMessage());
+        return entity(status(exception.errorCode()),
+                      exception.reason(),
+                      exception.getMessage());
     }
 
     private ResponseEntity<ErrorMessage> entity(Exception exception) {
-        return entity(HttpStatus.INTERNAL_SERVER_ERROR, ErrorReason.INTERNAL_SERVER_ERROR.name(),
+        return entity(HttpStatus.INTERNAL_SERVER_ERROR,
+                      ErrorReason.INTERNAL_SERVER_ERROR.name(),
                       exception.getMessage());
     }
 

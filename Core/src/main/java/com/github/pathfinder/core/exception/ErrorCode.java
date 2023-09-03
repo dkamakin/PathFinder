@@ -6,5 +6,7 @@ public enum ErrorCode {
     NOT_FOUND,
     BAD_REQUEST,
     CONFLICT,
+    UNAUTHORIZED,
+    FORBIDDEN,
 
 }

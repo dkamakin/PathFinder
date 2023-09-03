@@ -1,0 +1,64 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="user-1"
+               author="Daniil Kamakin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="user_id_sequence"/>
+            </not>
+        </preConditions>
+
+        <createSequence incrementBy="1"
+                        sequenceName="user_id_sequence"
+                        startValue="1"/>
+    </changeSet>
+
+    <changeSet id="user-2"
+               author="Daniil Kamakin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="users"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="users">
+            <column name="id"
+                    type="BIGINT">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_users"/>
+            </column>
+            <column name="name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <insert tableName="users">
+            <column name="id">1</column>
+            <column name="name">admin</column>
+            <column name="password">$2a$10$klPyL9Q0lqxBiXyWn/Et8uWV1LT1kfwDDxFu9osPM70Ul1mcMn9nu</column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="user-3"
+               author="Daniil Kamakin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="users" columnNames="name"/>
+            </not>
+        </preConditions>
+
+        <addUniqueConstraint columnNames="name"
+                             constraintName="uc_users_name"
+                             tableName="users"/>
+    </changeSet>
+
+</databaseChangeLog>

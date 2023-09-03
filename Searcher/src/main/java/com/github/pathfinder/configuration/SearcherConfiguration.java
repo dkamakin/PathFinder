@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
 
 @Configuration
-@Import({SecurityApiConfiguration.class, CoreConfiguration.class})
+@Import({CoreConfiguration.class, SecurityApiConfiguration.class})
 @EnableNeo4jRepositories(basePackages = "com.github.pathfinder.database", transactionManagerRef = "neo4jTransactionManager")
 public class SearcherConfiguration {
 

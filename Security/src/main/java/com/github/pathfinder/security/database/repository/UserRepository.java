@@ -10,9 +10,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
-    @Query("""
+    @Query(value = """
             SELECT user
             FROM UserEntity user
+            JOIN FETCH user.roles
             WHERE user.name = :username
             """)
     Optional<UserEntity> find(@Param("username") String username);

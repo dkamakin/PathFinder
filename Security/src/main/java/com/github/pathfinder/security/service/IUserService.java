@@ -1,8 +1,15 @@
 package com.github.pathfinder.security.service;
 
-import org.springframework.security.core.userdetails.UserDetailsPasswordService;
-import org.springframework.security.provisioning.UserDetailsManager;
+import com.github.pathfinder.security.api.data.Token;
+import com.github.pathfinder.security.data.user.User;
+import java.util.Optional;
 
-public interface IUserService extends UserDetailsManager, UserDetailsPasswordService {
+public interface IUserService {
+
+    User save(User user);
+
+    Optional<User> read(String username);
+
+    Optional<User> read(Token token);
 
 }

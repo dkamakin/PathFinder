@@ -1,7 +1,7 @@
 package com.github.pathfinder.configuration;
 
 import com.github.pathfinder.core.configuration.CoreConfiguration;
-import com.github.pathfinder.core.tools.JsonTools;
+import com.github.pathfinder.core.tools.impl.JsonTools;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
@@ -16,4 +16,5 @@ import org.springframework.test.context.ContextConfiguration;
 @Retention(RetentionPolicy.RUNTIME)
 @ContextConfiguration(classes = {SearcherWebTestConfiguration.class, CoreConfiguration.class, JsonTools.class})
 public @interface SearcherWebMvcTest {
+
 }

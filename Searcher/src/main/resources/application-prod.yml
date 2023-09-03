@@ -8,6 +8,7 @@ spring:
         max-attempts: 20
         multiplier: 1.3
         max-interval: 30000
+      fail-fast: true
   config:
     import: configserver:${CONFIG_URI}
 server:

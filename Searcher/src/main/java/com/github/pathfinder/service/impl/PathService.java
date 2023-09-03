@@ -21,8 +21,8 @@ public class PathService implements IPathService {
 
     private final IPointService pointService;
 
-    @Logged
     @Override
+    @Logged("request")
     @ReadTransactional
     public FindPathResponse find(FindPathRequest request) {
         var source = find(request.source());

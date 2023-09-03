@@ -1,11 +1,10 @@
 package com.github.pathfinder.messaging.router;
 
+import com.github.pathfinder.messaging.message.IMessage;
 import java.util.Optional;
 
 public interface IMessageSender {
 
-    <T> void send(String queue, T data);
-
-    <R, T> Optional<T> sendAndReceive(String queue, R data, Class<T> expected);
+    <R, T> Optional<T> sendAndReceive(IMessage<R> message, Class<T> expected);
 
 }

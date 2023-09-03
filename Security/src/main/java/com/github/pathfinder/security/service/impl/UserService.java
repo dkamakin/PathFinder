@@ -2,85 +2,61 @@ package com.github.pathfinder.security.service.impl;
 
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.core.interfaces.ReadTransactional;
+import com.github.pathfinder.security.api.data.Token;
+import com.github.pathfinder.security.api.exception.UserAlreadyRegisteredException;
 import com.github.pathfinder.security.data.Mapper;
+import com.github.pathfinder.security.data.user.User;
 import com.github.pathfinder.security.database.entity.UserEntity;
+import com.github.pathfinder.security.database.entity.UserRolesEntity;
 import com.github.pathfinder.security.database.repository.UserRepository;
-import com.github.pathfinder.security.exception.UserAlreadyRegisteredException;
-import com.github.pathfinder.security.exception.UserNotFoundException;
+import com.github.pathfinder.security.service.ITokenService;
 import com.github.pathfinder.security.service.IUserService;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor // TODO handle roles
+@RequiredArgsConstructor
 public class UserService implements IUserService {
 
     private final UserRepository userRepository;
+    private final ITokenService  tokenService;
 
     @Override
     @Transactional
-    @Logged(logException = true)
-    public UserDetails updatePassword(UserDetails user, String newPassword) {
-        return userRepository
-                .find(user.getUsername())
-                .map(userEntity -> userEntity.setPassword(newPassword))
-                .map(Mapper::map)
-                .orElseThrow(() -> new UserNotFoundException(user.getUsername()));
+    @Logged(ignoreReturnValue = false)
+    public User save(User user) {
+        userRepository.find(user.username()).ifPresent(registered -> {
+            throw new UserAlreadyRegisteredException(registered.getName());
+        });
+
+        var rolesEntity = new UserRolesEntity(user.roles().role());
+        var userEntity  = new UserEntity(user.username(), user.password(), rolesEntity);
+
+        rolesEntity.setUser(userEntity);
+
+        return Mapper.map(userRepository.save(userEntity));
     }
 
     @Override
-    @Transactional
-    @Logged(logException = true)
-    public void createUser(UserDetails user) {
-        userRepository
-                .find(user.getUsername())
-                .ifPresentOrElse(userEntity -> {
-                                     throw new UserAlreadyRegisteredException(user);
-                                 },
-                                 () -> userRepository.save(new UserEntity(user)));
-    }
-
-    @Override
-    @Transactional
-    @Logged(logException = true)
-    public void updateUser(UserDetails user) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    @Transactional
-    @Logged(logException = true)
-    public void deleteUser(String username) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    @Transactional
-    @Logged(logException = true)
-    public void changePassword(String oldPassword, String newPassword) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
+    @Logged("username")
     @ReadTransactional
-    @Logged(logException = true)
-    public boolean userExists(String username) {
-        return userRepository.find(username).isPresent();
-    }
-
-    @Override
-    @ReadTransactional
-    @Logged(logException = true)
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public Optional<User> read(String username) {
         return userRepository
                 .find(username)
-                .map(Mapper::map)
-                .orElseThrow(() -> new UserNotFoundException(username));
+                .map(Mapper::map);
+    }
+
+    @Override
+    @ReadTransactional
+    @Logged("username")
+    public Optional<User> read(Token token) {
+        return userRepository
+                .find(tokenService.userInfo(token).username())
+                .map(Mapper::map);
     }
 
 }
