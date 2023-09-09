@@ -1,9 +1,9 @@
-package com.github.pathfinder.security.api.filter;
+package com.github.pathfinder.core.web.tools;
 
 import com.github.pathfinder.core.tools.impl.JsonTools;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +36,8 @@ public class FilterResponseWriter {
         private final HttpServletResponse response;
         private final int                 status;
 
-        public void write(Object object) throws IOException {
+        @SneakyThrows
+        public void write(Object object) {
             response.setStatus(status);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             jsonTools.serialize(response.getOutputStream(), object);

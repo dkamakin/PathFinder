@@ -1,6 +1,6 @@
 dependencies {
     api project(":Messaging")
-    api project(":Core")
+    api project(":Core-Web")
 
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
 

@@ -4,8 +4,8 @@ import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.messaging.listener.AmqpHandler;
 import com.github.pathfinder.security.api.data.GetUserInfoRequest;
 import com.github.pathfinder.security.api.data.UserInfo;
-import com.github.pathfinder.security.api.exception.UserNotFoundException;
-import com.github.pathfinder.security.data.Mapper;
+import com.github.pathfinder.security.api.exception.InvalidTokenException;
+import com.github.pathfinder.security.data.InternalMapper;
 import com.github.pathfinder.security.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +24,8 @@ public class AuthenticationListener {
     public UserInfo handle(GetUserInfoRequest request) {
         return userService
                 .read(request.token())
-                .map(Mapper::userInfo)
-                .orElseThrow(UserNotFoundException::new);
+                .map(InternalMapper.INSTANCE::userInfo)
+                .orElseThrow(InvalidTokenException::new);
     }
 
 }

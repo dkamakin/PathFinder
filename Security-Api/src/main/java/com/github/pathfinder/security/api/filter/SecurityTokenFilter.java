@@ -1,10 +1,10 @@
 package com.github.pathfinder.security.api.filter;
 
 import com.github.pathfinder.core.exception.ErrorMessage;
+import com.github.pathfinder.core.web.tools.FilterResponseWriter;
 import com.github.pathfinder.security.api.SecurityApi;
-import com.github.pathfinder.security.api.data.Mapper;
+import com.github.pathfinder.security.api.data.SecurityApiMapper;
 import com.github.pathfinder.security.api.data.UserInfo;
-import com.github.pathfinder.security.api.exception.ErrorReason;
 import com.github.pathfinder.security.api.header.SecurityHeaders;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,13 +28,14 @@ public class SecurityTokenFilter extends OncePerRequestFilter {
 
     private final SecurityApi          securityApi;
     private final FilterResponseWriter responseWriter;
+    private final TokenSanitizer       tokenSanitizer;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
-        var token = request.getHeader(SecurityHeaders.TOKEN_HEADER);
+        var token = request.getHeader(SecurityHeaders.AUTHORIZATION_TOKEN_HEADER);
 
         if (StringUtils.isBlank(token)) {
             log.debug("Authentication token not found");
@@ -42,10 +43,11 @@ public class SecurityTokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        var userInfo = userInfo(token);
+        var sanitizedToken = tokenSanitizer.sanitize(token);
+        var userInfo       = userInfo(sanitizedToken);
 
         if (userInfo.isPresent()) {
-            authenticate(token, userInfo.get(), request);
+            authenticate(sanitizedToken, userInfo.get(), request);
             filterChain.doFilter(request, response);
         } else {
             sendUnauthorized(response);
@@ -55,7 +57,7 @@ public class SecurityTokenFilter extends OncePerRequestFilter {
     private void authenticate(String token, UserInfo userInfo, HttpServletRequest request) {
         log.debug("The token is valid, authenticating");
 
-        var authorities         = Mapper.grantedAuthority(userInfo);
+        var authorities         = SecurityApiMapper.INSTANCE.grantedAuthority(userInfo);
         var authenticationToken = new UsernamePasswordAuthenticationToken(userInfo, token, authorities);
 
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -67,19 +69,19 @@ public class SecurityTokenFilter extends OncePerRequestFilter {
         try {
             return Optional.of(securityApi.userInfo(token));
         } catch (Exception e) {
-            log.info("Failed to check the token validity: {}", e.getMessage());
+            log.error("Failed to check the token validity: {}", e.getMessage());
         }
 
         return Optional.empty();
     }
 
-    private void sendUnauthorized(HttpServletResponse response) throws IOException {
+    private void sendUnauthorized(HttpServletResponse response) {
         log.debug("Failed to authenticate");
 
         responseWriter
                 .to(response)
                 .status(HttpServletResponse.SC_UNAUTHORIZED)
-                .write(new ErrorMessage(ErrorReason.INVALID_TOKEN.name(), "Provided token is invalid"));
+                .write(new ErrorMessage("Provided access token is invalid"));
     }
 
 }

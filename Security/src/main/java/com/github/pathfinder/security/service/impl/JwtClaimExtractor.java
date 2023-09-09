@@ -12,8 +12,12 @@ public class JwtClaimExtractor {
 
     private final DecodedJWT decodedJWT;
 
-    public String username() {
-        return claim(JwtConstants.USERNAME, Claim::asString);
+    public Long userId() {
+        return claim(JwtConstants.USER_ID, Claim::asLong);
+    }
+
+    public String deviceName() {
+        return claim(JwtConstants.DEVICE_NAME, Claim::asString);
     }
 
     private <T> T claim(String name, Function<Claim, T> mapper) {

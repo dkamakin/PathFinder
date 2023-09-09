@@ -1,6 +1,8 @@
 package com.github.pathfinder.security.api.exception;
 
 import com.github.pathfinder.core.exception.ErrorMessage;
+import com.github.pathfinder.core.web.exception.tools.ExceptionHandlerTools;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -10,12 +12,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class SecurityExceptionHandler {
+
+    private final ExceptionHandlerTools exceptionHandlerTools;
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(AccessDeniedException.class)
     public ErrorMessage handle(AccessDeniedException exception) {
-        return new ErrorMessage(ErrorReason.INVALID_CREDENTIALS.name(), exception.getMessage());
+        return exceptionHandlerTools.message(exception);
     }
 
 }

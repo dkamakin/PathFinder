@@ -5,7 +5,7 @@ import com.github.pathfinder.messaging.message.IMessage;
 import com.github.pathfinder.messaging.message.IMessageBuilder;
 import com.github.pathfinder.messaging.router.IAMQPRouter;
 import com.github.pathfinder.security.api.configuration.SecurityQueueConfiguration;
-import com.github.pathfinder.security.api.data.Mapper;
+import com.github.pathfinder.security.api.data.SecurityApiMapper;
 import com.github.pathfinder.security.api.data.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ public class SecurityApi {
     @Logged
     public UserInfo userInfo(String token) {
         return amqpRouter
-                .route(directMessage(Mapper.userInfoRequest(token)))
+                .route(directMessage(SecurityApiMapper.INSTANCE.userInfoRequest(token)))
                 .sendAndReceive(UserInfo.class);
     }
 

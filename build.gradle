@@ -41,12 +41,15 @@ subprojects {
     def springActuatorVersion = "3.1.3"
     def springCloudBusVersion = "4.0.1"
     def apacheCommonsVersion = "3.13.0"
+    def mapStructVersion = "1.5.5.Final"
+    def springSecurityTestVersion = "6.1.2"
 
     ext {
         mainClassName = ''
     }
 
     dependencies {
+        implementation("org.mapstruct:mapstruct:$mapStructVersion")
         implementation("org.springframework.boot:spring-boot-starter-validation:$springBootVersion")
         implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
         implementation("org.springframework.boot:spring-boot-starter-aop:$springBootVersion")
@@ -63,14 +66,17 @@ subprojects {
         testImplementation("org.assertj:assertj-core:$assertJVersion")
         testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
         testAnnotationProcessor("org.projectlombok:lombok:$lombokVersion")
+        testAnnotationProcessor("org.mapstruct:mapstruct-processor:$mapStructVersion")
         testImplementation("org.projectlombok:lombok:$lombokVersion")
 
         testImplementation("com.playtika.testcontainers:testcontainers-spring-boot:$testcontainersSpringVersion")
         testImplementation("com.playtika.testcontainers:embedded-neo4j:$testcontainersSpringVersion")
         testImplementation("org.testcontainers:testcontainers:$testcontainersVersion")
+        testImplementation("org.springframework.security:spring-security-test:$springSecurityTestVersion")
 
         compileOnly("org.projectlombok:lombok:$lombokVersion")
         annotationProcessor("org.projectlombok:lombok:$lombokVersion")
+        annotationProcessor("org.mapstruct:mapstruct-processor:$mapStructVersion")
     }
 
     test {

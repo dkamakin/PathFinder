@@ -36,7 +36,7 @@ class PointServiceTest {
         var actual = pointService.save(PointFixtures.point());
 
         assertThat(actual)
-                .extracting(IndexedPoint::getId)
+                .extracting(IndexedPoint::id)
                 .isNotNull();
     }
 
@@ -45,13 +45,13 @@ class PointServiceTest {
         var point      = PointFixtures.point();
         var actual     = pointService.save(point);
         var notNearest = pointService.save(PointFixtures.farPoint(point));
-        var found      = pointService.findNearest(new Coordinate(actual.getLongitude(), actual.getLatitude()));
+        var coordinate = new Coordinate(actual.point().longitude(), actual.point().latitude());
+        var found      = pointService.findNearest(coordinate);
 
         assertThat(found)
-                .isPresent()
                 .get()
-                .extracting(IndexedPoint::getId)
-                .isEqualTo(actual.getId())
+                .extracting(IndexedPoint::id)
+                .isEqualTo(actual.id())
                 .isNotNull();
     }
 

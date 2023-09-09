@@ -41,9 +41,9 @@ public class CoreMessageConverter implements MessageConverter {
     }
 
     private RuntimeException exception(Message message) {
-        var errorMessage = (ErrorMessage) messageConverter.fromMessage(message, ErrorMessage.class);
+        var errorMessage = (ErrorMessage) messageConverter.fromMessage(message);
 
-        throw new ServiceException(errorMessage.code(), errorMessage.reason(), errorMessage.message());
+        throw new ServiceException(errorMessage.errorCode(), errorMessage.message());
     }
 
     private boolean isError(Message message) {

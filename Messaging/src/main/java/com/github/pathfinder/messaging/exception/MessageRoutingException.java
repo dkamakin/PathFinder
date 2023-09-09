@@ -1,8 +1,10 @@
 package com.github.pathfinder.messaging.exception;
 
-public class MessageRoutingException extends MessagingException {
+import com.github.pathfinder.core.exception.InternalServerException;
+
+public class MessageRoutingException extends InternalServerException {
 
     public MessageRoutingException() {
-        super(ErrorReason.FAILED_TO_ROUTE.name(), "Failed to route the message to the destination");
+        super("Failed to route the message to the destination");
     }
 }

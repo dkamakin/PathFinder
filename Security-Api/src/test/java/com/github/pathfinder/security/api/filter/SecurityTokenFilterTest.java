@@ -2,6 +2,7 @@ package com.github.pathfinder.security.api.filter;
 
 import com.github.pathfinder.core.configuration.CoreConfiguration;
 import com.github.pathfinder.core.tools.impl.JsonTools;
+import com.github.pathfinder.core.web.tools.FilterResponseWriter;
 import com.github.pathfinder.security.api.SecurityApi;
 import com.github.pathfinder.security.api.SecurityFixtures;
 import com.github.pathfinder.security.api.data.UserInfo;
@@ -12,7 +13,6 @@ import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
@@ -27,13 +27,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(classes = {FilterResponseWriter.class, SecurityTokenFilter.class, JsonTools.class, CoreConfiguration.class})
+@SpringJUnitConfig(classes = {FilterResponseWriter.class, TokenSanitizer.class, SecurityTokenFilter.class, JsonTools.class, CoreConfiguration.class})
 class SecurityTokenFilterTest {
 
     @MockBean
@@ -55,19 +55,19 @@ class SecurityTokenFilterTest {
     FilterChain filterChain;
 
     void whenNeedToGetToken(String expected) {
-        doReturn(expected).when(request).getHeader(SecurityHeaders.TOKEN_HEADER);
+        when(request.getHeader(SecurityHeaders.AUTHORIZATION_TOKEN_HEADER)).thenReturn(expected);
     }
 
     void whenNeedToGetUser(String token, UserInfo expected) {
-        doReturn(expected).when(securityApi).userInfo(token);
+        when(securityApi.userInfo(token)).thenReturn(expected);
     }
 
     void whenNeedToThrowOnGetUser(String token) {
         doThrow(new RuntimeException()).when(securityApi).userInfo(token);
     }
 
-    void whenNeedToGetOutputStream(HttpServletResponse response, OutputStream expected) throws IOException {
-        doReturn(expected).when(response).getOutputStream();
+    void whenNeedToGetOutputStream(HttpServletResponse response, ServletOutputStream expected) throws IOException {
+        when(response.getOutputStream()).thenReturn(expected);
     }
 
     static Stream<String> emptyStrings() {
@@ -118,11 +118,35 @@ class SecurityTokenFilterTest {
         target.doFilterInternal(request, response, filterChain);
 
         verifyNoInteractions(response);
+
         verify(filterChain).doFilter(request, response);
+
         assertThat(SecurityContextHolder.getContext().getAuthentication())
                 .matches(authentication -> authentication.getCredentials().equals(tokenString))
                 .matches(authentication -> authentication.getAuthorities().equals(authorities))
                 .matches(authentication -> authentication.getPrincipal().equals(expected));
     }
 
+    @Test
+    void doFilterInternal_TokenContainsBearerPart_SanitizeTokenAndProcessRequest()
+            throws ServletException, IOException {
+        var token       = "accessToken";
+        var bearerToken = "Bearer " + token;
+        var expected    = SecurityFixtures.USER_INFO;
+        var authorities = List.of(new SimpleGrantedAuthority(expected.role()));
+
+        whenNeedToGetToken(bearerToken);
+        whenNeedToGetUser(token, expected);
+
+        target.doFilterInternal(request, response, filterChain);
+
+        verifyNoInteractions(response);
+
+        verify(filterChain).doFilter(request, response);
+
+        assertThat(SecurityContextHolder.getContext().getAuthentication())
+                .matches(authentication -> authentication.getCredentials().equals(token))
+                .matches(authentication -> authentication.getAuthorities().equals(authorities))
+                .matches(authentication -> authentication.getPrincipal().equals(expected));
+    }
 }

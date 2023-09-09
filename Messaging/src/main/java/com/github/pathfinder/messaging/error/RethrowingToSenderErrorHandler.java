@@ -2,9 +2,7 @@ package com.github.pathfinder.messaging.error;
 
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.core.exception.ErrorCode;
-import com.github.pathfinder.core.exception.ErrorReason;
 import com.github.pathfinder.core.exception.ServiceException;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.listener.api.RabbitListenerErrorHandler;
@@ -20,37 +18,27 @@ public class RethrowingToSenderErrorHandler implements RabbitListenerErrorHandle
     public Object handleError(Message amqpMessage,
                               org.springframework.messaging.Message<?> message,
                               ListenerExecutionFailedException exception) {
-        return cause(exception)
-                .map(this::mapException)
-                .orElseGet(() -> internalServerError("Failed to process request"));
+        return mapException(cause(exception));
     }
 
-    private Optional<Throwable> cause(Throwable exception) {
-        return Optional.ofNullable(exception.getCause());
-    }
+    private Throwable cause(Throwable exception) {
+        while (exception.getCause() != null) {
+            exception = exception.getCause();
+        }
 
-    private ErrorMessage internalServerError(String message) {
-        return new ErrorMessage(ErrorCode.INTERNAL_SERVER_ERROR,
-                                ErrorReason.INTERNAL_SERVER_ERROR.name(),
-                                message);
+        return exception;
     }
 
     private ErrorMessage mapException(Throwable exception) {
         if (exception instanceof ServiceException serviceException) {
-            return message(serviceException);
-        } else {
-            return message(exception);
+            return mapException(serviceException);
         }
+
+        return new ErrorMessage(ErrorCode.INTERNAL_SERVER_ERROR, exception.getMessage());
     }
 
-    private ErrorMessage message(ServiceException serviceException) {
-        return new ErrorMessage(serviceException.errorCode(),
-                                serviceException.reason(),
-                                serviceException.getMessage());
-    }
-
-    private ErrorMessage message(Throwable exception) {
-        return internalServerError(exception.getMessage());
+    private ErrorMessage mapException(ServiceException exception) {
+        return new ErrorMessage(exception.errorCode(), exception.getMessage());
     }
 
 }

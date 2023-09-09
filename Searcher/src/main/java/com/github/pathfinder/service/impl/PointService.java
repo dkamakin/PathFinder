@@ -23,14 +23,17 @@ public class PointService implements IPointService {
     @Override
     @Transactional
     public IndexedPoint save(Point point) {
-        return EntityMapper.map(pointRepository.save(EntityMapper.map(point)));
+        var mapper = EntityMapper.INSTANCE;
+
+        return mapper.map(pointRepository.save(mapper.map(point)));
     }
 
     @Logged
     @Override
     @ReadTransactional
     public Optional<IndexedPoint> findNearest(Coordinate coordinate) {
-        return pointRepository.findNearest(coordinate.latitude(), coordinate.longitude())
-                .map(EntityMapper::map);
+        return pointRepository
+                .findNearest(coordinate.latitude(), coordinate.longitude())
+                .map(EntityMapper.INSTANCE::map);
     }
 }

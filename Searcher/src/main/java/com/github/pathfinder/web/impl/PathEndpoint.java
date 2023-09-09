@@ -22,12 +22,14 @@ public class PathEndpoint implements IPathEndpoint {
 
     private final IPathService pathService;
 
-    @Override
     @Logged
+    @Override
     @PostMapping
     @Secured(SecurityRoles.PATH_SEARCHER)
     public FoundPathDto find(@Valid @RequestBody FindPathDto request) {
-        return DtoMapper.map(pathService.find(DtoMapper.map(request)));
+        var mapper = DtoMapper.INSTANCE;
+
+        return mapper.map(pathService.find(mapper.map(request)));
     }
 
 }

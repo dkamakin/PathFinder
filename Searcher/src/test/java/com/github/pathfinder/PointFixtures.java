@@ -10,8 +10,8 @@ public class PointFixtures {
     }
 
     public static Point farPoint(Point point) {
-        return new Point(point.getAltitude() * 2, point.getLongitude() * 3, point.getLatitude(),
-                         point.getLandType());
+        return new Point(point.altitude() * 2, point.longitude() * 3, point.latitude(),
+                         point.landType());
     }
 
 }

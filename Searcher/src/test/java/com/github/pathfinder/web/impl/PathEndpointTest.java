@@ -11,6 +11,7 @@ import com.github.pathfinder.web.dto.HealthTypeDto;
 import com.github.pathfinder.web.dto.path.FindPathDto;
 import com.github.pathfinder.web.dto.path.FoundPathDto;
 import com.github.pathfinder.web.mapper.DtoMapper;
+import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -22,6 +23,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -85,12 +87,11 @@ class PathEndpointTest {
     @MethodSource("validFindPaths")
     @WithMockUser(roles = SecurityRoles.PATH_SEARCHER)
     void find_ValidRequest_PassToService(FindPathDto request) throws Exception {
-        var response = new FindPathResponse(1);
-        var expected = DtoMapper.map(response);
+        var expected = 1;
 
-        whenNeedToReturn(DtoMapper.map(request), response);
+        whenNeedToReturn(DtoMapper.INSTANCE.map(request), new FindPathResponse(expected));
 
-        var actual = jsonTools.deserialize(mockMvc.perform(post("/path")
+        var result = jsonTools.deserialize(mockMvc.perform(post("/path")
                                                                    .contentType(MediaType.APPLICATION_JSON)
                                                                    .content(jsonTools.serialize(request))
                                                                    .with(SecurityMockMvcRequestPostProcessors.csrf())
@@ -98,10 +99,11 @@ class PathEndpointTest {
                                                    .andExpect(status().isOk())
                                                    .andReturn()
                                                    .getResponse()
-                                                   .getContentAsString(),
+                                                   .getContentAsString(StandardCharsets.UTF_8),
                                            FoundPathDto.class);
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(result)
+                .matches(actual -> actual.cost().equals(expected));
     }
 
     @ParameterizedTest
@@ -114,6 +116,8 @@ class PathEndpointTest {
                                 .with(SecurityMockMvcRequestPostProcessors.csrf())
                 )
                 .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(pathService);
     }
 
 }

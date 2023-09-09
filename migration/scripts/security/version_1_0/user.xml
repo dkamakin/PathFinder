@@ -1,0 +1,171 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <!-- Sequences -->
+    <changeSet id="refresh-tokens-1"
+               author="Daniil Kamakin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="refresh_token_id_sequence"/>
+            </not>
+        </preConditions>
+
+        <createSequence incrementBy="1" sequenceName="refresh_token_id_sequence" startValue="1"/>
+    </changeSet>
+
+    <changeSet id="user-1"
+               author="Daniil Kamakin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="user_id_sequence"/>
+            </not>
+        </preConditions>
+
+        <createSequence incrementBy="1"
+                        sequenceName="user_id_sequence"
+                        startValue="1"/>
+    </changeSet>
+
+    <changeSet id="user-roles-1"
+               author="Daniil Kamakin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="role_id_sequence"/>
+            </not>
+        </preConditions>
+
+        <createSequence incrementBy="1" sequenceName="role_id_sequence" startValue="1"/>
+    </changeSet>
+
+    <!-- Tables -->
+    <changeSet id="refresh-tokens-2"
+               author="Daniil Kamakin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="refresh_tokens"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="refresh_tokens">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_refresh_tokens"/>
+            </column>
+            <column name="device_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="token" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="issued_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="user-roles-2"
+               author="Daniil Kamakin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="users_roles"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="users_roles">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users_roles"/>
+            </column>
+
+            <column name="role" type="VARCHAR(15)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <insert tableName="users_roles">
+            <column name="id">1</column>
+            <column name="role">PATH_SEARCHER</column>
+            <column name="user_id">1</column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="user-2"
+               author="Daniil Kamakin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="users"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="users">
+            <column name="id"
+                    type="BIGINT">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_users"/>
+            </column>
+            <column name="name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <insert tableName="users">
+            <column name="id">1</column>
+            <column name="name">admin</column>
+            <column name="password">$2a$10$klPyL9Q0lqxBiXyWn/Et8uWV1LT1kfwDDxFu9osPM70Ul1mcMn9nu</column>
+        </insert>
+    </changeSet>
+
+    <!-- Constraints -->
+    <changeSet id="user-3"
+               author="Daniil Kamakin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="users" columnNames="name"/>
+            </not>
+        </preConditions>
+
+        <addUniqueConstraint columnNames="name"
+                             constraintName="uc_users_name"
+                             tableName="users"/>
+    </changeSet>
+
+    <changeSet id="refresh-tokens-3"
+               author="Daniil Kamakin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FK_REFRESH_TOKENS_ON_USER"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="refresh_tokens"
+                                 constraintName="FK_REFRESH_TOKENS_ON_USER" referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+
+    <changeSet id="user-roles-4"
+               author="Daniil Kamakin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FK_USERS_ROLES_ON_USER"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="users_roles"
+                                 constraintName="FK_USERS_ROLES_ON_USER"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+
+</databaseChangeLog>

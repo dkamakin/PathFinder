@@ -9,17 +9,21 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import java.util.Set;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@Entity
 @Getter
 @ToString
-@Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = UserEntity.Token.TABLE)
@@ -57,21 +61,31 @@ public class UserEntity {
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserRolesEntity roles;
 
+    @ToString.Exclude
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserRefreshTokenEntity> refreshTokens;
+
     public UserEntity(String name, String password, UserRolesEntity roles) {
         this.name     = name;
         this.password = password;
         this.roles    = roles;
     }
 
+    public Set<UserRefreshTokenEntity> getRefreshTokens() {
+        return (refreshTokens == null ? refreshTokens = Set.of() : refreshTokens);
+    }
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object object) {
+        if (this == object) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+
+        if (object == null || getClass() != object.getClass()) {
             return false;
         }
-        UserEntity that = (UserEntity) o;
+
+        UserEntity that = (UserEntity) object;
         return Objects.equal(name, that.name) &&
                 Objects.equal(password, that.password);
     }

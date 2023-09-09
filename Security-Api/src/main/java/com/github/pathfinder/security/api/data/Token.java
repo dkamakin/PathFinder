@@ -7,7 +7,6 @@ public record Token(String value) {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("value", "***")
                 .toString();
     }
 }

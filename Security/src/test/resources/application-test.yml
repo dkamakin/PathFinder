@@ -6,13 +6,25 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+    properties:
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
   datasource:
     url: jdbc:h2:mem:foo;DB_CLOSE_ON_EXIT=FALSE
     password: ''
     username: sa
 token:
-  lifetime: PT1M
+  access:
+    lifetime: PT3M
+  refresh:
+    lifetime: PT5M
   secret: secret
 logging:
   level:
+    org:
+      hibernate:
+        sql: debug
+        type: trace
     root: debug

@@ -3,17 +3,20 @@ package com.github.pathfinder.mapper;
 import com.github.pathfinder.data.point.IndexedPoint;
 import com.github.pathfinder.data.point.Point;
 import com.github.pathfinder.database.entity.PointEntity;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
-public class EntityMapper {
+@Mapper
+public interface EntityMapper {
 
-    public static PointEntity map(Point point) {
-        return new PointEntity(point.getAltitude(), point.getLongitude(), point.getLatitude(), point.getLandType());
-    }
+    EntityMapper INSTANCE = Mappers.getMapper(EntityMapper.class);
 
-    public static IndexedPoint map(PointEntity entity) {
-        return new IndexedPoint(entity.getAltitude(), entity.getLongitude(), entity.getLatitude(),
-                                entity.getLandType(),
-                                entity.getId());
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "connection", ignore = true)
+    PointEntity map(Point point);
+
+    @Mapping(target = "point", source = "entity")
+    IndexedPoint map(PointEntity entity);
 
 }

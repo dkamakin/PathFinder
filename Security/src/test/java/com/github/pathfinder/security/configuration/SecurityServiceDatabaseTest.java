@@ -9,10 +9,10 @@ import java.lang.annotation.Target;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.AliasFor;
 
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @ServiceDatabaseTest
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
 @Import({SecurityTestDatabaseConfiguration.class})
 public @interface SecurityServiceDatabaseTest {
 

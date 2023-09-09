@@ -1,14 +1,10 @@
 ext.set("mainClassName", 'com.github.pathfinder.PathFinderApplication')
 
 dependencies {
-    def springSecurityTestVersion = "6.1.2"
-
     api project(":Security-Api")
 
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocVersion")
     implementation("org.springframework.boot:spring-boot-starter-data-neo4j:$springBootVersion")
     implementation("org.springframework.cloud:spring-cloud-starter-config:$springCloudConfigVersion")
-
-    testImplementation("org.springframework.security:spring-security-test:$springSecurityTestVersion")
 }

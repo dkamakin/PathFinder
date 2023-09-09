@@ -1,15 +1,16 @@
 package com.github.pathfinder.security.service;
 
 import com.github.pathfinder.security.api.data.Token;
-import com.github.pathfinder.security.data.user.User;
+import com.github.pathfinder.security.data.user.SaveUserRequest;
+import com.github.pathfinder.security.database.entity.UserEntity;
 import java.util.Optional;
 
 public interface IUserService {
 
-    User save(User user);
+    UserEntity save(SaveUserRequest user);
 
-    Optional<User> read(String username);
+    Optional<UserEntity> read(String username);
 
-    Optional<User> read(Token token);
+    Optional<UserEntity> read(Token token);
 
 }

@@ -3,9 +3,8 @@ package com.github.pathfinder.core.aspect;
 import com.github.pathfinder.core.interfaces.IThrowingSupplier;
 import com.github.pathfinder.core.tools.impl.MethodTimer;
 import java.time.Duration;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -15,23 +14,24 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Aspect
 @Component
+@RequiredArgsConstructor
 public class LoggedAspect {
+
+    private final LoggedFormatter formatter;
 
     @Around("@annotation(Logged)")
     public Object logged(ProceedingJoinPoint joinPoint) throws Throwable {
         var annotation = annotation(joinPoint);
         var logger     = logger(annotation);
+        var methodName = formatter.methodName(joinPoint.getSignature());
+        var header     = formatter.header(methodName, annotation.value(), joinPoint.getArgs());
 
-        logger.accept("Executing: {}", joinPoint.getSignature().toShortString());
+        logger.accept("Executing {}", header);
 
-        if (ArrayUtils.isNotEmpty(annotation.value())) {
-            logger.accept(formatArguments(annotation.value(), joinPoint.getArgs()));
-        }
-
-        var result = proceed(joinPoint::proceed, annotation, logger);
+        var result = proceed(joinPoint::proceed, annotation, logger, methodName);
 
         if (isNeedToLogResult(annotation)) {
-            logger.accept("Returned: {}", result);
+            logger.accept("{} returned {}", methodName, result);
         }
 
         return result;
@@ -39,10 +39,11 @@ public class LoggedAspect {
 
     private Object proceed(IThrowingSupplier<Object, Throwable> method,
                            Logged annotation,
-                           LogConsumer logger) throws Throwable {
+                           LogConsumer logger,
+                           String methodName) throws Throwable {
         try {
             if (annotation.logExecutionTime()) {
-                return new MethodTimer(duration -> logExecutionTime(duration, logger)).throwable(method);
+                return new MethodTimer(duration -> logExecutionTime(duration, logger, methodName)).throwable(method);
             } else {
                 return method.get();
             }
@@ -55,8 +56,8 @@ public class LoggedAspect {
         }
     }
 
-    private void logExecutionTime(Duration duration, LogConsumer logger) {
-        logger.accept("Execution time: {}", duration);
+    private void logExecutionTime(Duration duration, LogConsumer logger, String methodName) {
+        logger.accept("{} execution time {}", methodName, duration);
     }
 
     private boolean isNeedToLogResult(Logged annotation) {
@@ -74,26 +75,6 @@ public class LoggedAspect {
 
     private Logged annotation(ProceedingJoinPoint joinPoint) {
         return ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(Logged.class);
-    }
-
-    private String formatArguments(String[] names, Object[] arguments) {
-        var result = new StringBuilder();
-
-        for (var i = 0; i < names.length; i++) {
-            var name = names[i];
-
-            if (StringUtils.isEmpty(name)) {
-                continue;
-            }
-
-            result.append(name).append("=").append(arguments[i]);
-
-            if (i != names.length - 1) {
-                result.append(", ");
-            }
-        }
-
-        return result.toString();
     }
 
     private interface LogConsumer {

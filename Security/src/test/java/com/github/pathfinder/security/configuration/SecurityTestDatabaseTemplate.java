@@ -1,6 +1,7 @@
 package com.github.pathfinder.security.configuration;
 
 import com.github.pathfinder.security.database.entity.UserEntity;
+import com.github.pathfinder.security.database.entity.UserRefreshTokenEntity;
 import com.github.pathfinder.security.database.entity.UserRolesEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.test.context.TestComponent;
@@ -17,7 +18,10 @@ public class SecurityTestDatabaseTemplate {
 
     public void cleanDatabase() {
         transactionTemplate.execute(status -> {
-            JdbcTestUtils.deleteFromTables(jdbcTemplate, UserRolesEntity.Token.TABLE, UserEntity.Token.TABLE);
+            JdbcTestUtils.deleteFromTables(jdbcTemplate,
+                                           UserRefreshTokenEntity.Token.TABLE,
+                                           UserRolesEntity.Token.TABLE,
+                                           UserEntity.Token.TABLE);
             return null;
         });
     }

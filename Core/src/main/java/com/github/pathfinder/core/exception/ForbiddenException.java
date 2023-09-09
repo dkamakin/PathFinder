@@ -2,7 +2,8 @@ package com.github.pathfinder.core.exception;
 
 public class ForbiddenException extends ServiceException {
 
-    public ForbiddenException(String reason, String message, Object... params) {
-        super(ErrorCode.FORBIDDEN, reason, message, params);
+    public ForbiddenException(String message, Object... parameters) {
+        super(ErrorCode.FORBIDDEN, message, parameters);
     }
+
 }

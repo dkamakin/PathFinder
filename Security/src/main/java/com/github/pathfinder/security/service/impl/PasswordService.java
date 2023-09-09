@@ -17,4 +17,11 @@ public class PasswordService implements IPasswordService {
     public boolean matches(String rawPassword, String userPassword) {
         return passwordEncoder.matches(rawPassword, userPassword);
     }
+
+    @Logged
+    @Override
+    public String encode(String rawPassword) {
+        return passwordEncoder.encode(rawPassword);
+    }
+
 }
