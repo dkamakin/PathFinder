@@ -8,8 +8,7 @@ import jakarta.validation.constraints.Size;
 public record DeviceInfoDto(
         @NotBlank
         @Size(max = UserConstant.DEVICE_NAME_MAX_LENGTH)
-        @Schema(description = "Device name", requiredMode = Schema.RequiredMode.REQUIRED, example = "Windows 10 my PC",
-                maxLength = UserConstant.DEVICE_NAME_MAX_LENGTH)
+        @Schema(description = "Device name", requiredMode = Schema.RequiredMode.REQUIRED, example = "Windows 10 my PC")
         String name) {
 
 }

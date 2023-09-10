@@ -30,7 +30,7 @@ public class LoggedFormatter {
     public String formatArguments(String[] names, Object[] arguments) {
         var result = new StringBuilder();
 
-        for (var i = 0; i < names.length; i++) {
+        for (var i = 0; i < names.length && i < arguments.length; i++) {
             var name = names[i];
 
             if (StringUtils.isEmpty(name)) {

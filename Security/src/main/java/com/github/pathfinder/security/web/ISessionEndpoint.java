@@ -1,6 +1,7 @@
 package com.github.pathfinder.security.web;
 
 import com.github.pathfinder.core.exception.ErrorMessage;
+import com.github.pathfinder.core.web.tools.SwaggerTags;
 import com.github.pathfinder.security.web.dto.AuthenticationRequestDto;
 import com.github.pathfinder.security.web.dto.AuthenticationResponseDto;
 import com.github.pathfinder.security.web.dto.SessionRefreshRequestDto;
@@ -8,10 +9,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+@RequestMapping(value = "/user/session")
 public interface ISessionEndpoint {
 
-    @Operation(description = "User authenticating", responses = {
+    @PostMapping
+    @Operation(description = "User authenticating", tags = {SwaggerTags.UNSECURED}, responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = {@Content(schema = @Schema(implementation = AuthenticationResponseDto.class))}),
             @ApiResponse(responseCode = "400", description = "Bad request", content = {@Content(schema = @Schema(implementation = ErrorMessage.class))}),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = {@Content(schema = @Schema(implementation = ErrorMessage.class))}),
@@ -21,7 +27,8 @@ public interface ISessionEndpoint {
     })
     AuthenticationResponseDto authenticate(AuthenticationRequestDto request);
 
-    @Operation(description = "User session refresh", responses = {
+    @PutMapping
+    @Operation(description = "User session refresh", tags = {SwaggerTags.UNSECURED}, responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = {@Content(schema = @Schema(implementation = AuthenticationResponseDto.class))}),
             @ApiResponse(responseCode = "400", description = "Bad request", content = {@Content(schema = @Schema(implementation = ErrorMessage.class))}),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = {@Content(schema = @Schema(implementation = ErrorMessage.class))}),

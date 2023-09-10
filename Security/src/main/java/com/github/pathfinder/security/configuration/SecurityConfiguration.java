@@ -1,7 +1,7 @@
 package com.github.pathfinder.security.configuration;
 
 import com.github.pathfinder.core.configuration.CoreConfiguration;
-import com.github.pathfinder.core.web.configuration.CoreWebConfiguration;
+import com.github.pathfinder.core.web.configuration.impl.CoreWebConfiguration;
 import com.github.pathfinder.security.api.configuration.SecurityApiConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

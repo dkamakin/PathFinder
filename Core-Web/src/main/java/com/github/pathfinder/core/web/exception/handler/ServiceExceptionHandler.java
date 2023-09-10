@@ -2,7 +2,6 @@ package com.github.pathfinder.core.web.exception.handler;
 
 import com.github.pathfinder.core.exception.ErrorMessage;
 import com.github.pathfinder.core.exception.ServiceException;
-import com.github.pathfinder.core.web.exception.mapper.ExceptionMapper;
 import com.github.pathfinder.core.web.exception.tools.ExceptionHandlerTools;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,7 +43,7 @@ public class ServiceExceptionHandler {
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<ErrorMessage> handle(ServiceException exception) {
         return ResponseEntity
-                .status(ExceptionMapper.INSTANCE.status(exception.errorCode()))
+                .status(exception.errorCode().httpCode())
                 .body(exceptionHandlerTools.message(exception));
     }
 

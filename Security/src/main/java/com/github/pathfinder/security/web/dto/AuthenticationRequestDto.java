@@ -10,15 +10,11 @@ import jakarta.validation.constraints.Size;
 public record AuthenticationRequestDto(
         @NotBlank
         @Size(min = UserConstant.NAME_MIN_LENGTH, max = UserConstant.NAME_MAX_LENGTH)
-        @Schema(description = "Username", requiredMode = Schema.RequiredMode.REQUIRED, example = "admin",
-                maxLength = UserConstant.NAME_MAX_LENGTH,
-                minLength = UserConstant.NAME_MIN_LENGTH)
+        @Schema(description = "Username", requiredMode = Schema.RequiredMode.REQUIRED, example = "admin")
         String username,
         @NotBlank
         @Size(min = UserConstant.PASSWORD_MIN_LENGTH, max = UserConstant.PASSWORD_MAX_LENGTH)
-        @Schema(description = "Password", requiredMode = Schema.RequiredMode.REQUIRED, example = "admin",
-                minLength = UserConstant.PASSWORD_MIN_LENGTH,
-                maxLength = UserConstant.PASSWORD_MAX_LENGTH)
+        @Schema(description = "Password", requiredMode = Schema.RequiredMode.REQUIRED, example = "admin")
         String password,
         @Valid
         @NotNull
