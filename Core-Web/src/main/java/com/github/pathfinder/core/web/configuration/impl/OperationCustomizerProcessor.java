@@ -1,6 +1,6 @@
 package com.github.pathfinder.core.web.configuration.impl;
 
-import com.github.pathfinder.core.web.configuration.IOperationTagCustomizer;
+import com.github.pathfinder.core.web.configuration.IOperationCustomizer;
 import com.google.common.collect.ImmutableSet;
 import io.swagger.v3.oas.models.Operation;
 import java.util.List;
@@ -11,9 +11,9 @@ import org.springframework.web.method.HandlerMethod;
 
 @Component
 @RequiredArgsConstructor
-public class TagOperationCustomizer implements OperationCustomizer {
+public class OperationCustomizerProcessor implements OperationCustomizer {
 
-    private final List<IOperationTagCustomizer> customizers;
+    private final List<IOperationCustomizer> customizers;
 
     @Override
     public Operation customize(Operation operation, HandlerMethod handlerMethod) {
@@ -21,7 +21,7 @@ public class TagOperationCustomizer implements OperationCustomizer {
 
         customizers
                 .stream()
-                .filter(customizer -> customizer.isMatch(tags))
+                .filter(customizer -> customizer.isMatch(operation, handlerMethod, tags))
                 .forEach(customizer -> customizer.customize(operation, handlerMethod, tags));
 
         return operation;

@@ -1,7 +1,6 @@
 package com.github.pathfinder.security.web;
 
 import com.github.pathfinder.core.exception.ErrorMessage;
-import com.github.pathfinder.core.web.tools.SwaggerTags;
 import com.github.pathfinder.security.web.dto.AuthenticationRequestDto;
 import com.github.pathfinder.security.web.dto.AuthenticationResponseDto;
 import com.github.pathfinder.security.web.dto.SessionRefreshRequestDto;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface ISessionEndpoint {
 
     @PostMapping
-    @Operation(description = "User authenticating", tags = {SwaggerTags.UNSECURED}, responses = {
+    @Operation(description = "User authenticating", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = {@Content(schema = @Schema(implementation = AuthenticationResponseDto.class))}),
             @ApiResponse(responseCode = "400", description = "Bad request", content = {@Content(schema = @Schema(implementation = ErrorMessage.class))}),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = {@Content(schema = @Schema(implementation = ErrorMessage.class))}),
@@ -28,7 +27,7 @@ public interface ISessionEndpoint {
     AuthenticationResponseDto authenticate(AuthenticationRequestDto request);
 
     @PutMapping
-    @Operation(description = "User session refresh", tags = {SwaggerTags.UNSECURED}, responses = {
+    @Operation(description = "User session refresh", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = {@Content(schema = @Schema(implementation = AuthenticationResponseDto.class))}),
             @ApiResponse(responseCode = "400", description = "Bad request", content = {@Content(schema = @Schema(implementation = ErrorMessage.class))}),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = {@Content(schema = @Schema(implementation = ErrorMessage.class))}),

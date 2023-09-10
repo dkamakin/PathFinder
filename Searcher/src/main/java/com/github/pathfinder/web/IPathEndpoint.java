@@ -1,7 +1,6 @@
 package com.github.pathfinder.web;
 
 import com.github.pathfinder.core.exception.ErrorMessage;
-import com.github.pathfinder.core.web.tools.SwaggerTags;
 import com.github.pathfinder.security.api.role.SecurityRoles;
 import com.github.pathfinder.web.dto.path.FindPathDto;
 import com.github.pathfinder.web.dto.path.FoundPathDto;
@@ -18,7 +17,7 @@ public interface IPathEndpoint {
 
     @PostMapping
     @Secured(SecurityRoles.PATH_SEARCHER)
-    @Operation(description = "Find terrain path", tags = {SwaggerTags.SECURED}, responses = {
+    @Operation(description = "Find terrain path", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = {@Content(schema = @Schema(implementation = FoundPathDto.class))}),
             @ApiResponse(responseCode = "400", description = "Bad request", content = {@Content(schema = @Schema(implementation = ErrorMessage.class))}),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = {@Content(schema = @Schema(implementation = ErrorMessage.class))}),

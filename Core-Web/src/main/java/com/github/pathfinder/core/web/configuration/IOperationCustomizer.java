@@ -4,9 +4,9 @@ import io.swagger.v3.oas.models.Operation;
 import java.util.Set;
 import org.springframework.web.method.HandlerMethod;
 
-public interface IOperationTagCustomizer {
+public interface IOperationCustomizer {
 
-    boolean isMatch(Set<String> tags);
+    boolean isMatch(Operation operation, HandlerMethod handlerMethod, Set<String> tags);
 
     void customize(Operation operation, HandlerMethod handlerMethod, Set<String> tags);
 
