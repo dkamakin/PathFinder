@@ -20,7 +20,7 @@ public class AuthenticationListener {
     private final IUserService userService;
 
     @AmqpHandler
-    @Logged(logException = true)
+    @Logged("request")
     public UserInfo handle(GetUserInfoRequest request) {
         return userService
                 .read(request.token())

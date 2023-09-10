@@ -28,7 +28,7 @@ public class UserService implements IUserService {
 
     @Override
     @Transactional
-    @Logged(ignoreReturnValue = false)
+    @Logged(ignoreReturnValue = false, value = "user")
     public UserEntity save(SaveUserRequest user) {
         userRepository.find(user.username()).ifPresent(registered -> {
             throw new UserAlreadyRegisteredException(registered.getName());
@@ -44,15 +44,15 @@ public class UserService implements IUserService {
     }
 
     @Override
-    @Logged("username")
     @ReadTransactional
+    @Logged("username")
     public Optional<UserEntity> read(String username) {
         return userRepository.find(username);
     }
 
+    @Logged
     @Override
     @ReadTransactional
-    @Logged("username")
     public Optional<UserEntity> read(Token token) {
         return userRepository.findById(tokenService.payload(token).userId());
     }
