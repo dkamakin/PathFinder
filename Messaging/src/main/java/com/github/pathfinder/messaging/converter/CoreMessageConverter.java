@@ -10,15 +10,23 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConversionException;
-import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.amqp.support.converter.SmartMessageConverter;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CoreMessageConverter implements MessageConverter {
+public class CoreMessageConverter implements SmartMessageConverter {
 
     private final Jackson2JsonMessageConverter messageConverter;
+
+    @Override
+    @NotNull
+    public Object fromMessage(@NotNull Message message, @NotNull Object conversionHint)
+            throws MessageConversionException {
+        tryHandleException(message);
+        return messageConverter.fromMessage(message);
+    }
 
     @NotNull
     @Override
@@ -30,14 +38,17 @@ public class CoreMessageConverter implements MessageConverter {
     @NotNull
     @Override
     public Object fromMessage(@NotNull Message message) throws MessageConversionException {
+        tryHandleException(message);
+        return messageConverter.fromMessage(message);
+    }
+
+    private void tryHandleException(Message message) {
         if (isError(message)) {
             log.debug("Received a error message, throwing an exception");
             throw exception(message);
         }
 
-        log.debug("Received a non-error message, converting it");
-
-        return messageConverter.fromMessage(message);
+        log.debug("Received a non-error message");
     }
 
     private RuntimeException exception(Message message) {

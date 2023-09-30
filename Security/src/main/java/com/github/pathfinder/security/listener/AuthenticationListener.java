@@ -7,6 +7,7 @@ import com.github.pathfinder.security.api.data.UserInfo;
 import com.github.pathfinder.security.api.exception.InvalidTokenException;
 import com.github.pathfinder.security.data.InternalMapper;
 import com.github.pathfinder.security.service.IUserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ public class AuthenticationListener {
 
     @AmqpHandler
     @Logged("request")
-    public UserInfo handle(GetUserInfoRequest request) {
+    public UserInfo handle(@Valid GetUserInfoRequest request) {
         return userService
                 .read(request.token())
                 .map(InternalMapper.INSTANCE::userInfo)

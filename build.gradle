@@ -43,6 +43,7 @@ subprojects {
     def apacheCommonsVersion = "3.13.0"
     def mapStructVersion = "1.5.5.Final"
     def springSecurityTestVersion = "6.1.2"
+    def cloudStarterBootstrapVersion = "4.0.4"
 
     ext {
         mainClassName = ''
@@ -56,6 +57,7 @@ subprojects {
         implementation("org.springframework.retry:spring-retry:$springRetryVersion")
         implementation("org.apache.commons:commons-lang3:$apacheCommonsVersion")
         implementation("org.springframework.boot:spring-boot-starter-actuator:$springActuatorVersion")
+        implementation("org.springframework.cloud:spring-cloud-starter-bootstrap:$cloudStarterBootstrapVersion")
         api("org.springframework.cloud:spring-cloud-starter-bus-amqp:$springCloudBusVersion")
 
         implementation("org.postgresql:postgresql:$postgresqlVersion")
@@ -72,6 +74,8 @@ subprojects {
         testImplementation("com.playtika.testcontainers:testcontainers-spring-boot:$testcontainersSpringVersion")
         testImplementation("com.playtika.testcontainers:embedded-neo4j:$testcontainersSpringVersion")
         testImplementation("org.testcontainers:testcontainers:$testcontainersVersion")
+        testImplementation("org.testcontainers:rabbitmq:$testcontainersVersion")
+        testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
         testImplementation("org.springframework.security:spring-security-test:$springSecurityTestVersion")
 
         compileOnly("org.projectlombok:lombok:$lombokVersion")

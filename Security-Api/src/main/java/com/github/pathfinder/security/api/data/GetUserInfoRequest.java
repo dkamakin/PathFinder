@@ -1,5 +1,7 @@
 package com.github.pathfinder.security.api.data;
 
-public record GetUserInfoRequest(Token token) {
+import jakarta.validation.Valid;
+
+public record GetUserInfoRequest(@Valid Token token) {
 
 }

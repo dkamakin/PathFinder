@@ -16,14 +16,14 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.context.annotation.Import;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.within;
 import static org.mockito.Mockito.when;
 
 @SecurityIntegrationTest
-@ContextConfiguration(classes = {JwtTools.class, TokenConfiguration.class, TokenService.class, JwtPayloadService.class})
+@Import({JwtTools.class, TokenConfiguration.class, TokenService.class, JwtPayloadService.class})
 class TokenServiceTest {
 
     @Autowired

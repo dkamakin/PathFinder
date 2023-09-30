@@ -22,10 +22,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -33,7 +33,13 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(classes = {FilterResponseWriter.class, TokenSanitizer.class, SecurityTokenFilter.class, JsonTools.class, CoreConfiguration.class})
+@SpringBootTest(classes = {
+        FilterResponseWriter.class,
+        TokenSanitizer.class,
+        SecurityTokenFilter.class,
+        JsonTools.class,
+        CoreConfiguration.class
+})
 class SecurityTokenFilterTest {
 
     @MockBean

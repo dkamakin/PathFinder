@@ -24,7 +24,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SecurityServiceDatabaseTest
 @Import({AuthenticationService.class, UserService.class, PasswordService.class, BCryptPasswordEncoder.class})
 class AuthenticationServiceTest {

@@ -13,7 +13,7 @@ import org.springframework.core.annotation.AliasFor;
 @ServiceDatabaseTest
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import({SecurityTestDatabaseConfiguration.class})
+@Import({SecurityTestDatabaseTemplate.class})
 public @interface SecurityServiceDatabaseTest {
 
     @AliasFor(annotation = ServiceDatabaseTest.class, attribute = "properties")

@@ -1,6 +1,12 @@
+queue:
+  name: security-api
+direct-exchange:
+  name: direct-exchange
 spring:
   cloud:
     config:
+      enabled: false
+    bus:
       enabled: false
   jpa:
     hibernate:

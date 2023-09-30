@@ -3,8 +3,7 @@ package com.github.pathfinder.core.web.exception.handler;
 import com.github.pathfinder.core.exception.ErrorMessage;
 import com.github.pathfinder.core.exception.ServiceException;
 import com.github.pathfinder.core.web.exception.tools.ExceptionHandlerTools;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,12 +25,12 @@ public class ServiceExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handle(MethodArgumentNotValidException exception) {
-        return exception
-                .getBindingResult()
-                .getAllErrors()
-                .stream()
-                .collect(Collectors.toMap(this::fieldError, this::messageError));
+    public List<ServiceFieldError> handle(MethodArgumentNotValidException exception) {
+        var result = exception.getBindingResult().getAllErrors().stream().map(this::serviceFieldError).toList();
+
+        log.error("Bad request caught: {}", result);
+
+        return result;
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -53,7 +52,11 @@ public class ServiceExceptionHandler {
         return exceptionHandlerTools.message(exception);
     }
 
-    private String fieldError(ObjectError error) {
+    private ServiceFieldError serviceFieldError(ObjectError error) {
+        return new ServiceFieldError(fieldName(error), messageError(error));
+    }
+
+    private String fieldName(ObjectError error) {
         return ((FieldError) error).getField();
     }
 

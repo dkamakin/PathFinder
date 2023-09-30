@@ -14,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 @WebMvcTest
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@ContextConfiguration(classes = {SearcherWebTestConfiguration.class, CoreConfiguration.class, JsonTools.class})
+@ContextConfiguration(classes = {CoreConfiguration.class, JsonTools.class})
 public @interface SearcherWebMvcTest {
 
 }
