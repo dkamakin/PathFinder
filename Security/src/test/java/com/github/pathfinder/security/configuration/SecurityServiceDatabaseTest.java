@@ -7,7 +7,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.annotation.AliasFor;
 
 @Inherited
 @ServiceDatabaseTest
@@ -15,8 +14,5 @@ import org.springframework.core.annotation.AliasFor;
 @Retention(RetentionPolicy.RUNTIME)
 @Import({SecurityTestDatabaseTemplate.class})
 public @interface SecurityServiceDatabaseTest {
-
-    @AliasFor(annotation = ServiceDatabaseTest.class, attribute = "properties")
-    String[] properties() default {};
 
 }

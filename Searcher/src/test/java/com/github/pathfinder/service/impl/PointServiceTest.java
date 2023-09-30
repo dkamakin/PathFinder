@@ -4,7 +4,6 @@ import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.data.Coordinate;
-import com.github.pathfinder.data.point.IndexedPoint;
 import com.github.pathfinder.database.repository.PointRepository;
 import com.github.pathfinder.service.IPointService;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,27 +31,19 @@ class PointServiceTest {
     }
 
     @Test
-    void save_NewPointProvided_SavedSuccessfully() {
-        var actual = pointService.save(PointFixtures.point());
-
-        assertThat(actual)
-                .extracting(IndexedPoint::id)
-                .isNotNull();
-    }
-
-    @Test
     void findNearestPoint_PointExists_ReturnNearestPoint() {
         var point      = PointFixtures.point();
-        var actual     = pointService.save(point);
+        var expected   = pointService.save(point);
         var notNearest = pointService.save(PointFixtures.farPoint(point));
-        var coordinate = new Coordinate(actual.point().longitude(), actual.point().latitude());
+        var coordinate = new Coordinate(expected.getLongitude(), expected.getLatitude());
         var found      = pointService.findNearest(coordinate);
 
         assertThat(found)
                 .get()
-                .extracting(IndexedPoint::id)
-                .isEqualTo(actual.id())
-                .isNotNull();
+                .satisfies(actual -> assertThat(actual.getId())
+                        .isNotNull()
+                        .isNotEqualTo(notNearest.getId())
+                        .isEqualTo(expected.getId()));
     }
 
 }

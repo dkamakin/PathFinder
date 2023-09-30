@@ -1,9 +1,10 @@
 dependencyResolutionManagement {
     repositories {
+        maven { url "https://repo.osgeo.org/repository/release/" }
         mavenCentral()
     }
 }
 
 rootProject.name = 'PathFinder'
 
-include("Core", "Searcher", "Security", "Configuration", "Security-Api", "Messaging", "Core-Web")
+include("Core", "Searcher", "Security", "Configuration", "Security-Api", "Messaging", "Core-Web", "Messaging-Test")

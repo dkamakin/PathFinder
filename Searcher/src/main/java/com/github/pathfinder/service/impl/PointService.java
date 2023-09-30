@@ -3,8 +3,8 @@ package com.github.pathfinder.service.impl;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.core.interfaces.ReadTransactional;
 import com.github.pathfinder.data.Coordinate;
-import com.github.pathfinder.data.point.IndexedPoint;
 import com.github.pathfinder.data.point.Point;
+import com.github.pathfinder.database.entity.PointEntity;
 import com.github.pathfinder.database.repository.PointRepository;
 import com.github.pathfinder.mapper.EntityMapper;
 import com.github.pathfinder.service.IPointService;
@@ -22,18 +22,14 @@ public class PointService implements IPointService {
     @Logged
     @Override
     @Transactional
-    public IndexedPoint save(Point point) {
-        var mapper = EntityMapper.INSTANCE;
-
-        return mapper.map(pointRepository.save(mapper.map(point)));
+    public PointEntity save(Point point) {
+        return pointRepository.save(EntityMapper.INSTANCE.map(point));
     }
 
     @Logged
     @Override
     @ReadTransactional
-    public Optional<IndexedPoint> findNearest(Coordinate coordinate) {
-        return pointRepository
-                .findNearest(coordinate.latitude(), coordinate.longitude())
-                .map(EntityMapper.INSTANCE::map);
+    public Optional<PointEntity> findNearest(Coordinate coordinate) {
+        return pointRepository.findNearest(coordinate.latitude(), coordinate.longitude());
     }
 }

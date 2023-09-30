@@ -9,7 +9,6 @@ import java.lang.annotation.Target;
 import org.springframework.context.annotation.Import;
 
 @RabbitIntegrationTest
-@SecurityIntegrationTest
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Import(SecurityApiConfiguration.class)

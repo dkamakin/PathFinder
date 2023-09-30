@@ -1,5 +1,8 @@
 package com.github.pathfinder.security.data.user;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class UserConstant {
 
     public static final int ROLE_MAX_LENGTH        = 15;

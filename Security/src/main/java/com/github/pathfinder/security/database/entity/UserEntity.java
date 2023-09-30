@@ -2,6 +2,7 @@ package com.github.pathfinder.security.database.entity;
 
 import com.github.pathfinder.security.data.user.UserConstant;
 import com.google.common.base.Objects;
+import com.google.common.collect.Sets;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,6 +20,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.UtilityClass;
 
 @Entity
 @Getter
@@ -29,7 +31,8 @@ import lombok.ToString;
 @Table(name = UserEntity.Token.TABLE)
 public class UserEntity {
 
-    public static final class Token {
+    @UtilityClass
+    public static class Token {
 
         public static final String TABLE        = "USERS";
         public static final String ID           = "ID";
@@ -39,7 +42,8 @@ public class UserEntity {
         public static final String ID_SEQUENCE  = "USER_ID_SEQUENCE";
     }
 
-    public static final class Constant {
+    @UtilityClass
+    public static class Constant {
 
         public static final int NAME_MAX_LENGTH     = UserConstant.NAME_MAX_LENGTH;
         public static final int PASSWORD_MAX_LENGTH = 100;
@@ -72,7 +76,7 @@ public class UserEntity {
     }
 
     public Set<UserRefreshTokenEntity> getRefreshTokens() {
-        return (refreshTokens == null ? refreshTokens = Set.of() : refreshTokens);
+        return (refreshTokens == null ? refreshTokens = Sets.newHashSet() : refreshTokens);
     }
 
     @Override

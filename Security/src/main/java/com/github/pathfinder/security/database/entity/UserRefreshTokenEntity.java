@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.UtilityClass;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
@@ -25,7 +26,8 @@ import org.hibernate.annotations.CreationTimestamp;
 @Table(name = UserRefreshTokenEntity.Token.TABLE)
 public class UserRefreshTokenEntity {
 
-    public static final class Token {
+    @UtilityClass
+    public static class Token {
 
         public static final String TABLE        = "REFRESH_TOKENS";
         public static final String ID           = "ID";

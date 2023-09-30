@@ -17,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -41,11 +39,11 @@ class AuthenticationServiceTest {
     AuthenticationService target;
 
     @Autowired
-    SecurityTestDatabaseTemplate testDatabaseTemplate;
+    SecurityTestDatabaseTemplate securityTestDatabaseTemplate;
 
     @BeforeEach
     void setUp() {
-        testDatabaseTemplate.cleanDatabase();
+        securityTestDatabaseTemplate.cleanDatabase();
     }
 
     void whenNeedToIssueTokens(JwtPayload payload, Tokens first, Tokens... expected) {

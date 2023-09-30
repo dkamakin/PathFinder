@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.UtilityClass;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,8 @@ import org.springframework.context.annotation.Configuration;
 @AllArgsConstructor
 public class TokenConfiguration {
 
-    public static final class Token {
+    @UtilityClass
+    public static class Token {
 
         public static final String SECRET                 = "${token.secret}";
         public static final String ACCESS_TOKEN_LIFETIME  = "${token.access.lifetime:PT30S}";

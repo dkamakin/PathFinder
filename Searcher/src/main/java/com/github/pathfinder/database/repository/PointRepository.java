@@ -15,7 +15,7 @@ public interface PointRepository extends Neo4jRepository<PointEntity, Long> {
             with p, (abs($latitude - p.latitude) + abs($longitude  - p.longitude)) as value
             return p order by value limit 1
                 """)
-    Optional<PointEntity> findNearest(@Param("latitude") Integer latitude,
-                                      @Param("longitude") Integer longitude);
+    Optional<PointEntity> findNearest(@Param("latitude") Double latitude,
+                                      @Param("longitude") Double longitude);
 
 }

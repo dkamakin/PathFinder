@@ -9,7 +9,9 @@ import com.github.pathfinder.security.data.user.UserConstant;
 import com.github.pathfinder.security.database.entity.UserEntity;
 import com.github.pathfinder.security.database.entity.UserRolesEntity;
 import java.util.UUID;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class SecurityFixtures {
 
     public static final String          USERNAME          = string(UserConstant.NAME_MIN_LENGTH);

@@ -1,6 +1,5 @@
 package com.github.pathfinder.mapper;
 
-import com.github.pathfinder.data.point.IndexedPoint;
 import com.github.pathfinder.data.point.Point;
 import com.github.pathfinder.database.entity.PointEntity;
 import org.mapstruct.Mapper;
@@ -15,8 +14,5 @@ public interface EntityMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "connection", ignore = true)
     PointEntity map(Point point);
-
-    @Mapping(target = "point", source = "entity")
-    IndexedPoint map(PointEntity entity);
 
 }

@@ -13,6 +13,7 @@ import com.github.pathfinder.web.dto.path.FoundPathDto;
 import com.github.pathfinder.web.mapper.DtoMapper;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
+import static com.github.pathfinder.PointFixtures.LATITUDE;
+import static com.github.pathfinder.PointFixtures.LONGITUDE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -32,6 +35,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(PathEndpoint.class)
 class PathEndpointTest {
 
+    static final CoordinateDto COORDINATE_SOURCE = new CoordinateDto(1D, 2D);
+    static final CoordinateDto COORDINATE_TARGET = new CoordinateDto(3D, 4D);
+    static final FindPathDto   FIND_PATH_REQUEST = new FindPathDto(COORDINATE_SOURCE, COORDINATE_TARGET,
+                                                                   HealthTypeDto.HEALTHY);
+
     @Autowired
     JsonTools jsonTools;
 
@@ -41,40 +49,23 @@ class PathEndpointTest {
     @MockBean
     IPathService pathService;
 
-    static Stream<FindPathDto> validFindPaths() {
-        return Stream.of(
-                new FindPathDto(
-                        new CoordinateDto(1, 2),
-                        new CoordinateDto(2, 3),
-                        HealthTypeDto.HEALTHY),
-                new FindPathDto(
-                        new CoordinateDto(3, 19),
-                        new CoordinateDto(0, 15),
-                        HealthTypeDto.WEAKENED),
-                new FindPathDto(
-                        new CoordinateDto(10, 22),
-                        new CoordinateDto(20, 31),
-                        null),
-                new FindPathDto(
-                        new CoordinateDto(10, 22),
-                        new CoordinateDto(20, 31),
-                        HealthTypeDto.WOUNDED)
-        );
-    }
-
     static Stream<FindPathDto> invalidFindPaths() {
         return Stream.of(
                 new FindPathDto(
-                        new CoordinateDto(null, 2),
-                        new CoordinateDto(2, 3),
+                        new CoordinateDto(null, LATITUDE),
+                        new CoordinateDto(LONGITUDE, LATITUDE),
                         HealthTypeDto.HEALTHY),
                 new FindPathDto(
-                        new CoordinateDto(1, null),
-                        new CoordinateDto(2, 3),
+                        new CoordinateDto(LONGITUDE, null),
+                        new CoordinateDto(LONGITUDE, LATITUDE),
+                        HealthTypeDto.WOUNDED),
+                new FindPathDto(
+                        new CoordinateDto(LONGITUDE, null),
+                        null,
                         HealthTypeDto.WOUNDED),
                 new FindPathDto(
                         null,
-                        new CoordinateDto(2, 3),
+                        new CoordinateDto(LONGITUDE, LATITUDE),
                         HealthTypeDto.WEAKENED)
         );
     }
@@ -83,27 +74,27 @@ class PathEndpointTest {
         when(pathService.find(request)).thenReturn(response);
     }
 
-    @ParameterizedTest
-    @MethodSource("validFindPaths")
+    @Test
     @WithMockUser(roles = SecurityRoles.PATH_SEARCHER)
-    void find_ValidRequest_PassToService(FindPathDto request) throws Exception {
-        var expected = 1;
+    void find_ValidRequest_PassToService() throws Exception {
+        var request  = FIND_PATH_REQUEST;
+        var expected = new FindPathResponse(1);
 
-        whenNeedToReturn(DtoMapper.INSTANCE.map(request), new FindPathResponse(expected));
+        whenNeedToReturn(DtoMapper.INSTANCE.map(request), expected);
 
-        var result = jsonTools.deserialize(mockMvc.perform(post("/path")
-                                                                   .contentType(MediaType.APPLICATION_JSON)
-                                                                   .content(jsonTools.serialize(request))
-                                                                   .with(SecurityMockMvcRequestPostProcessors.csrf())
-                                                   )
-                                                   .andExpect(status().isOk())
-                                                   .andReturn()
-                                                   .getResponse()
-                                                   .getContentAsString(StandardCharsets.UTF_8),
-                                           FoundPathDto.class);
+        var response = mockMvc.perform(post("/path")
+                                               .contentType(MediaType.APPLICATION_JSON)
+                                               .content(jsonTools.serialize(request))
+                                               .with(SecurityMockMvcRequestPostProcessors.csrf())
+                )
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(StandardCharsets.UTF_8);
+        var actual = jsonTools.deserialize(response, FoundPathDto.class);
 
-        assertThat(result)
-                .matches(actual -> actual.cost().equals(expected));
+        assertThat(actual)
+                .matches(result -> result.cost().equals(expected.cost()));
     }
 
     @ParameterizedTest

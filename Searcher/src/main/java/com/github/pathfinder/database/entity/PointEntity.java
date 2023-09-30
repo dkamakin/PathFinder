@@ -1,71 +1,67 @@
 package com.github.pathfinder.database.entity;
 
+import com.google.common.base.Objects;
 import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.ToString;
+import lombok.experimental.UtilityClass;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 @Getter
-@Node("Point")
+@ToString
 @NoArgsConstructor
+@Node(PointEntity.Token.NODE_NAME)
 public class PointEntity {
+
+    @UtilityClass
+    public static class Token {
+
+        public static final String NODE_NAME  = "Point";
+        public static final String CONNECTION = "CONNECTION";
+    }
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @Relationship(type = "CONNECTION")
+    @ToString.Exclude
+    @Relationship(type = Token.CONNECTION)
     private Set<PointEntity> connection;
 
-    private Integer  altitude;
-    private Integer  longitude;
-    private Integer  latitude;
+    private Double   altitude;
+    private Double   longitude;
+    private Double   latitude;
     private LandType landType;
 
-    public PointEntity(Integer altitude, Integer longitude, Integer latitude, LandType landType) {
-        this.altitude = altitude;
+    public PointEntity(Double altitude, Double longitude, Double latitude, LandType landType) {
+        this.altitude  = altitude;
         this.longitude = longitude;
-        this.latitude = latitude;
-        this.landType = landType;
+        this.latitude  = latitude;
+        this.landType  = landType;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        PointEntity point = (PointEntity) o;
-
-        return new EqualsBuilder().append(altitude, point.altitude)
-                .append(longitude, point.longitude)
-                .append(latitude, point.latitude)
-                .append(landType, point.landType)
-                .isEquals();
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
+        PointEntity that = (PointEntity) object;
+        return Objects.equal(id, that.id) &&
+                Objects.equal(altitude, that.altitude) &&
+                Objects.equal(longitude, that.longitude) &&
+                Objects.equal(latitude, that.latitude) &&
+                landType == that.landType;
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(altitude)
-                .append(longitude).append(latitude)
-                .append(landType)
-                .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("id", id)
-                .append("altitude", altitude)
-                .append("longitude", longitude)
-                .append("latitude", latitude)
-                .append("landType", landType)
-                .toString();
+        return Objects.hashCode(id, altitude, longitude, latitude, landType);
     }
 }

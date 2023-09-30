@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.UtilityClass;
 
 @Getter
 @Entity
@@ -26,7 +27,8 @@ import lombok.ToString;
 @Table(name = UserRolesEntity.Token.TABLE)
 public class UserRolesEntity {
 
-    public static final class Token {
+    @UtilityClass
+    public static class Token {
 
         public static final String TABLE               = "USERS_ROLES";
         public static final String ID                  = "ID";

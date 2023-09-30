@@ -1,5 +1,6 @@
 package com.github.pathfinder.configuration;
 
+import lombok.experimental.UtilityClass;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -8,7 +9,9 @@ import org.testcontainers.utility.DockerImageName;
 
 public class Neo4jExtension implements BeforeAllCallback, AfterAllCallback {
 
+    @UtilityClass
     public static class Constant {
+
         public static final String IMAGE_NAME = "neo4j:5.8.0";
     }
 

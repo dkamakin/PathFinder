@@ -1,10 +1,17 @@
 ext.set("mainClassName", 'com.github.pathfinder.PathFinderApplication')
 
 dependencies {
+    def geoToolsVersion = "29.2"
+    def testcontainersSpringVersion = "3.0.0-RC7"
+
     api project(":Security-Api")
 
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocVersion")
     implementation("org.springframework.boot:spring-boot-starter-data-neo4j:$springBootVersion")
     implementation("org.springframework.cloud:spring-cloud-starter-config:$springCloudConfigVersion")
+    implementation("org.geotools:gt-main:$geoToolsVersion")
+
+    testImplementation("com.playtika.testcontainers:testcontainers-spring-boot:$testcontainersSpringVersion")
+    testImplementation("com.playtika.testcontainers:embedded-neo4j:$testcontainersSpringVersion")
 }

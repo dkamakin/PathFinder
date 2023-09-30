@@ -5,7 +5,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocVersion")
 
-    testCompileOnly(project(':Core').sourceSets.test.output)
+    testImplementation(project(':Core').sourceSets.test.output)
 }
 
 bootJar {

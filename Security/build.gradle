@@ -3,7 +3,8 @@ ext.set("mainClassName", 'com.github.pathfinder.security.SecurityApplication')
 dependencies {
     def jwtVersion = "4.4.0"
 
-    api project(":Security-Api")
+    implementation project(":Security-Api")
+    implementation project(":Messaging")
 
     implementation("com.auth0:java-jwt:$jwtVersion")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocVersion")
@@ -12,6 +13,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
     implementation("org.springframework.cloud:spring-cloud-starter-config:$springCloudConfigVersion")
 
-    testCompileOnly(project(':Core').sourceSets.test.output)
-    testCompileOnly(project(':Messaging').sourceSets.test.output)
+    testImplementation("org.testcontainers:rabbitmq:$testcontainersVersion")
+
+    testImplementation(project(':Core').sourceSets.test.output)
+    testImplementation(project(':Messaging-Test').sourceSets.test.output)
 }
