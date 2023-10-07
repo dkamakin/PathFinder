@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.neo4j.core.Neo4jTemplate;
 
 @TestConfiguration
-@Import(CoreConfiguration.class)
+@Import({CoreConfiguration.class, Neo4jConfiguration.class})
 public class Neo4jTestConfiguration {
 
     @Bean

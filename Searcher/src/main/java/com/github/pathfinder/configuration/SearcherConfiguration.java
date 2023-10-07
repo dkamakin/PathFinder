@@ -5,11 +5,14 @@ import com.github.pathfinder.core.web.configuration.impl.CoreWebConfiguration;
 import com.github.pathfinder.security.api.configuration.SecurityApiConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
 
 @Configuration
-@Import({CoreConfiguration.class, SecurityApiConfiguration.class, CoreWebConfiguration.class})
-@EnableNeo4jRepositories(basePackages = "com.github.pathfinder.database", transactionManagerRef = "neo4jTransactionManager")
+@Import({
+        CoreConfiguration.class,
+        SecurityApiConfiguration.class,
+        CoreWebConfiguration.class,
+        Neo4jConfiguration.class,
+})
 public class SearcherConfiguration {
 
 }

@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PointRepository extends Neo4jRepository<PointEntity, Long> {
+public interface PointRepository extends Neo4jRepository<PointEntity, String> {
 
     @Query(value = """
             MATCH (p:Point)

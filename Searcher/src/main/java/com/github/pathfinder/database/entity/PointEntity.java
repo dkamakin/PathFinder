@@ -6,10 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.UtilityClass;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.core.schema.RelationshipId;
 
 @Getter
 @ToString
@@ -24,9 +23,8 @@ public class PointEntity {
         public static final String CONNECTION = "CONNECTION";
     }
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    @RelationshipId
+    private String id;
 
     @ToString.Exclude
     @Relationship(type = Token.CONNECTION)

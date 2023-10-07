@@ -37,6 +37,8 @@ public class NearestPointSearcher implements INearestPointSearcher {
         var distance         = distanceCalculator.distance(coordinate, targetCoordinate);
         var accuracy         = coordinateConfiguration.getDistanceAccuracyMeters();
 
+        log.info("Distance between the start and the end is {}", distance);
+
         return distance.meters() <= accuracy;
     }
 
