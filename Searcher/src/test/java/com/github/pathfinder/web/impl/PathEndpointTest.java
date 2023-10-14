@@ -87,7 +87,7 @@ class PathEndpointTest {
                                                .content(jsonTools.serialize(request))
                                                .with(SecurityMockMvcRequestPostProcessors.csrf())
                 )
-                .andExpect(status().isInternalServerError())
+                .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8);
