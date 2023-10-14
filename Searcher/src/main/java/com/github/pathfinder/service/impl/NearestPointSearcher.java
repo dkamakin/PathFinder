@@ -8,7 +8,7 @@ import com.github.pathfinder.database.entity.PointEntity;
 import com.github.pathfinder.exception.PointNotFoundException;
 import com.github.pathfinder.service.IDistanceCalculator;
 import com.github.pathfinder.service.INearestPointSearcher;
-import com.github.pathfinder.service.IPointService;
+import com.github.pathfinder.service.IPointSearcherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class NearestPointSearcher implements INearestPointSearcher {
 
-    private final IPointService           pointService;
+    private final IPointSearcherService   searcherService;
     private final CoordinateConfiguration coordinateConfiguration;
     private final IDistanceCalculator     distanceCalculator;
 
@@ -26,7 +26,7 @@ public class NearestPointSearcher implements INearestPointSearcher {
     @ReadTransactional
     @Logged("coordinate")
     public PointEntity findNearest(Coordinate coordinate) {
-        return pointService
+        return searcherService
                 .findNearest(coordinate)
                 .filter(found -> isCloseEnough(coordinate, found))
                 .orElseThrow(() -> new PointNotFoundException(coordinate));

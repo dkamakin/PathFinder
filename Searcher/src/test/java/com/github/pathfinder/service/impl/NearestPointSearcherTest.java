@@ -8,7 +8,7 @@ import com.github.pathfinder.data.distance.MetersDistance;
 import com.github.pathfinder.database.entity.PointEntity;
 import com.github.pathfinder.exception.PointNotFoundException;
 import com.github.pathfinder.service.IDistanceCalculator;
-import com.github.pathfinder.service.IPointService;
+import com.github.pathfinder.service.IPointSearcherService;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +33,7 @@ class NearestPointSearcherTest {
     CoordinateConfiguration coordinateConfiguration;
 
     @Mock
-    IPointService pointService;
+    IPointSearcherService searcherService;
 
     void whenNeedToGetAccuracy(Double accuracyMeters) {
         when(coordinateConfiguration.getDistanceAccuracyMeters()).thenReturn(accuracyMeters);
@@ -44,7 +44,7 @@ class NearestPointSearcherTest {
     }
 
     void whenNeedToGetPoint(Coordinate coordinate, PointEntity expected) {
-        when(pointService.findNearest(coordinate)).thenReturn(Optional.ofNullable(expected));
+        when(searcherService.findNearest(coordinate)).thenReturn(Optional.ofNullable(expected));
     }
 
     @Test

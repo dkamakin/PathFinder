@@ -2,17 +2,23 @@ package com.github.pathfinder.database.entity;
 
 import com.google.common.base.Objects;
 import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.UtilityClass;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
-import org.springframework.data.neo4j.core.schema.RelationshipId;
 
 @Getter
+@Builder
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Node(PointEntity.Token.NODE_NAME)
 public class PointEntity {
 
@@ -21,18 +27,30 @@ public class PointEntity {
 
         public static final String NODE_NAME  = "Point";
         public static final String CONNECTION = "CONNECTION";
+        public static final String ALTITUDE   = "altitude";
+        public static final String LONGITUDE  = "longitude";
+        public static final String LATITUDE   = "latitude";
+        public static final String LAND_TYPE  = "landType";
     }
 
-    @RelationshipId
+    @Id
+    @GeneratedValue
     private String id;
 
     @ToString.Exclude
     @Relationship(type = Token.CONNECTION)
     private Set<PointEntity> connection;
 
-    private Double   altitude;
-    private Double   longitude;
-    private Double   latitude;
+    @Property(Token.ALTITUDE)
+    private Double altitude;
+
+    @Property(Token.LONGITUDE)
+    private Double longitude;
+
+    @Property(Token.LATITUDE)
+    private Double latitude;
+
+    @Property(Token.LAND_TYPE)
     private LandType landType;
 
     public PointEntity(Double altitude, Double longitude, Double latitude, LandType landType) {
@@ -51,8 +69,7 @@ public class PointEntity {
             return false;
         }
         PointEntity that = (PointEntity) object;
-        return Objects.equal(id, that.id) &&
-                Objects.equal(altitude, that.altitude) &&
+        return Objects.equal(altitude, that.altitude) &&
                 Objects.equal(longitude, that.longitude) &&
                 Objects.equal(latitude, that.latitude) &&
                 landType == that.landType;
@@ -60,6 +77,6 @@ public class PointEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, altitude, longitude, latitude, landType);
+        return Objects.hashCode(altitude, longitude, latitude, landType);
     }
 }

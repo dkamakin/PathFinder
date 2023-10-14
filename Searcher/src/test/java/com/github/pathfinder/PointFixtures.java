@@ -22,7 +22,7 @@ public class PointFixtures {
     }
 
     public static Point farPoint(Point point) {
-        return new Point(point.altitude() * 2, point.longitude() * 3, point.latitude(),
+        return new Point(point.altitude() * 2 + Math.random(), point.longitude() + Math.random(), point.latitude(),
                          point.landType());
     }
 

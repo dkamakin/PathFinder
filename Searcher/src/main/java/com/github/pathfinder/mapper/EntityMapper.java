@@ -13,6 +13,6 @@ public interface EntityMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "connection", ignore = true)
-    PointEntity map(Point point);
+    PointEntity pointEntity(Point point);
 
 }
