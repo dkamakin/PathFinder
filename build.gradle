@@ -90,3 +90,7 @@ subprojects {
         }
     }
 }
+
+wrapper {
+    version = '8.4'
+}
