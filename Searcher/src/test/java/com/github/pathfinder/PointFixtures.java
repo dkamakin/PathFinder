@@ -18,7 +18,11 @@ public class PointFixtures {
     }
 
     public static Point point() {
-        return new Point(1D, LONGITUDE, LATITUDE, LandType.BAY);
+        return pointBuilder().build();
+    }
+
+    public static Point.PointBuilder pointBuilder() {
+        return Point.builder().altitude(1D).longitude(LONGITUDE).latitude(LATITUDE).landType(LandType.DUNE);
     }
 
     public static Point farPoint(Point point) {

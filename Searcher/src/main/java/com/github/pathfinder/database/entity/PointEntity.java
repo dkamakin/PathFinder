@@ -1,6 +1,7 @@
 package com.github.pathfinder.database.entity;
 
 import com.google.common.base.Objects;
+import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,17 +40,21 @@ public class PointEntity {
 
     @ToString.Exclude
     @Relationship(type = Token.CONNECTION)
-    private Set<PointEntity> connection;
+    private Set<PointRelation> relations;
 
+    @NotNull
     @Property(Token.ALTITUDE)
     private Double altitude;
 
+    @NotNull
     @Property(Token.LONGITUDE)
     private Double longitude;
 
+    @NotNull
     @Property(Token.LATITUDE)
     private Double latitude;
 
+    @NotNull
     @Property(Token.LAND_TYPE)
     private LandType landType;
 

@@ -3,8 +3,11 @@ package com.github.pathfinder.service.impl;
 import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
+import com.github.pathfinder.data.point.Point;
+import com.github.pathfinder.database.entity.PointEntity;
 import com.github.pathfinder.database.repository.PointRepository;
 import com.github.pathfinder.service.IPointService;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +32,39 @@ class PointServiceTest {
         neo4jTestTemplate.cleanDatabase();
     }
 
-    @Test
-    void save_PointDoesNotExist_SavePoint() {
-        var point  = PointFixtures.point();
-        var actual = target.save(point);
-
+    void assertEquals(Point point, PointEntity actual) {
         assertThat(actual)
                 .matches(saved -> saved.getId() != null)
                 .matches(saved -> point.altitude().equals(saved.getAltitude()))
                 .matches(saved -> saved.getLandType() == point.landType())
                 .matches(saved -> point.latitude().equals(saved.getLatitude()))
                 .matches(saved -> point.longitude().equals(saved.getLongitude()));
+    }
+
+    @Test
+    void save_PointDoesNotExist_SavePoint() {
+        var point  = PointFixtures.point();
+        var actual = target.save(point);
+
+        assertThat(actual).satisfies(saved -> assertEquals(point, saved));
+    }
+
+    @Test
+    void save_PointsAreConnected_StoreConnection() {
+        var targetPoint = PointFixtures.pointBuilder().altitude(1D).build();
+        var connection  = new Point.PointConnection(targetPoint, 1D);
+        var sourcePoint = PointFixtures.pointBuilder().connections(Set.of(connection)).build();
+
+        var actual = target.save(sourcePoint);
+
+        assertThat(actual)
+                .satisfies(saved -> assertEquals(sourcePoint, saved))
+                .satisfies(saved -> assertThat(saved.getRelations())
+                        .hasSize(1)
+                        .first()
+                        .satisfies(relation -> assertEquals(targetPoint, relation.getTarget()))
+                        .matches(relation -> connection.distance().equals(relation.getDistance())));
+
     }
 
 }
