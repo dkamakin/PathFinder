@@ -40,7 +40,7 @@ subprojects {
     def springCloudBusVersion = "4.0.1"
     def apacheCommonsVersion = "3.13.0"
     def mapStructVersion = "1.5.5.Final"
-    def springSecurityTestVersion = "6.1.4"
+    def springSecurityTestVersion = "6.1.5"
 
     ext {
         mainClassName = ''
