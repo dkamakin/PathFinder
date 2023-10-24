@@ -2,7 +2,6 @@ package com.github.pathfinder.service.impl;
 
 import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.CoordinateConfiguration;
-import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.data.Coordinate;
 import com.github.pathfinder.data.distance.IDistance;
@@ -12,7 +11,6 @@ import com.github.pathfinder.exception.PointNotFoundException;
 import com.github.pathfinder.service.IDistanceCalculator;
 import com.github.pathfinder.service.IPointSearcherService;
 import com.github.pathfinder.service.IPointService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -35,18 +33,10 @@ class PointSearcherServiceTest {
     PointRepository pointRepository;
 
     @Autowired
-    Neo4jTestTemplate neo4jTestTemplate;
-
-    @Autowired
     IPointSearcherService target;
 
     @Autowired
     IPointService pointService;
-
-    @BeforeEach
-    void setUp() {
-        neo4jTestTemplate.cleanDatabase();
-    }
 
     void whenNeedToGetAccuracy(Double accuracyMeters) {
         when(coordinateConfiguration.getDistanceAccuracyMeters()).thenReturn(accuracyMeters);

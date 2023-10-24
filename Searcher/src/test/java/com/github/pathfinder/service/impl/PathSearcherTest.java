@@ -2,7 +2,6 @@ package com.github.pathfinder.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.pathfinder.PointFixtures;
-import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.core.configuration.CoreConfiguration;
 import com.github.pathfinder.database.node.PointNode;
@@ -17,7 +16,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -42,14 +40,6 @@ class PathSearcherTest {
     @Autowired
     IPathSearcher target;
 
-    @Autowired
-    Neo4jTestTemplate neo4jTestTemplate;
-
-    @BeforeEach
-    void setUp() {
-        neo4jTestTemplate.cleanDatabase();
-    }
-
     @SneakyThrows
     static Stream<TestPathFile> testPathFileStream() {
         var json   = Files.readString(TEST_FILE_PATH);
@@ -62,7 +52,7 @@ class PathSearcherTest {
     @ParameterizedTest
     @MethodSource("testPathFileStream")
     void aStar_PathExists_ReturnCorrectPath(TestPathFile deserialized) {
-        var graphName = "test path exists";
+        var graphName = "test";
         var testFile  = new TestFile(deserialized);
 
         testFile.nodes().forEach(pointService::save);
@@ -83,7 +73,7 @@ class PathSearcherTest {
 
     @Test
     void aStar_PathDoesNotExist_PathNotFoundException() {
-        var graphName   = "test path does not exist";
+        var graphName   = "test";
         var sourcePoint = pointService.save(PointFixtures.pointWithConnection());
         var targetPoint = pointService.save(PointFixtures.point());
 

@@ -9,9 +9,7 @@ import com.github.pathfinder.security.api.exception.InvalidCredentialsException;
 import com.github.pathfinder.security.api.exception.InvalidTokenException;
 import com.github.pathfinder.security.api.exception.UserNotFoundException;
 import com.github.pathfinder.security.configuration.SecurityServiceDatabaseTest;
-import com.github.pathfinder.security.configuration.SecurityTestDatabaseTemplate;
 import com.github.pathfinder.security.data.jwt.JwtPayload;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -37,14 +35,6 @@ class AuthenticationServiceTest {
 
     @Autowired
     AuthenticationService target;
-
-    @Autowired
-    SecurityTestDatabaseTemplate securityTestDatabaseTemplate;
-
-    @BeforeEach
-    void setUp() {
-        securityTestDatabaseTemplate.cleanDatabase();
-    }
 
     void whenNeedToIssueTokens(JwtPayload payload, Tokens first, Tokens... expected) {
         when(tokenService.issue(payload)).thenReturn(first, expected);
