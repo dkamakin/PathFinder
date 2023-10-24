@@ -1,12 +1,12 @@
 package com.github.pathfinder.database.entity;
 
+import com.github.pathfinder.core.tools.impl.NullHelper;
 import com.google.common.base.Objects;
 import jakarta.validation.constraints.NotNull;
 import java.util.Set;
-import lombok.AllArgsConstructor;
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.UtilityClass;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
@@ -18,8 +18,6 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 @Getter
 @Builder
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
 @Node(PointEntity.Token.NODE_NAME)
 public class PointEntity {
 
@@ -28,6 +26,7 @@ public class PointEntity {
 
         public static final String NODE_NAME  = "Point";
         public static final String CONNECTION = "CONNECTION";
+        public static final String ID         = "id";
         public static final String ALTITUDE   = "altitude";
         public static final String LONGITUDE  = "longitude";
         public static final String LATITUDE   = "latitude";
@@ -36,7 +35,11 @@ public class PointEntity {
 
     @Id
     @GeneratedValue
-    private String id;
+    private String internalId;
+
+    @NotNull
+    @Property(Token.ID)
+    private UUID id;
 
     @ToString.Exclude
     @Relationship(type = Token.CONNECTION)
@@ -57,6 +60,26 @@ public class PointEntity {
     @NotNull
     @Property(Token.LAND_TYPE)
     private LandType landType;
+
+    public PointEntity() {
+        this.id = UUID.randomUUID();
+    }
+
+    public PointEntity(UUID id, Set<PointRelation> relations, Double altitude, Double longitude, Double latitude,
+                       LandType landType) {
+        this(null, id, relations, altitude, longitude, latitude, landType);
+    }
+
+    public PointEntity(String internalId, UUID id, Set<PointRelation> relations, Double altitude, Double longitude,
+                       Double latitude, LandType landType) {
+        this.internalId = internalId;
+        this.id         = NullHelper.notNull(id, UUID::randomUUID);
+        this.relations  = relations;
+        this.altitude   = altitude;
+        this.longitude  = longitude;
+        this.latitude   = latitude;
+        this.landType   = landType;
+    }
 
     public PointEntity(Double altitude, Double longitude, Double latitude, LandType landType) {
         this.altitude  = altitude;

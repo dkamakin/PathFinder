@@ -35,6 +35,7 @@ class PointServiceTest {
     void assertEquals(Point point, PointEntity actual) {
         assertThat(actual)
                 .matches(saved -> saved.getId() != null)
+                .matches(saved -> saved.getInternalId() != null)
                 .matches(saved -> point.altitude().equals(saved.getAltitude()))
                 .matches(saved -> saved.getLandType() == point.landType())
                 .matches(saved -> point.latitude().equals(saved.getLatitude()))
@@ -51,8 +52,7 @@ class PointServiceTest {
 
     @Test
     void save_PointsAreConnected_StoreConnection() {
-        var targetPoint = PointFixtures.pointBuilder().altitude(1D).build();
-        var connection  = new Point.PointConnection(targetPoint, 1D);
+        var connection  = PointFixtures.pointConnection();
         var sourcePoint = PointFixtures.pointBuilder().connections(Set.of(connection)).build();
 
         var actual = target.save(sourcePoint);
@@ -62,7 +62,7 @@ class PointServiceTest {
                 .satisfies(saved -> assertThat(saved.getRelations())
                         .hasSize(1)
                         .first()
-                        .satisfies(relation -> assertEquals(targetPoint, relation.getTarget()))
+                        .satisfies(relation -> assertEquals(connection.target(), relation.getTarget()))
                         .matches(relation -> connection.distance().equals(relation.getDistance())));
 
     }

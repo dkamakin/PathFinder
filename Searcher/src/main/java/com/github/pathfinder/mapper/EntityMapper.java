@@ -13,6 +13,7 @@ public interface EntityMapper {
     EntityMapper INSTANCE = Mappers.getMapper(EntityMapper.class);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "internalId", ignore = true)
     @Mapping(target = "relations", source = "connections")
     PointEntity pointEntity(Point point);
 

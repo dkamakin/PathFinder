@@ -5,7 +5,6 @@ import com.github.pathfinder.core.interfaces.ReadTransactional;
 import com.github.pathfinder.data.database.CreateProjectionResponse;
 import com.github.pathfinder.database.repository.ProjectionRepository;
 import com.github.pathfinder.exception.ProjectionAlreadyExistsException;
-import com.github.pathfinder.exception.ProjectionNotFoundException;
 import com.github.pathfinder.service.IProjectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,12 +39,8 @@ public class ProjectionService implements IProjectionService {
     @Override
     @Transactional
     @Logged("graphName")
-    public void delete(String graphName) {
-        if (!exists(graphName)) {
-            throw new ProjectionNotFoundException(graphName);
-        }
-
-        projectionRepository.delete(graphName);
+    public void tryDelete(String graphName) {
+        projectionRepository.tryDelete(graphName);
     }
 
 }

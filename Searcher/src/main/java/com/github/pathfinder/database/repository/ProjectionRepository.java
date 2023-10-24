@@ -32,10 +32,13 @@ public interface ProjectionRepository extends Neo4jRepository<PointEntity, Strin
     boolean exists(@Param("graphName") String graphName);
 
     @Query("""
-            CALL gds.graph.drop($graphName)
+            CALL gds.graph.drop(
+            $graphName,
+            false
+            )
             YIELD graphName
             RETURN graphName
             """)
-    String delete(@Param("graphName") String graphName);
+    String tryDelete(@Param("graphName") String graphName);
 
 }

@@ -8,6 +8,6 @@ public interface IProjectionService {
 
     boolean exists(String graphName);
 
-    void delete(String graphName);
+    void tryDelete(String graphName);
 
 }

@@ -23,4 +23,11 @@ public class PointService implements IPointService {
         return pointRepository.save(EntityMapper.INSTANCE.pointEntity(point));
     }
 
+    @Override
+    @Transactional
+    @Logged("point")
+    public PointEntity save(PointEntity point) {
+        return pointRepository.save(point);
+    }
+
 }

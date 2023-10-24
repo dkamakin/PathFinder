@@ -35,6 +35,11 @@ public class PointRelation {
     @TargetNode
     private PointEntity target;
 
+    public PointRelation(Double distance, PointEntity target) {
+        this.distance = distance;
+        this.target   = target;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {

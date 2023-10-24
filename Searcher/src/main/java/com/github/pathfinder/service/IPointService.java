@@ -7,4 +7,6 @@ public interface IPointService {
 
     PointEntity save(Point point);
 
+    PointEntity save(PointEntity point);
+
 }
