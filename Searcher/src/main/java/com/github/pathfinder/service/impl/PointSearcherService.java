@@ -32,12 +32,12 @@ public class PointSearcherService implements IPointSearcherService {
                 .orElseThrow(() -> new PointNotFoundException(coordinate));
     }
 
-    private boolean isCloseEnough(Coordinate coordinate, PointNode entity) {
-        var targetCoordinate = new Coordinate(entity.getLongitude(), entity.getLatitude());
+    private boolean isCloseEnough(Coordinate coordinate, PointNode point) {
+        var targetCoordinate = new Coordinate(point.getLongitude(), point.getLatitude());
         var distance         = distanceCalculator.distance(coordinate, targetCoordinate);
         var accuracy         = coordinateConfiguration.getDistanceAccuracyMeters();
 
-        log.info("Distance between the start and the end is {}", distance);
+        log.info("The distance from the coordinate to the point is {}, the accuracy is {}", distance, accuracy);
 
         return distance.meters() <= accuracy;
     }

@@ -25,7 +25,7 @@ public class TestFile {
 
     public PointNode node(UUID id) {
         return nodes.stream()
-                .filter(entity -> entity.getId().equals(id))
+                .filter(node -> node.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new PointNotFoundException(id));
     }
