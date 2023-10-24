@@ -54,6 +54,7 @@ services:
     environment:
       NEO4J_AUTH: ${NEO4J_USERNAME}/${NEO4J_PASSWORD}
       NEO4J_dbms_default__listen__address: neo4j
+      NEO4J_PLUGINS: '["graph-data-science"]'
       NEO4J_dbms_default__advertised__address: neo4j
       NEO4J_dbms_connector_bolt_advertised__address: :${NEO4J_PORT}
       NEO4J_server_config_strict__validation_enabled: false

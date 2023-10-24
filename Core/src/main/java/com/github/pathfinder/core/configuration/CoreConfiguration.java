@@ -11,13 +11,17 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackages = "com.github.pathfinder.core", includeFilters = @ComponentScan.Filter(Aspect.class))
 public class CoreConfiguration {
 
-    @Bean
-    public ObjectMapper objectMapper() {
+    public static ObjectMapper objectMapperFactory() {
         var mapper = new ObjectMapper();
 
         mapper.registerModule(new JavaTimeModule());
 
         return mapper;
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return objectMapperFactory();
     }
 
 }

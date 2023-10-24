@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.Neo4jContainer;
+import org.testcontainers.containers.Neo4jLabsPlugin;
 import org.testcontainers.utility.DockerImageName;
 
 public class Neo4jExtension implements BeforeAllCallback, AfterAllCallback {
@@ -19,16 +20,23 @@ public class Neo4jExtension implements BeforeAllCallback, AfterAllCallback {
 
     @Override
     public void beforeAll(ExtensionContext context) {
-        neo4j = new Neo4jContainer<>(DockerImageName.parse(Constant.IMAGE_NAME));
+        neo4j = new Neo4jContainer<>(DockerImageName.parse(Constant.IMAGE_NAME))
+                .withLabsPlugins(Neo4jLabsPlugin.GRAPH_DATA_SCIENCE);
+
         neo4j.start();
 
-        System.setProperty("spring.neo4j.uri", neo4j.getBoltUrl());
-        System.setProperty("spring.neo4j.authentication.username", "neo4j");
-        System.setProperty("spring.neo4j.authentication.password", neo4j.getAdminPassword());
+        setProperties(neo4j);
     }
 
     @Override
     public void afterAll(ExtensionContext context) {
 
     }
+
+    void setProperties(Neo4jContainer<?> neo4j) {
+        System.setProperty("spring.neo4j.uri", neo4j.getBoltUrl());
+        System.setProperty("spring.neo4j.authentication.username", "neo4j");
+        System.setProperty("spring.neo4j.authentication.password", neo4j.getAdminPassword());
+    }
+
 }
