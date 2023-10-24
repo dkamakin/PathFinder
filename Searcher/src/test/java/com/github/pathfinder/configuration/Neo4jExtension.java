@@ -1,14 +1,16 @@
 package com.github.pathfinder.configuration;
 
 import lombok.experimental.UtilityClass;
-import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.Neo4jContainer;
 import org.testcontainers.containers.Neo4jLabsPlugin;
 import org.testcontainers.utility.DockerImageName;
 
-public class Neo4jExtension implements BeforeAllCallback, AfterAllCallback {
+public class Neo4jExtension implements BeforeAllCallback, BeforeEachCallback {
 
     @UtilityClass
     public static class Constant {
@@ -29,8 +31,9 @@ public class Neo4jExtension implements BeforeAllCallback, AfterAllCallback {
     }
 
     @Override
-    public void afterAll(ExtensionContext context) {
-
+    public void beforeEach(ExtensionContext context) {
+        ApplicationContext springContext = SpringExtension.getApplicationContext(context);
+        springContext.getBean(Neo4jTestTemplate.class).cleanDatabase();
     }
 
     void setProperties(Neo4jContainer<?> neo4j) {

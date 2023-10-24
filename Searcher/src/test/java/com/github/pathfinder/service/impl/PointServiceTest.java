@@ -1,14 +1,12 @@
 package com.github.pathfinder.service.impl;
 
 import com.github.pathfinder.PointFixtures;
-import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.data.point.Point;
-import com.github.pathfinder.database.entity.PointEntity;
+import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.repository.PointRepository;
 import com.github.pathfinder.service.IPointService;
 import java.util.Set;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
@@ -22,17 +20,9 @@ class PointServiceTest {
     PointRepository pointRepository;
 
     @Autowired
-    Neo4jTestTemplate neo4jTestTemplate;
-
-    @Autowired
     IPointService target;
 
-    @BeforeEach
-    void setUp() {
-        neo4jTestTemplate.cleanDatabase();
-    }
-
-    void assertEquals(Point point, PointEntity actual) {
+    void assertEquals(Point point, PointNode actual) {
         assertThat(actual)
                 .matches(saved -> saved.getId() != null)
                 .matches(saved -> saved.getInternalId() != null)

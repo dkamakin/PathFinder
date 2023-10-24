@@ -1,12 +1,10 @@
 package com.github.pathfinder.service.impl;
 
 import com.github.pathfinder.PointFixtures;
-import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.exception.ProjectionAlreadyExistsException;
 import com.github.pathfinder.service.IProjectionService;
 import java.util.Set;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
@@ -23,14 +21,6 @@ class ProjectionServiceTest {
 
     @Autowired
     IProjectionService target;
-
-    @Autowired
-    Neo4jTestTemplate neo4jTestTemplate;
-
-    @BeforeEach
-    void setUp() {
-        neo4jTestTemplate.cleanDatabase();
-    }
 
     @Test
     void createProjection_ProjectionDoesNotExist_CreateProjection() {
@@ -60,7 +50,7 @@ class ProjectionServiceTest {
     void exists_ProjectionExists_True() {
         var connection  = PointFixtures.pointConnection();
         var sourcePoint = PointFixtures.pointBuilder().connections(Set.of(connection)).build();
-        var graphName   = "test does exist";
+        var graphName   = "test";
 
         pointService.save(sourcePoint);
         target.createProjection(graphName);
@@ -72,7 +62,7 @@ class ProjectionServiceTest {
     void tryDelete_ProjectionExists_DeleteProjection() {
         var connection  = PointFixtures.pointConnection();
         var sourcePoint = PointFixtures.pointBuilder().connections(Set.of(connection)).build();
-        var graphName   = "test delete";
+        var graphName   = "test";
 
         pointService.save(sourcePoint);
         target.createProjection(graphName);
@@ -86,7 +76,7 @@ class ProjectionServiceTest {
 
     @Test
     void tryDelete_ProjectionDoesNotExist_NoAction() {
-        assertThatCode(() -> target.tryDelete("sdasd")).doesNotThrowAnyException();
+        assertThatCode(() -> target.tryDelete("test")).doesNotThrowAnyException();
     }
 
 }
