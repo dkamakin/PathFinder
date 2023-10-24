@@ -1,4 +1,4 @@
-package com.github.pathfinder.database.entity;
+package com.github.pathfinder.database.node;
 
 import com.github.pathfinder.core.tools.impl.NullHelper;
 import com.google.common.base.Objects;
@@ -18,8 +18,8 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 @Getter
 @Builder
 @ToString
-@Node(PointEntity.Token.NODE_NAME)
-public class PointEntity {
+@Node(PointNode.Token.NODE_NAME)
+public class PointNode {
 
     @UtilityClass
     public static class Token {
@@ -61,17 +61,17 @@ public class PointEntity {
     @Property(Token.LAND_TYPE)
     private LandType landType;
 
-    public PointEntity() {
+    public PointNode() {
         this.id = UUID.randomUUID();
     }
 
-    public PointEntity(UUID id, Set<PointRelation> relations, Double altitude, Double longitude, Double latitude,
-                       LandType landType) {
+    public PointNode(UUID id, Set<PointRelation> relations, Double altitude, Double longitude, Double latitude,
+                     LandType landType) {
         this(null, id, relations, altitude, longitude, latitude, landType);
     }
 
-    public PointEntity(String internalId, UUID id, Set<PointRelation> relations, Double altitude, Double longitude,
-                       Double latitude, LandType landType) {
+    public PointNode(String internalId, UUID id, Set<PointRelation> relations, Double altitude, Double longitude,
+                     Double latitude, LandType landType) {
         this.internalId = internalId;
         this.id         = NullHelper.notNull(id, UUID::randomUUID);
         this.relations  = relations;
@@ -81,7 +81,7 @@ public class PointEntity {
         this.landType   = landType;
     }
 
-    public PointEntity(Double altitude, Double longitude, Double latitude, LandType landType) {
+    public PointNode(Double altitude, Double longitude, Double latitude, LandType landType) {
         this.altitude  = altitude;
         this.longitude = longitude;
         this.latitude  = latitude;
@@ -96,7 +96,7 @@ public class PointEntity {
         if (object == null || getClass() != object.getClass()) {
             return false;
         }
-        PointEntity that = (PointEntity) object;
+        PointNode that = (PointNode) object;
         return Objects.equal(altitude, that.altitude) &&
                 Objects.equal(longitude, that.longitude) &&
                 Objects.equal(latitude, that.latitude) &&

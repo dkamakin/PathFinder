@@ -1,7 +1,7 @@
 package com.github.pathfinder.service.impl;
 
-import com.github.pathfinder.database.entity.PointEntity;
-import com.github.pathfinder.database.entity.PointRelation;
+import com.github.pathfinder.database.node.PointNode;
+import com.github.pathfinder.database.node.PointRelation;
 import com.github.pathfinder.exception.PointNotFoundException;
 import java.util.List;
 import java.util.Map;
@@ -15,28 +15,28 @@ public class TestFile {
 
     private final TestPathFile                          deserialized;
     private final Map<UUID, TestPathFile.TestFilePoint> pointsMap;
-    private final List<PointEntity>                     entities;
+    private final List<PointNode>                       nodes;
 
     public TestFile(TestPathFile deserialized) {
         this.deserialized = deserialized;
         this.pointsMap    = pointsMap(deserialized);
-        this.entities     = deserialized.points().stream().map(this::pointEntity).toList();
+        this.nodes        = deserialized.points().stream().map(this::pointNode).toList();
     }
 
-    public PointEntity entity(UUID id) {
-        return entities.stream()
+    public PointNode node(UUID id) {
+        return nodes.stream()
                 .filter(entity -> entity.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new PointNotFoundException(id));
     }
 
-    public List<PointEntity> pointEntities() {
-        return deserialized.points().stream().map(this::pointEntity).toList();
+    public List<PointNode> nodes() {
+        return deserialized.points().stream().map(this::pointNode).toList();
     }
 
-    private PointEntity pointEntity(TestPathFile.TestFilePoint point) {
-        return new PointEntity(point.id(), relations(point), point.altitude(), point.longitude(), point.latitude(),
-                               point.landType());
+    private PointNode pointNode(TestPathFile.TestFilePoint point) {
+        return new PointNode(point.id(), relations(point), point.altitude(), point.longitude(), point.latitude(),
+                             point.landType());
     }
 
     private Set<PointRelation> relations(TestPathFile.TestFilePoint point) {
@@ -45,7 +45,7 @@ public class TestFile {
 
     private PointRelation relation(TestPathFile.TestFilePoint.TestFileConnection connection) {
         var point  = point(connection.targetId());
-        var entity = pointEntity(point);
+        var entity = pointNode(point);
 
         return new PointRelation(connection.distance(), entity);
     }

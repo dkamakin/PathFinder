@@ -5,7 +5,7 @@ import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.core.configuration.CoreConfiguration;
-import com.github.pathfinder.database.entity.PointEntity;
+import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.repository.impl.PathRepository;
 import com.github.pathfinder.exception.PathNotFoundException;
 import com.github.pathfinder.service.IPathSearcher;
@@ -65,10 +65,10 @@ class PathSearcherTest {
         var graphName = "test path exists";
         var testFile  = new TestFile(deserialized);
 
-        testFile.pointEntities().forEach(pointService::save);
+        testFile.nodes().forEach(pointService::save);
 
-        var sourcePoint = testFile.entity(deserialized.sourceId());
-        var targetPoint = testFile.entity(deserialized.targetId());
+        var sourcePoint = testFile.node(deserialized.sourceId());
+        var targetPoint = testFile.node(deserialized.targetId());
 
         projectionService.createProjection(graphName);
 
@@ -76,7 +76,7 @@ class PathSearcherTest {
 
         assertThat(actual)
                 .satisfies(found -> assertThat(found.path())
-                        .map(PointEntity::getId)
+                        .map(PointNode::getId)
                         .isEqualTo(deserialized.expected().path()))
                 .matches(found -> found.totalCost().equals(deserialized.expected().totalCost()));
     }

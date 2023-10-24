@@ -3,7 +3,7 @@ package com.github.pathfinder.service.impl;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.pathfinder.core.tools.impl.NullHelper;
-import com.github.pathfinder.database.entity.LandType;
+import com.github.pathfinder.database.node.LandType;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;

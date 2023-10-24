@@ -1,12 +1,12 @@
 package com.github.pathfinder.service;
 
 import com.github.pathfinder.data.point.Point;
-import com.github.pathfinder.database.entity.PointEntity;
+import com.github.pathfinder.database.node.PointNode;
 
 public interface IPointService {
 
-    PointEntity save(Point point);
+    PointNode save(Point point);
 
-    PointEntity save(PointEntity point);
+    PointNode save(PointNode point);
 
 }

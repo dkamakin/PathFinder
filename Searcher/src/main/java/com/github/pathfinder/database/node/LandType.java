@@ -1,4 +1,4 @@
-package com.github.pathfinder.database.entity;
+package com.github.pathfinder.database.node;
 
 public enum LandType {
     SAND(3),

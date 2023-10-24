@@ -1,7 +1,7 @@
 package com.github.pathfinder.configuration;
 
-import com.github.pathfinder.database.entity.PointEntity;
-import com.github.pathfinder.database.entity.PointRelation;
+import com.github.pathfinder.database.node.PointNode;
+import com.github.pathfinder.database.node.PointRelation;
 import com.github.pathfinder.database.repository.ProjectionRepository;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class Neo4jTestTemplate {
 
     @Transactional
     public void cleanDatabase() {
-        Set.of(PointEntity.class, PointRelation.class).forEach(neo4jTemplate::deleteAll);
+        Set.of(PointNode.class, PointRelation.class).forEach(neo4jTemplate::deleteAll);
         testRepository.graphNames().forEach(projectionRepository::tryDelete);
     }
 

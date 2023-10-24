@@ -1,4 +1,4 @@
-package com.github.pathfinder.database.entity;
+package com.github.pathfinder.database.node;
 
 import com.google.common.base.Objects;
 import lombok.AllArgsConstructor;
@@ -33,9 +33,9 @@ public class PointRelation {
     private Double distance;
 
     @TargetNode
-    private PointEntity target;
+    private PointNode target;
 
-    public PointRelation(Double distance, PointEntity target) {
+    public PointRelation(Double distance, PointNode target) {
         this.distance = distance;
         this.target   = target;
     }

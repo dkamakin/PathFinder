@@ -1,6 +1,6 @@
 package com.github.pathfinder.data.point;
 
-import com.github.pathfinder.database.entity.LandType;
+import com.github.pathfinder.database.node.LandType;
 import java.util.Set;
 import lombok.Builder;
 

@@ -4,7 +4,7 @@ import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.data.point.Point;
-import com.github.pathfinder.database.entity.PointEntity;
+import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.repository.PointRepository;
 import com.github.pathfinder.service.IPointService;
 import java.util.Set;
@@ -32,7 +32,7 @@ class PointServiceTest {
         neo4jTestTemplate.cleanDatabase();
     }
 
-    void assertEquals(Point point, PointEntity actual) {
+    void assertEquals(Point point, PointNode actual) {
         assertThat(actual)
                 .matches(saved -> saved.getId() != null)
                 .matches(saved -> saved.getInternalId() != null)
