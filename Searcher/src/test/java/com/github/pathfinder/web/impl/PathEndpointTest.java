@@ -2,8 +2,10 @@ package com.github.pathfinder.web.impl;
 
 import com.github.pathfinder.configuration.SearcherWebMvcTest;
 import com.github.pathfinder.core.tools.impl.JsonTools;
+import com.github.pathfinder.data.path.AStarResult;
 import com.github.pathfinder.data.path.FindPathRequest;
-import com.github.pathfinder.data.path.FindPathResponse;
+import com.github.pathfinder.database.node.LandType;
+import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.security.api.role.SecurityRoles;
 import com.github.pathfinder.service.IPathService;
 import com.github.pathfinder.web.dto.CoordinateDto;
@@ -12,6 +14,7 @@ import com.github.pathfinder.web.dto.path.FindPathDto;
 import com.github.pathfinder.web.dto.path.FoundPathDto;
 import com.github.pathfinder.web.mapper.DtoMapper;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -70,31 +73,40 @@ class PathEndpointTest {
         );
     }
 
-    void whenNeedToReturn(FindPathRequest request, FindPathResponse response) {
+    void whenNeedToReturn(FindPathRequest request, AStarResult response) {
         when(pathService.find(request)).thenReturn(response);
     }
 
     @Test
     @WithMockUser(roles = SecurityRoles.PATH_SEARCHER)
     void find_ValidRequest_PassToService() throws Exception {
-        var request  = FIND_PATH_REQUEST;
-        var expected = new FindPathResponse(1);
+        var request   = FIND_PATH_REQUEST;
+        var longitude = 23D;
+        var latitude  = 22.5D;
+        var totalCost = 100D;
+        var expected = new FoundPathDto(
+                List.of(new CoordinateDto(longitude, latitude)),
+                totalCost
+        );
+        var response = new AStarResult(
+                List.of(new PointNode(1D, longitude, latitude, LandType.DUNE)),
+                totalCost
+        );
 
-        whenNeedToReturn(DtoMapper.INSTANCE.map(request), expected);
+        whenNeedToReturn(DtoMapper.INSTANCE.map(request), response);
 
-        var response = mockMvc.perform(post("/path")
-                                               .contentType(MediaType.APPLICATION_JSON)
-                                               .content(jsonTools.serialize(request))
-                                               .with(SecurityMockMvcRequestPostProcessors.csrf())
+        var json = mockMvc.perform(post("/path")
+                                           .contentType(MediaType.APPLICATION_JSON)
+                                           .content(jsonTools.serialize(request))
+                                           .with(SecurityMockMvcRequestPostProcessors.csrf())
                 )
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8);
-        var actual = jsonTools.deserialize(response, FoundPathDto.class);
+        var actual = jsonTools.deserialize(json, FoundPathDto.class);
 
-        assertThat(actual)
-                .matches(result -> result.cost().equals(expected.cost()));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @ParameterizedTest

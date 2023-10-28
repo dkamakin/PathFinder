@@ -22,7 +22,7 @@ public class PathEndpoint implements IPathEndpoint {
     public FoundPathDto find(@Valid @RequestBody FindPathDto request) {
         var mapper = DtoMapper.INSTANCE;
 
-        return mapper.map(pathService.find(mapper.map(request)));
+        return DtoMapper.INSTANCE.map(pathService.find(mapper.map(request)));
     }
 
 }

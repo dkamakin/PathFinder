@@ -1,5 +1,9 @@
 package com.github.pathfinder.web.dto.path;
 
-public record FoundPathDto(Integer cost) {
+import com.github.pathfinder.web.dto.CoordinateDto;
+import java.util.List;
+
+public record FoundPathDto(List<CoordinateDto> path,
+                           Double totalCost) {
 
 }

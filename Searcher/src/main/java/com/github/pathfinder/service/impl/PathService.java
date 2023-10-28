@@ -2,10 +2,9 @@ package com.github.pathfinder.service.impl;
 
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.core.interfaces.ReadTransactional;
-import com.github.pathfinder.data.HealthType;
+import com.github.pathfinder.data.path.AStarResult;
 import com.github.pathfinder.data.path.FindPathRequest;
-import com.github.pathfinder.data.path.FindPathResponse;
-import com.github.pathfinder.database.node.PointNode;
+import com.github.pathfinder.service.IPathSearcher;
 import com.github.pathfinder.service.IPathService;
 import com.github.pathfinder.service.IPointSearcherService;
 import lombok.RequiredArgsConstructor;
@@ -18,19 +17,16 @@ import org.springframework.stereotype.Service;
 public class PathService implements IPathService {
 
     private final IPointSearcherService pointSearcher;
+    private final IPathSearcher pathSearcher;
 
     @Override
     @Logged("request")
     @ReadTransactional
-    public FindPathResponse find(FindPathRequest request) {
+    public AStarResult find(FindPathRequest request) {
         var source = pointSearcher.findNearest(request.source());
         var target = pointSearcher.findNearest(request.target());
 
-        return findNearest(source, target, request.health());
-    }
-
-    private FindPathResponse findNearest(PointNode source, PointNode target, HealthType health) {
-        return new FindPathResponse(0);
+        return pathSearcher.aStar(request.health().getGraphName(), source, target);
     }
 
 }
