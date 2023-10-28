@@ -1,10 +1,10 @@
 package com.github.pathfinder.service;
 
+import com.github.pathfinder.data.path.AStarResult;
 import com.github.pathfinder.data.path.FindPathRequest;
-import com.github.pathfinder.data.path.FindPathResponse;
 
 public interface IPathService {
 
-    FindPathResponse find(FindPathRequest request);
+    AStarResult find(FindPathRequest request);
 
 }
