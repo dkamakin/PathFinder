@@ -2,7 +2,7 @@ ext.set("mainClassName", 'com.github.pathfinder.PathFinderApplication')
 
 dependencies {
     def geoToolsVersion = "29.2"
-    def testcontainersSpringVersion = "3.0.5"
+    def testcontainersSpringVersion = "3.0.6"
 
     api project(":Security-Api")
 
