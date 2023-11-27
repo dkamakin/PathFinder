@@ -38,7 +38,7 @@ subprojects {
     def springRetryVersion = "2.0.4"
     def springActuatorVersion = "3.1.5"
     def springCloudBusVersion = "4.0.1"
-    def apacheCommonsVersion = "3.13.0"
+    def apacheCommonsVersion = "3.14.0"
     def mapStructVersion = "1.5.5.Final"
     def springSecurityTestVersion = "6.1.5"
 
