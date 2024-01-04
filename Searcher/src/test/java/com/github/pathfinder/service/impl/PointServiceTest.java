@@ -89,8 +89,10 @@ class PointServiceTest {
                         .satisfies(node -> assertThat(node.getRelations())
                                 .hasSize(1)
                                 .first()
-                                .matches(relation -> relation.getWeight() == 5.247841282633755)
-                                .matches(relation -> relation.getDistanceMeters() == 3.49856085508917)
+                                .satisfies(relation -> assertThat(relation.getWeight())
+                                        .isEqualTo(5.247841282633755))
+                                .satisfies(relation -> assertThat(relation.getDistanceMeters())
+                                        .isEqualTo(3.49856085508917))
                                 .matches(relation -> relation.getTarget().equals(secondPoint))));
     }
 
