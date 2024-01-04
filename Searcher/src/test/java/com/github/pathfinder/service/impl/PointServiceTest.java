@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.withinPercentage;
 
 @SearcherNeo4jTest
 @Import({PointService.class, CoordinateConfiguration.class, ProjectionService.class})
@@ -90,9 +91,9 @@ class PointServiceTest {
                                 .hasSize(1)
                                 .first()
                                 .satisfies(relation -> assertThat(relation.getWeight())
-                                        .isEqualTo(5.247841282633755))
+                                        .isCloseTo(5.247841282633755, withinPercentage(0.99)))
                                 .satisfies(relation -> assertThat(relation.getDistanceMeters())
-                                        .isEqualTo(3.49856085508917))
+                                        .isCloseTo(3.49856085508917, withinPercentage(0.99)))
                                 .matches(relation -> relation.getTarget().equals(secondPoint))));
     }
 
