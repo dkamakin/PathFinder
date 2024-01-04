@@ -1,0 +1,21 @@
+spring:
+  cloud:
+    config:
+      enabled: false
+logging:
+  level:
+    root: debug
+elevation:
+  client:
+    uri: "https://api.open-elevation.com/api/v1/lookup"
+osm:
+  client:
+    url: "https://overpass-api.de/api/"
+  index:
+    boxes:
+      - min:
+          latitude: 32
+          longitude: 12
+        max:
+          latitude: 32
+          longitude: 12

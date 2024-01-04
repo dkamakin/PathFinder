@@ -1,9 +1,22 @@
 coordinate:
   distance:
-    accuracyMeters: 45
+    accuracyMeters: 45.0
+exchange:
+  deadLetter:
+    name:
+      searcher-deadLetter-exchange
+queue:
+  default:
+    name: searcher-api
+  deadLetter:
+    name: searcher-deadLetter-queue
+direct-exchange:
+  name: direct-exchange
 spring:
   cloud:
     config:
+      enabled: false
+    bus:
       enabled: false
 logging:
   level:

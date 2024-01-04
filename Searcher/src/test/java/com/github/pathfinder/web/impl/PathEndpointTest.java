@@ -4,12 +4,10 @@ import com.github.pathfinder.configuration.SearcherWebMvcTest;
 import com.github.pathfinder.core.tools.impl.JsonTools;
 import com.github.pathfinder.data.path.AStarResult;
 import com.github.pathfinder.data.path.FindPathRequest;
-import com.github.pathfinder.database.node.LandType;
 import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.security.api.role.SecurityRoles;
 import com.github.pathfinder.service.IPathService;
 import com.github.pathfinder.web.dto.CoordinateDto;
-import com.github.pathfinder.web.dto.HealthTypeDto;
 import com.github.pathfinder.web.dto.path.FindPathDto;
 import com.github.pathfinder.web.dto.path.FoundPathDto;
 import com.github.pathfinder.web.mapper.DtoMapper;
@@ -40,8 +38,7 @@ class PathEndpointTest {
 
     static final CoordinateDto COORDINATE_SOURCE = new CoordinateDto(1D, 2D);
     static final CoordinateDto COORDINATE_TARGET = new CoordinateDto(3D, 4D);
-    static final FindPathDto   FIND_PATH_REQUEST = new FindPathDto(COORDINATE_SOURCE, COORDINATE_TARGET,
-                                                                   HealthTypeDto.HEALTHY);
+    static final FindPathDto   FIND_PATH_REQUEST = new FindPathDto(COORDINATE_SOURCE, COORDINATE_TARGET);
 
     @Autowired
     JsonTools jsonTools;
@@ -56,20 +53,16 @@ class PathEndpointTest {
         return Stream.of(
                 new FindPathDto(
                         new CoordinateDto(null, LATITUDE),
-                        new CoordinateDto(LONGITUDE, LATITUDE),
-                        HealthTypeDto.HEALTHY),
+                        new CoordinateDto(LONGITUDE, LATITUDE)),
                 new FindPathDto(
                         new CoordinateDto(LONGITUDE, null),
-                        new CoordinateDto(LONGITUDE, LATITUDE),
-                        HealthTypeDto.WOUNDED),
+                        new CoordinateDto(LONGITUDE, LATITUDE)),
                 new FindPathDto(
                         new CoordinateDto(LONGITUDE, null),
-                        null,
-                        HealthTypeDto.WOUNDED),
+                        null),
                 new FindPathDto(
                         null,
-                        new CoordinateDto(LONGITUDE, LATITUDE),
-                        HealthTypeDto.WEAKENED)
+                        new CoordinateDto(LONGITUDE, LATITUDE))
         );
     }
 
@@ -89,7 +82,7 @@ class PathEndpointTest {
                 totalCost
         );
         var response = new AStarResult(
-                List.of(new PointNode(1D, longitude, latitude, LandType.DUNE)),
+                List.of(PointNode.builder().passabilityCoefficient(1D).location(latitude, longitude, 1D).build()),
                 totalCost
         );
 

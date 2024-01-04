@@ -1,50 +1,27 @@
 package com.github.pathfinder.service.impl;
 
 import com.github.pathfinder.PointFixtures;
-import com.github.pathfinder.configuration.CoordinateConfiguration;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
-import com.github.pathfinder.data.Coordinate;
-import com.github.pathfinder.data.distance.IDistance;
-import com.github.pathfinder.data.distance.MetersDistance;
-import com.github.pathfinder.database.repository.PointRepository;
-import com.github.pathfinder.exception.PointNotFoundException;
-import com.github.pathfinder.service.IDistanceCalculator;
+import com.github.pathfinder.core.data.Coordinate;
+import com.github.pathfinder.searcher.api.exception.PointNotFoundException;
 import com.github.pathfinder.service.IPointSearcherService;
 import com.github.pathfinder.service.IPointService;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
 
 @SearcherNeo4jTest
-@Import({PointSearcherService.class, PointService.class})
+@Import({PointSearcherService.class, PointService.class, ProjectionService.class})
 class PointSearcherServiceTest {
-
-    @MockBean
-    IDistanceCalculator distanceCalculator;
-
-    @MockBean
-    CoordinateConfiguration coordinateConfiguration;
-
-    @Autowired
-    PointRepository pointRepository;
 
     @Autowired
     IPointSearcherService target;
 
     @Autowired
     IPointService pointService;
-
-    void whenNeedToGetAccuracy(Double accuracyMeters) {
-        when(coordinateConfiguration.getDistanceAccuracyMeters()).thenReturn(accuracyMeters);
-    }
-
-    void whenNeedToCalculateDistance(Coordinate source, Coordinate target, IDistance expected) {
-        when(distanceCalculator.distance(source, target)).thenReturn(expected);
-    }
 
     @Test
     void findNearest_PointDoesNotExist_PointNotFoundException() {
@@ -55,37 +32,31 @@ class PointSearcherServiceTest {
 
     @Test
     void findNearest_PointIsTooFarAway_PointNotFoundException() {
-        var accuracyMeters = 45D;
-        var distance       = new MetersDistance(accuracyMeters + 0.1D);
-        var point          = pointService.save(PointFixtures.point());
-        var coordinate     = new Coordinate(point.getLongitude(), point.getLatitude());
-
-        whenNeedToGetAccuracy(accuracyMeters);
-        whenNeedToCalculateDistance(coordinate, coordinate, distance);
+        var point      = PointFixtures.randomPointNode();
+        var coordinate = new Coordinate(point.latitude(), point.longitude() + 1);
 
         assertThatThrownBy(() -> target.findNearest(coordinate)).isInstanceOf(PointNotFoundException.class);
     }
 
     @Test
     void findNearest_PointIsNotTooFar_ReturnPoint() {
-        var firstPoint     = pointService.save(PointFixtures.point());
-        var expected       = pointService.save(PointFixtures.point());
-        var notNearest     = pointService.save(PointFixtures.point());
-        var coordinate     = new Coordinate(expected.getLongitude(), expected.getLatitude());
-        var accuracyMeters = 45D;
-        var distance       = new MetersDistance(accuracyMeters - 1D);
+        var nearestPoint = PointFixtures.randomPointNodeBuilder()
+                .location(44.827410791880155, 20.419468330585666, 1D).build();
+        var noisePoint = PointFixtures.randomPointNodeBuilder()
+                .location(44.82744118518296, 20.419457053285115, 1D).build();
+        var notNearest = PointFixtures.randomPointNodeBuilder()
+                .location(44.82755949185502, 20.413331663727266, 1D).build();
+        var coordinate = new Coordinate(44.827452775846965, 20.419722423975298);
 
-        whenNeedToGetAccuracy(accuracyMeters);
-        whenNeedToCalculateDistance(coordinate, coordinate, distance);
+        pointService.saveAll(List.of(nearestPoint, noisePoint, notNearest));
 
         var found = target.findNearest(coordinate);
 
         assertThat(found)
                 .satisfies(actual -> assertThat(actual.getId())
-                        .isNotNull()
-                        .isNotEqualTo(firstPoint.getId())
+                        .isNotEqualTo(noisePoint.getId())
                         .isNotEqualTo(notNearest.getId())
-                        .isEqualTo(expected.getId()));
+                        .isEqualTo(nearestPoint.getId()));
     }
 
 }

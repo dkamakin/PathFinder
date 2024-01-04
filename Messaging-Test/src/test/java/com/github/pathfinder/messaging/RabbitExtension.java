@@ -1,28 +1,28 @@
 package com.github.pathfinder.messaging;
 
-import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.RabbitMQContainer;
 
-public class RabbitExtension implements BeforeAllCallback, AfterAllCallback {
+public class RabbitExtension implements BeforeAllCallback {
 
     private static final String RABBIT_IMAGE = "rabbitmq:3.12-management-alpine";
 
-    RabbitMQContainer rabbitMQContainer;
+    private final RabbitMQContainer rabbitMQContainer;
+
+    public RabbitExtension() {
+        this.rabbitMQContainer = new RabbitMQContainer(RABBIT_IMAGE);
+    }
 
     @Override
     public void beforeAll(ExtensionContext context) {
-        rabbitMQContainer = new RabbitMQContainer(RABBIT_IMAGE);
         rabbitMQContainer.start();
 
-        System.setProperty("spring.rabbitmq.host", rabbitMQContainer.getHost());
-        System.setProperty("spring.rabbitmq.port", rabbitMQContainer.getAmqpPort().toString());
+        SpringRabbitProperties.setHost(rabbitMQContainer.getHost());
+        SpringRabbitProperties.setPort(rabbitMQContainer.getAmqpPort().toString());
+        SpringRabbitProperties.setPassword(rabbitMQContainer.getAdminPassword());
+        SpringRabbitProperties.setUsername(rabbitMQContainer.getAdminUsername());
     }
 
-    @Override
-    public void afterAll(ExtensionContext context) {
-
-    }
 }
 

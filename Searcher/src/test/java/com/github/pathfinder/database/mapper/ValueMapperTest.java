@@ -1,7 +1,7 @@
 package com.github.pathfinder.database.mapper;
 
-import com.github.pathfinder.exception.AnnotationNotFoundException;
-import com.github.pathfinder.exception.ValueNotFoundException;
+import com.github.pathfinder.searcher.api.exception.AnnotationNotFoundException;
+import com.github.pathfinder.searcher.api.exception.ValueNotFoundException;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;

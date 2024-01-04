@@ -1,60 +1,96 @@
 package com.github.pathfinder.service.impl;
 
 import com.github.pathfinder.PointFixtures;
+import com.github.pathfinder.configuration.CoordinateConfiguration;
+import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
-import com.github.pathfinder.data.point.Point;
-import com.github.pathfinder.database.node.PointNode;
-import com.github.pathfinder.database.repository.PointRepository;
+import com.github.pathfinder.database.node.PointRelation;
 import com.github.pathfinder.service.IPointService;
-import java.util.Set;
+import com.github.pathfinder.service.IProjectionService;
+import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SearcherNeo4jTest
-@Import(PointService.class)
+@Import({PointService.class, CoordinateConfiguration.class, ProjectionService.class})
 class PointServiceTest {
-
-    @Autowired
-    PointRepository pointRepository;
 
     @Autowired
     IPointService target;
 
-    void assertEquals(Point point, PointNode actual) {
+    @Autowired
+    Neo4jTestTemplate testTemplate;
+
+    @Autowired
+    IProjectionService projectionService;
+
+    @Test
+    void saveAll_PointsAreConnected_StoreConnection() {
+        var sourcePoint = PointFixtures.randomPointNode();
+        var targetPoint = PointFixtures.randomPointNode();
+        var connection  = new PointRelation(12D, 13D, targetPoint);
+        var secondPoint = PointFixtures.randomPointNode();
+        var actual      = target.saveAll(List.of(sourcePoint.add(connection), secondPoint));
+
         assertThat(actual)
-                .matches(saved -> saved.getId() != null)
-                .matches(saved -> saved.getInternalId() != null)
-                .matches(saved -> point.altitude().equals(saved.getAltitude()))
-                .matches(saved -> saved.getLandType() == point.landType())
-                .matches(saved -> point.latitude().equals(saved.getLatitude()))
-                .matches(saved -> point.longitude().equals(saved.getLongitude()));
+                .hasSize(2)
+                .anySatisfy(first -> assertThat(first)
+                        .isEqualTo(sourcePoint)
+                        .matches(saved -> StringUtils.isNotEmpty(saved.getInternalId()))
+                        .satisfies(saved -> assertThat(saved.getRelations())
+                                .hasSize(1)
+                                .first()
+                                .matches(x -> x.getTarget().equals(targetPoint))
+                                .isEqualTo(connection)))
+                .anySatisfy(second -> assertThat(second)
+                        .matches(saved -> StringUtils.isNotEmpty(saved.getInternalId()))
+                        .isEqualTo(secondPoint));
     }
 
     @Test
-    void save_PointDoesNotExist_SavePoint() {
-        var point  = PointFixtures.point();
-        var actual = target.save(point);
+    void createConnections_PointsAreNotConnected_ConnectOnlyWithinAccuracy() {
+        var firstPoint = PointFixtures.randomPointNodeBuilder()
+                .passabilityCoefficient(1D)
+                .location(44.827410791880155, 20.419468330585666, 1D).build();
+        var secondPoint = PointFixtures.randomPointNodeBuilder()
+                .passabilityCoefficient(2D)
+                .location(44.82744118518296, 20.419457053285115, 1D).build();
+        var tooFarAwayPoint = PointFixtures.randomPointNodeBuilder()
+                .passabilityCoefficient(3D)
+                .location(44.82755949185502, 20.413331663727266, 1D).build();
+        var randomPoint    = PointFixtures.randomPointNode();
+        var randomRelation = new PointRelation(1D, 1D, randomPoint);
+        var graphName      = "test";
 
-        assertThat(actual).satisfies(saved -> assertEquals(point, saved));
-    }
+        target.saveAll(List.of(firstPoint, secondPoint, tooFarAwayPoint.add(randomRelation)));
+        projectionService.createProjection(graphName);
+        target.createConnections();
 
-    @Test
-    void save_PointsAreConnected_StoreConnection() {
-        var connection  = PointFixtures.pointConnection();
-        var sourcePoint = PointFixtures.pointBuilder().connections(Set.of(connection)).build();
+        var actual = testTemplate.allNodes();
 
-        var actual = target.save(sourcePoint);
+        assertThat(projectionService.exists(graphName)).isFalse();
+        assertThat(projectionService.defaultGraphName()).isNotEmpty();
 
         assertThat(actual)
-                .satisfies(saved -> assertEquals(sourcePoint, saved))
-                .satisfies(saved -> assertThat(saved.getRelations())
-                        .hasSize(1)
-                        .first()
-                        .satisfies(relation -> assertEquals(connection.target(), relation.getTarget()))
-                        .matches(relation -> connection.distance().equals(relation.getDistance())));
-
+                .hasSize(4)
+                .anySatisfy(random -> assertThat(randomPoint)
+                        .matches(x -> x.getRelations().isEmpty()))
+                .anySatisfy(farPoint -> assertThat(farPoint)
+                        .isEqualTo(tooFarAwayPoint)
+                        .satisfies(x -> assertThat(x.getRelations())
+                                .hasSize(1)
+                                .contains(randomRelation)))
+                .anySatisfy(connected -> assertThat(connected)
+                        .isEqualTo(firstPoint)
+                        .satisfies(node -> assertThat(node.getRelations())
+                                .hasSize(1)
+                                .first()
+                                .matches(relation -> relation.getWeight() == 5.247841282633755)
+                                .matches(relation -> relation.getDistanceMeters() == 3.49856085508917)
+                                .matches(relation -> relation.getTarget().equals(secondPoint))));
     }
 
 }

@@ -10,7 +10,7 @@
         "connections": [
           {
             "targetId": "fc7fd6e8-701f-47f5-991a-c7d27e11f6b2",
-            "distance": 1
+            "weight": 1
           }
         ]
       },
@@ -43,15 +43,15 @@
         "connections": [
           {
             "targetId": "1c286276-8966-4054-83a4-dd6354774363",
-            "distance": 1
+            "weight": 1
           },
           {
             "targetId": "2a2508e3-77a6-468b-9bf4-eed57eb6a9fc",
-            "distance": 0.75
+            "weight": 0.75
           },
           {
             "targetId": "a5d681f1-1fc5-403c-ac2e-f707da026662",
-            "distance": 0.5
+            "weight": 0.5
           }
         ]
       },
@@ -64,11 +64,11 @@
         "connections": [
           {
             "targetId": "949fe9f8-93a4-4519-b836-161b096a55d8",
-            "distance": 1.5
+            "weight": 1.5
           },
           {
             "targetId": "1ee77891-44d6-4d41-a5d5-1c8a4040ca01",
-            "distance": 1.2512
+            "weight": 1.2512
           }
         ]
       },

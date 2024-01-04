@@ -1,11 +1,13 @@
 package com.github.pathfinder.service.impl;
 
+import com.github.pathfinder.configuration.CoordinateConfiguration;
 import com.github.pathfinder.core.aspect.Logged;
-import com.github.pathfinder.data.point.Point;
 import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.repository.PointRepository;
-import com.github.pathfinder.mapper.NodeMapper;
 import com.github.pathfinder.service.IPointService;
+import com.github.pathfinder.service.IProjectionService;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,20 +16,24 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PointService implements IPointService {
 
-    private final PointRepository pointRepository;
+    private final PointRepository         pointRepository;
+    private final CoordinateConfiguration coordinateConfiguration;
+    private final IProjectionService      projectionService;
 
+    @Logged
     @Override
     @Transactional
-    @Logged("point")
-    public PointNode save(Point point) {
-        return save(NodeMapper.INSTANCE.pointNode(point));
+    public List<PointNode> saveAll(List<PointNode> points) {
+        return pointRepository.saveAll(points);
     }
 
+    @Logged
     @Override
     @Transactional
-    @Logged("point")
-    public PointNode save(PointNode point) {
-        return pointRepository.save(point);
+    public void createConnections() {
+        pointRepository.createConnections(coordinateConfiguration.getDistanceAccuracyMeters());
+        projectionService.deleteAll();
+        projectionService.createProjection(UUID.randomUUID().toString());
     }
 
 }

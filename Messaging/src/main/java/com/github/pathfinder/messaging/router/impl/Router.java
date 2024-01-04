@@ -21,4 +21,9 @@ public class Router implements IAMQPRouter.IRouter {
                 .orElseThrow(MessageRoutingException::new);
     }
 
+    @Override
+    public void send() {
+        messageSender.send(message);
+    }
+
 }

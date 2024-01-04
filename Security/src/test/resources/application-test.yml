@@ -1,5 +1,6 @@
 queue:
-  name: security-api
+  default:
+    name: security-api
 direct-exchange:
   name: direct-exchange
 spring:

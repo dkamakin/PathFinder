@@ -1,13 +1,16 @@
 package com.github.pathfinder.service;
 
-import com.github.pathfinder.data.database.CreateProjectionResponse;
+import java.util.List;
+import java.util.Optional;
 
 public interface IProjectionService {
 
-    CreateProjectionResponse createProjection(String graphName);
+    boolean createProjection(String graphName);
+
+    List<String> deleteAll();
 
     boolean exists(String graphName);
 
-    void tryDelete(String graphName);
+    Optional<String> defaultGraphName();
 
 }

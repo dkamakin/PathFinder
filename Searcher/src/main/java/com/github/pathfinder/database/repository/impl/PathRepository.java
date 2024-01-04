@@ -3,7 +3,7 @@ package com.github.pathfinder.database.repository.impl;
 import com.github.pathfinder.data.path.AStarResult;
 import com.github.pathfinder.database.mapper.ValueMapper;
 import com.github.pathfinder.database.repository.IPathRepository;
-import com.github.pathfinder.exception.PathNotFoundException;
+import com.github.pathfinder.searcher.api.exception.PathNotFoundException;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class PathRepository implements IPathRepository {
               logProgress:       false,
               latitudeProperty:  'latitude',
               longitudeProperty: 'longitude',
-              relationshipWeightProperty: 'distance'
+              relationshipWeightProperty: 'weight'
             })
             YIELD path, totalCost
             RETURN nodes(path) as path, totalCost

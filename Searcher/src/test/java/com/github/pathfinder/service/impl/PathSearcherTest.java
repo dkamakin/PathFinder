@@ -6,7 +6,7 @@ import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.core.configuration.CoreConfiguration;
 import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.repository.impl.PathRepository;
-import com.github.pathfinder.exception.PathNotFoundException;
+import com.github.pathfinder.searcher.api.exception.PathNotFoundException;
 import com.github.pathfinder.service.IPathSearcher;
 import com.github.pathfinder.service.IPointService;
 import com.github.pathfinder.service.IProjectionService;
@@ -55,7 +55,7 @@ class PathSearcherTest {
         var graphName = "test";
         var testFile  = new TestFile(deserialized);
 
-        testFile.nodes().forEach(pointService::save);
+        pointService.saveAll(testFile.nodes());
 
         var sourcePoint = testFile.node(deserialized.sourceId());
         var targetPoint = testFile.node(deserialized.targetId());
@@ -74,8 +74,10 @@ class PathSearcherTest {
     @Test
     void aStar_PathDoesNotExist_PathNotFoundException() {
         var graphName   = "test";
-        var sourcePoint = pointService.save(PointFixtures.pointWithConnection());
-        var targetPoint = pointService.save(PointFixtures.point());
+        var sourcePoint = PointFixtures.randomPointNode();
+        var targetPoint = PointFixtures.randomPointNode();
+
+        pointService.saveAll(List.of(sourcePoint, targetPoint));
 
         projectionService.createProjection(graphName);
 

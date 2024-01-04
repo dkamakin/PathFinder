@@ -2,15 +2,13 @@ package com.github.pathfinder.service.impl;
 
 import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
-import com.github.pathfinder.exception.ProjectionAlreadyExistsException;
+import com.github.pathfinder.database.node.PointRelation;
 import com.github.pathfinder.service.IProjectionService;
-import java.util.Set;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SearcherNeo4jTest
 @Import({PointService.class, ProjectionService.class})
@@ -23,22 +21,54 @@ class ProjectionServiceTest {
     IProjectionService target;
 
     @Test
-    void createProjection_ProjectionDoesNotExist_CreateProjection() {
-        var connection      = PointFixtures.pointConnection();
-        var sourcePoint     = PointFixtures.pointBuilder().connections(Set.of(connection)).build();
+    void deleteAll_ProjectionsExists_DeleteAll() {
+        var sourcePoint     = PointFixtures.randomPointNode();
+        var connection      = new PointRelation(12D, 13D, PointFixtures.randomPointNode());
         var graphName       = "test";
         var secondGraphName = graphName + 'a';
 
-        pointService.save(sourcePoint);
+        pointService.saveAll(List.of(sourcePoint.add(connection)));
 
-        var actual = target.createProjection(graphName);
-
-        assertThatThrownBy(() -> target.createProjection(graphName))
-                .isInstanceOf(ProjectionAlreadyExistsException.class);
-
+        target.createProjection(graphName);
         target.createProjection(secondGraphName);
 
-        assertThat(actual).matches(response -> response.nodesCount() == 2);
+        assertThat(target.deleteAll()).hasSize(2).contains(graphName, secondGraphName);
+    }
+
+    @Test
+    void deleteAll_NoProjections_EmptyResult() {
+        assertThat(target.deleteAll()).isEmpty();
+    }
+
+    @Test
+    void defaultGraphName_NoProjections_EmptyResult() {
+        assertThat(target.defaultGraphName()).isEmpty();
+    }
+
+    @Test
+    void defaultGraphName_ProjectionsExists_ReturnAny() {
+        var sourcePoint = PointFixtures.randomPointNode();
+        var connection  = new PointRelation(12D, 13D, PointFixtures.randomPointNode());
+        var graphName   = "test";
+
+        pointService.saveAll(List.of(sourcePoint.add(connection)));
+
+        assertThat(target.createProjection(graphName)).isTrue();
+        assertThat(target.defaultGraphName()).contains(graphName);
+    }
+
+    @Test
+    void createProjection_ProjectionDoesNotExist_CreateProjection() {
+        var sourcePoint     = PointFixtures.randomPointNode();
+        var connection      = new PointRelation(12D, 13D, PointFixtures.randomPointNode());
+        var graphName       = "test";
+        var secondGraphName = graphName + 'a';
+
+        pointService.saveAll(List.of(sourcePoint.add(connection)));
+
+        assertThat(target.createProjection(graphName)).isTrue();
+        assertThat(target.createProjection(graphName)).isFalse();
+        assertThat(target.createProjection(secondGraphName)).isTrue();
     }
 
     @Test
@@ -48,35 +78,14 @@ class ProjectionServiceTest {
 
     @Test
     void exists_ProjectionExists_True() {
-        var connection  = PointFixtures.pointConnection();
-        var sourcePoint = PointFixtures.pointBuilder().connections(Set.of(connection)).build();
+        var sourcePoint = PointFixtures.randomPointNode();
+        var connection  = new PointRelation(12D, 13D, PointFixtures.randomPointNode());
         var graphName   = "test";
 
-        pointService.save(sourcePoint);
+        pointService.saveAll(List.of(sourcePoint.add(connection)));
         target.createProjection(graphName);
 
         assertThat(target.exists(graphName)).isTrue();
-    }
-
-    @Test
-    void tryDelete_ProjectionExists_DeleteProjection() {
-        var connection  = PointFixtures.pointConnection();
-        var sourcePoint = PointFixtures.pointBuilder().connections(Set.of(connection)).build();
-        var graphName   = "test";
-
-        pointService.save(sourcePoint);
-        target.createProjection(graphName);
-
-        assertThat(target.exists(graphName)).isTrue();
-
-        target.tryDelete(graphName);
-
-        assertThat(target.exists(graphName)).isFalse();
-    }
-
-    @Test
-    void tryDelete_ProjectionDoesNotExist_NoAction() {
-        assertThatCode(() -> target.tryDelete("test")).doesNotThrowAnyException();
     }
 
 }

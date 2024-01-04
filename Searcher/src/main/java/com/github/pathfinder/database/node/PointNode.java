@@ -1,12 +1,16 @@
 package com.github.pathfinder.database.node;
 
-import com.github.pathfinder.core.tools.impl.NullHelper;
+import com.github.pathfinder.core.data.Coordinate;
 import com.google.common.base.Objects;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 import java.util.UUID;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.UtilityClass;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
@@ -14,23 +18,29 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.types.GeographicPoint2d;
+import org.springframework.data.neo4j.types.GeographicPoint3d;
 
 @Getter
-@Builder
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Node(PointNode.Token.NODE_NAME)
 public class PointNode {
 
     @UtilityClass
     public static class Token {
 
-        public static final String NODE_NAME  = "Point";
-        public static final String CONNECTION = "CONNECTION";
-        public static final String ID         = "id";
-        public static final String ALTITUDE   = "altitude";
-        public static final String LONGITUDE  = "longitude";
-        public static final String LATITUDE   = "latitude";
-        public static final String LAND_TYPE  = "landType";
+        public static final String NODE_NAME               = "Point";
+        public static final String CONNECTION              = "CONNECTION";
+        public static final String ID                      = "id";
+        public static final String ALTITUDE                = "altitude";
+        public static final String LONGITUDE               = "longitude";
+        public static final String LATITUDE                = "latitude";
+        public static final String LAND_TYPE               = "landType";
+        public static final String LOCATION_2D             = "location2d";
+        public static final String LOCATION_3D             = "location3d";
+        public static final String PASSABILITY_COEFFICIENT = "passabilityCoefficient";
     }
 
     @Id
@@ -46,65 +56,86 @@ public class PointNode {
     private Set<PointRelation> relations;
 
     @NotNull
+    @Property(Token.LOCATION_3D)
+    private GeographicPoint3d location3d;
+
+    @NotNull
+    @Property(Token.LOCATION_2D)
+    private GeographicPoint2d location2d;
+
     @Property(Token.ALTITUDE)
-    private Double altitude;
+    private double altitude;
 
-    @NotNull
-    @Property(Token.LONGITUDE)
-    private Double longitude;
-
-    @NotNull
     @Property(Token.LATITUDE)
-    private Double latitude;
+    @DecimalMin(Coordinate.Constraint.LATITUDE_MIN_VALUE_STRING)
+    @DecimalMax(Coordinate.Constraint.LATITUDE_MAX_VALUE_STRING)
+    private double latitude;
 
-    @NotNull
+    @Property(Token.LONGITUDE)
+    @DecimalMin(Coordinate.Constraint.LONGITUDE_MIN_VALUE_STRING)
+    @DecimalMax(Coordinate.Constraint.LONGITUDE_MAX_VALUE_STRING)
+    private double longitude;
+
+    @NotBlank
     @Property(Token.LAND_TYPE)
-    private LandType landType;
+    private String landType;
 
-    public PointNode() {
-        this.id = UUID.randomUUID();
+    @Property(Token.PASSABILITY_COEFFICIENT)
+    private double passabilityCoefficient;
+
+    protected PointNode(UUID id, Set<PointRelation> relations, GeographicPoint3d location, String landType,
+                        Double passabilityCoefficient) {
+        this.id                     = id;
+        this.relations              = relations;
+        this.location3d             = location;
+        this.location2d             = new GeographicPoint2d(location.getLatitude(), location.getLongitude());
+        this.landType               = landType;
+        this.altitude               = location.getHeight();
+        this.latitude               = location.getLatitude();
+        this.longitude              = location.getLongitude();
+        this.passabilityCoefficient = passabilityCoefficient;
     }
 
-    public PointNode(UUID id, Set<PointRelation> relations, Double altitude, Double longitude, Double latitude,
-                     LandType landType) {
-        this(null, id, relations, altitude, longitude, latitude, landType);
+    public static PointNodeBuilder builder() {
+        return new PointNodeBuilder();
     }
 
-    public PointNode(String internalId, UUID id, Set<PointRelation> relations, Double altitude, Double longitude,
-                     Double latitude, LandType landType) {
-        this.internalId = internalId;
-        this.id         = NullHelper.notNull(id, UUID::randomUUID);
-        this.relations  = relations;
-        this.altitude   = altitude;
-        this.longitude  = longitude;
-        this.latitude   = latitude;
-        this.landType   = landType;
+    public Double latitude() {
+        return location2d.getLatitude();
     }
 
-    public PointNode(Double altitude, Double longitude, Double latitude, LandType landType) {
-        this.altitude  = altitude;
-        this.longitude = longitude;
-        this.latitude  = latitude;
-        this.landType  = landType;
+    public Double longitude() {
+        return location2d.getLongitude();
+    }
+
+    public PointNode add(PointRelation relation) {
+        relations.add(relation);
+        return this;
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (this == object) {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (object == null || getClass() != object.getClass()) {
+
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PointNode that = (PointNode) object;
-        return Objects.equal(altitude, that.altitude) &&
-                Objects.equal(longitude, that.longitude) &&
-                Objects.equal(latitude, that.latitude) &&
-                landType == that.landType;
+        PointNode pointNode = (PointNode) o;
+        return Objects.equal(id, pointNode.id) &&
+                Objects.equal(altitude, pointNode.altitude) &&
+                Objects.equal(location3d, pointNode.location3d) &&
+                Objects.equal(location2d, pointNode.location2d) &&
+                Objects.equal(latitude, pointNode.latitude) &&
+                Objects.equal(longitude, pointNode.longitude) &&
+                Objects.equal(landType, pointNode.landType) &&
+                Objects.equal(passabilityCoefficient, pointNode.passabilityCoefficient);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(altitude, longitude, latitude, landType);
+        return Objects.hashCode(id, altitude, location3d, location2d, latitude, longitude, landType,
+                                passabilityCoefficient);
     }
 }

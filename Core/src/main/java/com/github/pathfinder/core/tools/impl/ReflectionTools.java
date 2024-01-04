@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class ReflectionTools {
 
+    @SuppressWarnings("unchecked")
     public <T> T cast(Object object) {
         return (T) object;
     }
