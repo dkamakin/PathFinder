@@ -76,7 +76,8 @@ class PointServiceTest {
 
         assertThat(actual)
                 .hasSize(4)
-                .anySatisfy(random -> assertThat(randomPoint)
+                .anySatisfy(random -> assertThat(random)
+                        .isEqualTo(randomPoint)
                         .matches(x -> x.getRelations().isEmpty()))
                 .anySatisfy(farPoint -> assertThat(farPoint)
                         .isEqualTo(tooFarAwayPoint)

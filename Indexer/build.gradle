@@ -6,8 +6,6 @@ dependencies {
     api project(":Core")
     api project(":Searcher-Api")
 
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
-
     implementation("de.westnordost:osmapi-core:$westnordostVersion")
     implementation("de.westnordost:osmapi-map:$westnordostVersion")
     implementation("de.westnordost:osmapi-overpass:$westnordostVersion")

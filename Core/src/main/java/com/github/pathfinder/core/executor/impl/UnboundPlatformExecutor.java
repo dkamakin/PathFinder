@@ -19,7 +19,7 @@ public class UnboundPlatformExecutor implements PlatformExecutor {
     private final ExecutorService executor;
 
     public UnboundPlatformExecutor() {
-        executor = Executors.newVirtualThreadPerTaskExecutor();
+        this.executor = Executors.newVirtualThreadPerTaskExecutor();
     }
 
     @Logged
