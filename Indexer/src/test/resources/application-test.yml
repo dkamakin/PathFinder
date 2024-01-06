@@ -10,12 +10,13 @@ elevation:
     uri: "https://api.open-elevation.com/api/v1/lookup"
 osm:
   client:
-    url: "https://overpass-api.de/api/"
+    overpass:
+      url: "https://overpass-api.de/api/"
   index:
     boxes:
       - min:
-          latitude: 32
-          longitude: 12
+          latitude: 45.1647
+          longitude: 19.847
         max:
-          latitude: 32
-          longitude: 12
+          latitude: 45.1804
+          longitude: 19.8758

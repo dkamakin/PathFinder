@@ -1,23 +1,20 @@
 package com.github.pathfinder.indexer.client.osm.westnordost;
 
-import com.github.pathfinder.indexer.data.osm.OsmElement;
+import com.github.pathfinder.indexer.data.osm.OsmNode;
 import com.google.common.collect.Lists;
 import de.westnordost.osmapi.map.data.BoundingBox;
 import de.westnordost.osmapi.map.data.Node;
 import de.westnordost.osmapi.map.data.Relation;
 import de.westnordost.osmapi.map.data.Way;
 import java.util.List;
-import java.util.function.BiFunction;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Getter
-public class ListCollectingDataHandler implements WestNordOstHandler<OsmElement> {
+public class NodesCollectingDataHandler implements WestNordOstHandler<OsmNode> {
 
-    private final List<OsmElement> elements;
+    private final List<OsmNode> elements;
 
-    public ListCollectingDataHandler() {
+    public NodesCollectingDataHandler() {
         this.elements = Lists.newArrayList();
     }
 
@@ -28,30 +25,22 @@ public class ListCollectingDataHandler implements WestNordOstHandler<OsmElement>
 
     @Override
     public void handle(Node node) {
-        add(node, WestNordOstMapper::osmNode);
+        elements.add(WestNordOstMapper.MAPPER.osmNode(node));
     }
 
     @Override
     public void handle(Way way) {
-        add(way, WestNordOstMapper::osmWay);
+        // only nodes are supported
     }
 
     @Override
     public void handle(Relation relation) {
-        // relations are not supported
+        // only nodes are supported
     }
 
     @Override
-    public List<OsmElement> result() {
+    public List<OsmNode> result() {
         return elements;
-    }
-
-    private <T> void add(T element, BiFunction<WestNordOstMapper, T, OsmElement> mapper) {
-        add(mapper.apply(WestNordOstMapper.MAPPER, element));
-    }
-
-    private void add(OsmElement element) {
-        elements.add(element);
     }
 
 }

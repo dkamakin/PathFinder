@@ -5,7 +5,6 @@ import com.github.pathfinder.core.executor.PlatformExecutor;
 import com.github.pathfinder.indexer.configuration.osm.IndexBox;
 import com.github.pathfinder.indexer.configuration.osm.OsmIndexConfiguration;
 import com.github.pathfinder.indexer.service.IndexService;
-import com.github.pathfinder.indexer.service.osm.IOsmIndexer;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -20,10 +19,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OsmIndexService implements IndexService {
 
-    private final IOsmIndexer           indexer;
     private final OsmIndexConfiguration configuration;
     private final SearcherApi           searcherApi;
     private final PlatformExecutor      executor;
+    private final OsmIndexTask          task;
 
     @Async
     @Logged
@@ -37,7 +36,7 @@ public class OsmIndexService implements IndexService {
     }
 
     private Callable<Object> task(IndexBox box) {
-        return Executors.callable(() -> indexer.process(box));
+        return Executors.callable(() -> task.accept(box));
     }
 
 }

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 @Slf4j
 @Service
@@ -22,14 +23,15 @@ public class OsmIndexer implements IOsmIndexer {
 
     @Override
     public void process(IndexBox box) {
-        var elements = client.queryElements(box);
+        var elements = client.elements(box);
 
         log.info("Query result: {} elements", elements.size());
 
+        if (CollectionUtils.isEmpty(elements)) {
+            return;
+        }
+
         var points = pointExtractor.points(elements);
-
-        log.info("Extracted {} points", points.size());
-
         var saved = searcherApi.save(new SavePointsMessage(points));
 
         log.info("Saved {} points", saved);

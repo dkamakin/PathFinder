@@ -3,51 +3,40 @@ package com.github.pathfinder.indexer.client.osm.westnordost;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
 import com.github.pathfinder.indexer.client.osm.impl.OverpassQueryBuilder;
+import com.github.pathfinder.indexer.client.osm.impl.OverpassQueryTools;
 import com.github.pathfinder.indexer.configuration.osm.IndexBox;
 import com.github.pathfinder.indexer.data.osm.OsmElement;
 import com.github.pathfinder.indexer.data.osm.OsmNode;
 import com.github.pathfinder.indexer.exception.ApiExecutionException;
-import de.westnordost.osmapi.OsmConnection;
-import de.westnordost.osmapi.map.MapDataApi;
 import de.westnordost.osmapi.overpass.OverpassMapDataApi;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@RequiredArgsConstructor
 public class WestNordOstOsmClient implements OsmClient {
 
     private final OverpassMapDataApi overpassApi;
-    private final MapDataApi         mapDataApi;
 
-    public WestNordOstOsmClient(OsmConnection connection) {
-        this.overpassApi = new OverpassMapDataApi(connection);
-        this.mapDataApi  = new MapDataApi(connection);
+    @Logged
+    @Override
+    public List<OsmNode> nodes(List<Long> ids) {
+        return queryElements("""
+                                     (
+                                     %s;
+                                     );
+                                     out body;
+                                     """.formatted(OverpassQueryTools.nodeQueries(ids)),
+                             new NodesCollectingDataHandler());
     }
 
     @Logged
     @Override
-    public List<OsmNode> elements(List<Long> ids) {
-        return mapDataApi.getNodes(ids).stream().map(WestNordOstMapper.MAPPER::osmNode).toList();
-    }
-
-    @Logged
-    @Override
-    public List<OsmElement> queryElements(String overpassQuery) {
-        var handler = new ListCollectingDataHandler();
-
-        overpassHandle(api -> api.queryElements(overpassQuery, handler));
-
-        log.info("Executed an overpass action, total elements: {}", handler.getElements().size());
-
-        return handler.getElements();
-    }
-
-    @Logged
-    @Override
-    public List<OsmElement> queryElements(IndexBox box) {
+    public List<OsmElement> elements(IndexBox box) {
         return queryElements(new OverpassQueryBuilder("""
                                                               (
                                                               node($min,$max);
@@ -56,9 +45,19 @@ public class WestNordOstOsmClient implements OsmClient {
                                                               out body;
                                                               """
         ).bind(Map.of(
-                "min", box.getMin(),
-                "max", box.getMax()
-        )));
+                "min", OverpassQueryTools.latitudeLongitude(box.getMin()),
+                "max", OverpassQueryTools.latitudeLongitude(box.getMax())
+        )), new ListCollectingDataHandler());
+    }
+
+    private <T extends OsmElement> List<T> queryElements(String overpassQuery, WestNordOstHandler<T> handler) {
+        overpassHandle(api -> api.queryElements(overpassQuery, handler));
+
+        var result = handler.result();
+
+        log.info("Executed an overpass action, total elements: {}", result.size());
+
+        return result;
     }
 
     private void overpassHandle(Consumer<OverpassMapDataApi> action) {

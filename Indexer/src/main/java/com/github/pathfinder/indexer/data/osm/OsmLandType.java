@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum OsmLandType {
+    UNKNOWN(1),
     SAND(3),
     BEACH(3),
     COASTLINE(3),

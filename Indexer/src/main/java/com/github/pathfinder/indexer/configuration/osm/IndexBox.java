@@ -7,8 +7,10 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class IndexBox {
 
@@ -21,6 +23,7 @@ public class IndexBox {
     private IndexBox.BoxCoordinate max;
 
     @Data
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class BoxCoordinate {
 
@@ -33,11 +36,6 @@ public class IndexBox {
         @DecimalMin(Coordinate.Constraint.LONGITUDE_MIN_VALUE_STRING)
         @DecimalMax(Coordinate.Constraint.LONGITUDE_MAX_VALUE_STRING)
         private Double longitude;
-
-        @Override
-        public String toString() {
-            return latitude + "," + longitude;
-        }
 
     }
 

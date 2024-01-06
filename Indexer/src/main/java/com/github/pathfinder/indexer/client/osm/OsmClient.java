@@ -8,11 +8,9 @@ import java.util.Map;
 
 public interface OsmClient {
 
-    List<OsmNode> elements(List<Long> ids);
+    List<OsmNode> nodes(List<Long> ids);
 
-    List<OsmElement> queryElements(String overpassQuery);
-
-    List<OsmElement> queryElements(IndexBox box);
+    List<OsmElement> elements(IndexBox box);
 
     interface IOverpassQueryBuilder {
 

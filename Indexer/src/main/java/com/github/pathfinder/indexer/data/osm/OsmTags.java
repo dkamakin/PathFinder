@@ -1,10 +1,17 @@
 package com.github.pathfinder.indexer.data.osm;
 
-import lombok.experimental.UtilityClass;
+import java.util.Map;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
-@UtilityClass
+@RequiredArgsConstructor
 public class OsmTags {
 
-    public static final String NATURAL = "natural";
+    private static final String NATURAL = "natural";
 
+    private final Map<String, String> tags;
+
+    public Optional<String> natural() {
+        return Optional.ofNullable(tags.get(OsmTags.NATURAL));
+    }
 }
