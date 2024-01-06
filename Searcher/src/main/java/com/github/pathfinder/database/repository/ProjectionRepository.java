@@ -28,7 +28,7 @@ public interface ProjectionRepository extends Neo4jRepository<PointNode, String>
             CALL gds.graph.project(
             $graphName,
             'Point',
-            'CONNECTION',
+            {CONNECTION: {orientation: 'UNDIRECTED'}},
             {
               nodeProperties:         ['latitude', 'longitude'],
               relationshipProperties: 'weight'
