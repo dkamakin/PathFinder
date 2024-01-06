@@ -24,8 +24,12 @@ public class PointSearcherService implements IPointSearcherService {
     @ReadTransactional
     @Logged("coordinate")
     public PointNode findNearest(Coordinate coordinate) {
+        var accuracy = accuracy();
+
+        log.info("Searching the nearest point to {}, accuracy: {}", coordinate, accuracy);
+
         return searcherRepository
-                .findNearest(coordinate.latitude(), coordinate.longitude(), accuracy())
+                .findNearest(coordinate.latitude(), coordinate.longitude(), accuracy)
                 .orElseThrow(() -> new PointNotFoundException(coordinate));
     }
 

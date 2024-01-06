@@ -1,5 +1,6 @@
 package com.github.pathfinder.database.repository.impl;
 
+import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.data.path.AStarResult;
 import com.github.pathfinder.database.mapper.ValueMapper;
 import com.github.pathfinder.database.repository.IPathRepository;
@@ -37,6 +38,7 @@ public class PathRepository implements IPathRepository {
     private final ValueMapper mapper;
 
     @Override
+    @Logged(value = {"graphName", "sourceId", "targetId"})
     public AStarResult aStar(String graphName, UUID sourceId, UUID targetId) {
         return client
                 .query(A_STAR_QUERY)
