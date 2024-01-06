@@ -8,7 +8,9 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Import;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
@@ -19,6 +21,9 @@ class CreateConnectionsListenerTest {
 
     @MockBean
     IPointService pointService;
+
+    @SpyBean
+    DeadLetterListener deadLetterListener;
 
     @Autowired
     SearcherApi searcherApi;
@@ -35,6 +40,7 @@ class CreateConnectionsListenerTest {
         searcherApi.createConnections();
 
         verify(pointService, timeout(MessagingTestConstant.DEFAULT_TIMEOUT.toMillis()).times(2)).createConnections();
+        verify(deadLetterListener).createConnections(any());
     }
 
     @Test

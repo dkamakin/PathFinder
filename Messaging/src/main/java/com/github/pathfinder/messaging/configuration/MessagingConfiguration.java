@@ -62,7 +62,7 @@ public class MessagingConfiguration implements RabbitListenerConfigurer {
     private Integer concurrentConsumers;
 
     @NotBlank
-    @Value("${direct-exchange.name}")
+    @Value("${exchange.direct.name}")
     private String directExchangeName;
 
     private final LocalValidatorFactoryBean localValidatorFactoryBean;

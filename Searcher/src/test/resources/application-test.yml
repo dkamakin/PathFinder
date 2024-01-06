@@ -2,16 +2,17 @@ coordinate:
   distance:
     accuracyMeters: 45.0
 exchange:
-  deadLetter:
-    name:
-      searcher-deadLetter-exchange
+  direct:
+    name: pathfinder.exchange.direct
+  searcher:
+    deadLetter:
+      name: pathfinder.exchange.searcher.deadLetter
 queue:
-  default:
-    name: searcher-api
-  deadLetter:
-    name: searcher-deadLetter-queue
-direct-exchange:
-  name: direct-exchange
+  searcher:
+    default:
+      name: pathfinder.queue.searcher.api
+    deadLetter:
+      name: pathfinder.queue.searcher.deadLetter
 spring:
   cloud:
     config:

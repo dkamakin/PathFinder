@@ -5,6 +5,9 @@ spring:
 logging:
   level:
     root: debug
+index:
+  delay:
+    P7D
 elevation:
   client:
     uri: "https://api.open-elevation.com/api/v1/lookup"

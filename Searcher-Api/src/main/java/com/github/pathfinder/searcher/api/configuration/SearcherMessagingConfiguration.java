@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.validation.annotation.Validated;
 
+@Slf4j
 @Getter
 @ToString
 @Validated
@@ -32,8 +34,8 @@ public class SearcherMessagingConfiguration {
     @UtilityClass
     public static class Token {
 
-        public static final String DEFAULT_QUEUE_NAME     = "${queue.default.name}";
-        public static final String DEAD_LETTER_QUEUE_NAME = "${queue.deadLetter.name}";
+        public static final String DEFAULT_QUEUE_NAME     = "${queue.searcher.default.name}";
+        public static final String DEAD_LETTER_QUEUE_NAME = "${queue.searcher.deadLetter.name}";
 
     }
 
@@ -46,7 +48,7 @@ public class SearcherMessagingConfiguration {
     private String deadLetterQueueName;
 
     @NotBlank
-    @Value("${exchange.deadLetter.name}")
+    @Value("${exchange.searcher.deadLetter.name}")
     private String deadLetterExchangeName;
 
     @Bean
@@ -66,6 +68,7 @@ public class SearcherMessagingConfiguration {
 
     @Bean
     public Binding searcherDefaultBinding(@Qualifier("directExchange") DirectExchange directExchange) {
+        log.info("Searcher binding with configuration: {}", this);
         return BindingBuilder.bind(searcherDefaultQueue()).to(directExchange).withQueueName();
     }
 
