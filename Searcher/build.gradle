@@ -10,7 +10,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocVersion")
     implementation("org.springframework.boot:spring-boot-starter-data-neo4j:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
     implementation("org.springframework.cloud:spring-cloud-starter-config:$springCloudConfigVersion")
 
     testImplementation("com.playtika.testcontainers:testcontainers-spring-boot:$testcontainersSpringVersion")

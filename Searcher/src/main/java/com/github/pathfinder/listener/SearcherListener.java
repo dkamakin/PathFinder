@@ -1,9 +1,12 @@
 package com.github.pathfinder.listener;
 
 import com.github.pathfinder.core.aspect.Logged;
+import com.github.pathfinder.mapper.NodeMapper;
+import com.github.pathfinder.messaging.error.RethrowingToSenderErrorHandler;
 import com.github.pathfinder.messaging.listener.AmqpHandler;
 import com.github.pathfinder.messaging.listener.AmqpListener;
 import com.github.pathfinder.searcher.api.data.point.CreateConnectionsMessage;
+import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
 import com.github.pathfinder.service.IPointService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +16,8 @@ import static com.github.pathfinder.searcher.api.configuration.SearcherMessaging
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@AmqpListener(queues = DEFAULT_QUEUE_NAME)
-public class CreateConnectionsListener {
+@AmqpListener(queues = DEFAULT_QUEUE_NAME, errorHandler = RethrowingToSenderErrorHandler.NAME)
+public class SearcherListener {
 
     private final IPointService pointService;
 
@@ -22,6 +25,12 @@ public class CreateConnectionsListener {
     @AmqpHandler
     public void connect(CreateConnectionsMessage ignored) {
         pointService.createConnections();
+    }
+
+    @Logged
+    @AmqpHandler
+    public int save(SavePointsMessage request) {
+        return pointService.saveAll(NodeMapper.MAPPER.pointNodes(request.points())).size();
     }
 
 }

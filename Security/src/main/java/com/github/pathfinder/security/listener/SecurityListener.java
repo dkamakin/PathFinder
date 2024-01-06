@@ -19,7 +19,7 @@ import static com.github.pathfinder.security.api.configuration.SecurityMessaging
 @Component
 @RequiredArgsConstructor
 @AmqpListener(errorHandler = RethrowingToSenderErrorHandler.NAME, queues = DEFAULT_QUEUE_NAME)
-public class AuthenticationListener {
+public class SecurityListener {
 
     private final IUserService userService;
 

@@ -1,6 +1,9 @@
 package com.github.pathfinder.configuration;
 
+import com.github.pathfinder.listener.DeadLetterListener;
+import com.github.pathfinder.listener.SearcherListener;
 import com.github.pathfinder.messaging.RabbitIntegrationTest;
+import com.github.pathfinder.messaging.error.RethrowingToSenderErrorHandler;
 import com.github.pathfinder.searcher.api.configuration.SearcherApiConfiguration;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -16,7 +19,10 @@ import org.springframework.context.annotation.Import;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @ImportAutoConfiguration(RefreshAutoConfiguration.class)
-@Import(SearcherApiConfiguration.class)
+@Import({SearcherApiConfiguration.class,
+        SearcherListener.class,
+        RethrowingToSenderErrorHandler.class,
+        DeadLetterListener.class})
 public @interface SearcherAmqpTest {
 
 }

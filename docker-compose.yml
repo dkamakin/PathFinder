@@ -20,6 +20,14 @@ services:
       PORT: ${SECURITY_PORT}
     ports:
       - "${SECURITY_PORT}:${SECURITY_PORT}"
+  indexer:
+    build: ./Indexer
+    container_name: indexer
+    environment:
+      CONFIG_URI: http://configuration:${CONFIGURATION_PORT}
+      PORT: ${INDEXER_PORT}
+    ports:
+      - "${INDEXER_PORT}:${INDEXER_PORT}"
   searcher:
     build: ./Searcher
     container_name: searcher

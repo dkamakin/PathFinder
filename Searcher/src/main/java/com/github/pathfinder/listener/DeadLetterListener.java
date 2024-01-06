@@ -14,11 +14,11 @@ import static com.github.pathfinder.searcher.api.configuration.SearcherMessaging
 @AmqpListener(queues = DEAD_LETTER_QUEUE_NAME)
 public class DeadLetterListener {
 
-    private final CreateConnectionsListener createConnectionsListener;
+    private final SearcherListener searcherListener;
 
     @AmqpHandler
     public void createConnections(CreateConnectionsMessage message) {
-        createConnectionsListener.connect(message);
+        searcherListener.connect(message);
     }
 
 }

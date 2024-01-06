@@ -2,6 +2,7 @@ package com.github.pathfinder.security.configuration;
 
 import com.github.pathfinder.messaging.RabbitIntegrationTest;
 import com.github.pathfinder.security.api.configuration.SecurityApiConfiguration;
+import com.github.pathfinder.security.listener.SecurityListener;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -14,7 +15,7 @@ import org.springframework.context.annotation.Import;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @ImportAutoConfiguration(RefreshAutoConfiguration.class)
-@Import(SecurityApiConfiguration.class)
+@Import({SecurityApiConfiguration.class, SecurityListener.class})
 public @interface SecurityAmqpTest {
 
 }

@@ -15,7 +15,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import static com.github.pathfinder.security.SecurityFixtures.TOKEN;
 import static com.github.pathfinder.security.SecurityFixtures.USER_ENTITY;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,8 +22,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @SecurityAmqpTest
-@Import(AuthenticationListener.class)
-class AuthenticationListenerTest {
+class SecurityListenerTest {
 
     @Autowired
     SecurityApi securityApi;
