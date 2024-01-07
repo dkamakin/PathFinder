@@ -62,7 +62,8 @@ class PointServiceTest {
                 .matches(chunk -> chunk.getId() == id);
     }
 
-    @Test void createConnections_ChunksNotFound_NoException() {
+    @Test
+    void createConnections_ChunksNotFound_NoException() {
         target.saveAll(1, List.of(PointFixtures.randomPointNodeBuilder().passabilityCoefficient(2D)
                                           .location(44.82744118518296, 20.419457053285115, 1D).build()));
         target.saveAll(2, List.of(PointFixtures.randomPointNodeBuilder().passabilityCoefficient(1D)
