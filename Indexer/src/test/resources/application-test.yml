@@ -33,6 +33,7 @@ index:
 elevation:
   client:
     uri: "https://api.open-elevation.com/api/v1/lookup"
+    batchSize: 20000
 osm:
   client:
     overpass:

@@ -7,11 +7,13 @@ import com.github.pathfinder.indexer.data.elevation.ElevationCoordinate;
 import com.github.pathfinder.indexer.data.elevation.ElevationMapper;
 import com.github.pathfinder.indexer.data.elevation.OpenElevationRequest;
 import com.github.pathfinder.indexer.data.elevation.OpenElevationResponse;
+import com.google.common.collect.Lists;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -26,8 +28,15 @@ public class OpenElevationClient implements ElevationClient {
     private final HttpClient                 httpClient;
 
     @Override
-    @SneakyThrows
     public List<Elevation> elevations(List<ElevationCoordinate> coordinates) {
+        return Lists.partition(coordinates, configuration.getBatchSize()).stream()
+                .map(this::elevationsInternal)
+                .flatMap(Collection::stream)
+                .toList();
+    }
+
+    @SneakyThrows
+    private List<Elevation> elevationsInternal(List<ElevationCoordinate> coordinates) {
         var request = request(coordinates);
         var result  = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
