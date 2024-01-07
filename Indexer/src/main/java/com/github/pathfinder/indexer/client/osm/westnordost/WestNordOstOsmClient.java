@@ -4,7 +4,7 @@ import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
 import com.github.pathfinder.indexer.client.osm.impl.OverpassQueryBuilder;
 import com.github.pathfinder.indexer.client.osm.impl.OverpassQueryTools;
-import com.github.pathfinder.indexer.configuration.osm.IndexBox;
+import com.github.pathfinder.indexer.data.index.IndexBox;
 import com.github.pathfinder.indexer.data.osm.OsmElement;
 import com.github.pathfinder.indexer.data.osm.OsmNode;
 import com.github.pathfinder.indexer.exception.ApiExecutionException;
@@ -45,8 +45,8 @@ public class WestNordOstOsmClient implements OsmClient {
                                                               out body;
                                                               """
         ).bind(Map.of(
-                "min", OverpassQueryTools.latitudeLongitude(box.getMin()),
-                "max", OverpassQueryTools.latitudeLongitude(box.getMax())
+                "min", OverpassQueryTools.latitudeLongitude(box.min()),
+                "max", OverpassQueryTools.latitudeLongitude(box.max())
         )), new ListCollectingDataHandler());
     }
 

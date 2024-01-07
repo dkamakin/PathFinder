@@ -11,8 +11,6 @@ import org.springframework.cloud.autoconfigure.RefreshAutoConfiguration;
 
 @Inherited
 @SpringBootTest(classes = {
-        CoreConfiguration.class,
-        RefreshAutoConfiguration.class
 })
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

@@ -5,8 +5,11 @@ import com.github.pathfinder.mapper.NodeMapper;
 import com.github.pathfinder.messaging.error.RethrowingToSenderErrorHandler;
 import com.github.pathfinder.messaging.listener.AmqpHandler;
 import com.github.pathfinder.messaging.listener.AmqpListener;
-import com.github.pathfinder.searcher.api.data.point.CreateConnectionsMessage;
+import com.github.pathfinder.searcher.api.data.ConnectChunksMessage;
+import com.github.pathfinder.searcher.api.data.GetChunksMessage;
+import com.github.pathfinder.searcher.api.data.GetChunksResponse;
 import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
+import com.github.pathfinder.service.IChunkService;
 import com.github.pathfinder.service.IPointService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,17 +23,24 @@ import static com.github.pathfinder.searcher.api.configuration.SearcherMessaging
 public class SearcherListener {
 
     private final IPointService pointService;
+    private final IChunkService chunkService;
 
     @Logged
     @AmqpHandler
-    public void connect(CreateConnectionsMessage ignored) {
-        pointService.createConnections();
+    public void connect(ConnectChunksMessage request) {
+        pointService.createConnections(request.ids());
     }
 
     @Logged
     @AmqpHandler
-    public int save(SavePointsMessage request) {
-        return pointService.saveAll(NodeMapper.MAPPER.pointNodes(request.points())).size();
+    public void save(SavePointsMessage request) {
+        pointService.saveAll(request.id(), NodeMapper.MAPPER.pointNodes(request.points()));
+    }
+
+    @Logged
+    @AmqpHandler
+    public GetChunksResponse chunks(GetChunksMessage request) {
+        return NodeMapper.MAPPER.getChunksResponse(chunkService.chunks(request.ids()));
     }
 
 }

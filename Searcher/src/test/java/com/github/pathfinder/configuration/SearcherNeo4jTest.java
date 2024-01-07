@@ -1,5 +1,8 @@
 package com.github.pathfinder.configuration;
 
+import com.github.pathfinder.service.impl.ChunkService;
+import com.github.pathfinder.service.impl.PointService;
+import com.github.pathfinder.service.impl.ProjectionService;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -18,7 +21,12 @@ import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORT
 @Retention(RetentionPolicy.RUNTIME)
 @Transactional(propagation = NOT_SUPPORTED)
 @ImportAutoConfiguration(RefreshAutoConfiguration.class)
-@Import({Neo4jTestConfiguration.class, CoordinateConfiguration.class})
+@Import({Neo4jTestConfiguration.class,
+        CoordinateConfiguration.class,
+        Neo4jTestTemplate.class,
+        ProjectionService.class,
+        PointService.class,
+        ChunkService.class})
 public @interface SearcherNeo4jTest {
 
 }

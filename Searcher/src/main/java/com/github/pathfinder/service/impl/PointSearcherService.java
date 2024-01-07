@@ -10,10 +10,12 @@ import com.github.pathfinder.searcher.api.exception.PointNotFoundException;
 import com.github.pathfinder.service.IPointSearcherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RefreshScope
 @RequiredArgsConstructor
 public class PointSearcherService implements IPointSearcherService {
 

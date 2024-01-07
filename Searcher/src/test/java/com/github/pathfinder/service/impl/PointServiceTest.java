@@ -4,10 +4,12 @@ import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.CoordinateConfiguration;
 import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
+import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.node.PointRelation;
 import com.github.pathfinder.service.IPointService;
 import com.github.pathfinder.service.IProjectionService;
 import java.util.List;
+import java.util.function.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +30,17 @@ class PointServiceTest {
     @Autowired
     IProjectionService projectionService;
 
+    @Autowired
+    ChunkService chunkService;
+
     @Test
     void saveAll_PointsAreConnected_StoreConnection() {
         var sourcePoint = PointFixtures.randomPointNode();
         var targetPoint = PointFixtures.randomPointNode();
         var connection  = new PointRelation(12D, 13D, targetPoint);
         var secondPoint = PointFixtures.randomPointNode();
-        var actual      = target.saveAll(List.of(sourcePoint.add(connection), secondPoint));
+        var id     = 1234;
+        var actual = target.saveAll(id, List.of(sourcePoint.add(connection), secondPoint));
 
         assertThat(actual)
                 .hasSize(2)
@@ -49,6 +55,33 @@ class PointServiceTest {
                 .anySatisfy(second -> assertThat(second)
                         .matches(saved -> StringUtils.isNotEmpty(saved.getInternalId()))
                         .isEqualTo(secondPoint));
+
+        assertThat(chunkService.chunks(List.of(id)))
+                .hasSize(1)
+                .first()
+                .matches(chunk -> chunk.getId() == id);
+    }
+
+    @Test
+    void createConnections_ChunksFound_MarkChunksAsConnected() {
+        target.saveAll(1, List.of(PointFixtures.randomPointNodeBuilder()
+                                          .passabilityCoefficient(2D)
+                                          .location(44.82744118518296, 20.419457053285115, 1D).build()));
+        target.saveAll(2, List.of(PointFixtures.randomPointNodeBuilder()
+                                          .passabilityCoefficient(1D)
+                                          .location(44.827410791880155, 20.419468330585666, 1D).build()));
+
+        var ids = List.of(1, 2);
+
+        assertThat(chunkService.chunks(ids))
+                .hasSameSizeAs(ids)
+                .allMatch(Predicate.not(ChunkNode::isConnected));
+
+        target.createConnections(ids);
+
+        assertThat(chunkService.chunks(ids))
+                .hasSameSizeAs(ids)
+                .allMatch(ChunkNode::isConnected);
     }
 
     @Test
@@ -66,9 +99,10 @@ class PointServiceTest {
         var randomRelation = new PointRelation(1D, 1D, randomPoint);
         var graphName      = "test";
 
-        target.saveAll(List.of(firstPoint, secondPoint, tooFarAwayPoint.add(randomRelation)));
+        testTemplate.saveAll(List.of(firstPoint, secondPoint, tooFarAwayPoint.add(randomRelation)));
         projectionService.createProjection(graphName);
-        target.createConnections();
+
+        target.createConnections(List.of());
 
         var actual = testTemplate.allNodes();
 

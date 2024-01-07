@@ -2,6 +2,7 @@ package com.github.pathfinder.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.pathfinder.PointFixtures;
+import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.core.configuration.CoreConfiguration;
 import com.github.pathfinder.database.node.PointNode;
@@ -40,6 +41,9 @@ class PathSearcherTest {
     @Autowired
     IPathSearcher target;
 
+    @Autowired
+    Neo4jTestTemplate testTemplate;
+
     @SneakyThrows
     static Stream<TestPathFile> testPathFileStream() {
         var json   = Files.readString(TEST_FILE_PATH);
@@ -55,7 +59,7 @@ class PathSearcherTest {
         var graphName = "test";
         var testFile  = new TestFile(deserialized);
 
-        pointService.saveAll(testFile.nodes());
+        testTemplate.saveAll(testFile.nodes());
 
         var sourcePoint = testFile.node(deserialized.sourceId());
         var targetPoint = testFile.node(deserialized.targetId());
@@ -77,7 +81,7 @@ class PathSearcherTest {
         var sourcePoint = PointFixtures.randomPointNode();
         var targetPoint = PointFixtures.randomPointNode();
 
-        pointService.saveAll(List.of(sourcePoint, targetPoint));
+        testTemplate.saveAll(List.of(sourcePoint, targetPoint));
 
         projectionService.createProjection(graphName);
 

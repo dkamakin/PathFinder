@@ -1,6 +1,7 @@
 package com.github.pathfinder.service.impl;
 
 import com.github.pathfinder.PointFixtures;
+import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.core.data.Coordinate;
 import com.github.pathfinder.searcher.api.exception.PointNotFoundException;
@@ -22,6 +23,9 @@ class PointSearcherServiceTest {
 
     @Autowired
     IPointService pointService;
+
+    @Autowired
+    Neo4jTestTemplate testTemplate;
 
     @Test
     void findNearest_PointDoesNotExist_PointNotFoundException() {
@@ -48,7 +52,7 @@ class PointSearcherServiceTest {
                 .location(44.82755949185502, 20.413331663727266, 1D).build();
         var coordinate = new Coordinate(44.827452775846965, 20.419722423975298);
 
-        pointService.saveAll(List.of(nearestPoint, noisePoint, notNearest));
+        testTemplate.saveAll(List.of(nearestPoint, noisePoint, notNearest));
 
         var found = target.findNearest(coordinate);
 

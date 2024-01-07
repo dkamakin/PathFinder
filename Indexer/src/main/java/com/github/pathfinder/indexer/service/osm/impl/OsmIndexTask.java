@@ -1,6 +1,6 @@
 package com.github.pathfinder.indexer.service.osm.impl;
 
-import com.github.pathfinder.indexer.configuration.osm.IndexBox;
+import com.github.pathfinder.indexer.data.index.IndexBox;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

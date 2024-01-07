@@ -1,6 +1,6 @@
 package com.github.pathfinder.indexer.client.osm.impl;
 
-import com.github.pathfinder.indexer.configuration.osm.IndexBox;
+import com.github.pathfinder.indexer.data.index.IndexBox;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
@@ -25,7 +25,7 @@ public class OverpassQueryTools {
     }
 
     public static String latitudeLongitude(IndexBox.BoxCoordinate box) {
-        return box.getLatitude() + COMMA + box.getLongitude();
+        return box.latitude() + COMMA + box.longitude();
     }
 
 }

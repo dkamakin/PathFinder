@@ -2,7 +2,7 @@ package com.github.pathfinder.listener;
 
 import com.github.pathfinder.messaging.listener.AmqpHandler;
 import com.github.pathfinder.messaging.listener.AmqpListener;
-import com.github.pathfinder.searcher.api.data.point.CreateConnectionsMessage;
+import com.github.pathfinder.searcher.api.data.ConnectChunksMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ public class DeadLetterListener {
     private final SearcherListener searcherListener;
 
     @AmqpHandler
-    public void createConnections(CreateConnectionsMessage message) {
+    public void createConnections(ConnectChunksMessage message) {
         searcherListener.connect(message);
     }
 
