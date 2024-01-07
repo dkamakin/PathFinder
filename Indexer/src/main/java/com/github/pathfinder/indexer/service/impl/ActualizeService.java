@@ -7,7 +7,6 @@ import com.github.pathfinder.indexer.service.IActualizeService;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.Chunk;
 import com.github.pathfinder.searcher.api.data.GetChunksMessage;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,19 +29,18 @@ public class ActualizeService implements IActualizeService {
     @Override
     @Transactional
     @Logged(ignoreReturnValue = false)
-    public List<IndexBoxEntity> perform() {
+    public void perform() {
         var notSavedOrConnectedBoxes = boxService.notSavedOrConnected();
 
         if (CollectionUtils.isEmpty(notSavedOrConnectedBoxes)) {
-            return Collections.emptyList();
+            log.info("Not saved or connected boxes not found");
+            return;
         }
 
         var chunks        = searcherApi.chunks(getChunksMessage(notSavedOrConnectedBoxes)).chunks();
         var indexedChunks = indexChunks(chunks);
 
         notSavedOrConnectedBoxes.forEach(box -> actualize(box, indexedChunks));
-
-        return notSavedOrConnectedBoxes;
     }
 
     private void actualize(IndexBoxEntity box, Map<Integer, Chunk> chunks) {
