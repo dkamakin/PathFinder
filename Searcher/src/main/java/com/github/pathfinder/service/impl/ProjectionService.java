@@ -2,8 +2,9 @@ package com.github.pathfinder.service.impl;
 
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.core.interfaces.ReadTransactional;
-import com.github.pathfinder.database.repository.ProjectionRepository;
+import com.github.pathfinder.database.repository.IProjectionRepository;
 import com.github.pathfinder.service.IProjectionService;
+import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ProjectionService implements IProjectionService {
 
-    private final ProjectionRepository projectionRepository;
+    private final IProjectionRepository projectionRepository;
 
     @Override
     @Transactional
@@ -26,9 +27,9 @@ public class ProjectionService implements IProjectionService {
             return false;
         }
 
-        int nodesCount = projectionRepository.createProjection(graphName);
+        var projectionStatistics = projectionRepository.createProjection(graphName);
 
-        log.info("Created a projection with {} nodes", nodesCount);
+        log.info("Created a projection {}, {}", graphName, projectionStatistics);
 
         return true;
     }
@@ -37,7 +38,7 @@ public class ProjectionService implements IProjectionService {
     @Transactional
     @Logged(ignoreReturnValue = false)
     public List<String> deleteAll() {
-        return projectionRepository.deleteAll(projectionRepository.all());
+        return Lists.newArrayList(projectionRepository.deleteAll(projectionRepository.all()));
     }
 
     @Override

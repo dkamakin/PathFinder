@@ -4,12 +4,10 @@ import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.data.path.AStarResult;
 import com.github.pathfinder.database.mapper.ValueMapper;
 import com.github.pathfinder.database.repository.IPathRepository;
-import com.github.pathfinder.searcher.api.exception.PathNotFoundException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.neo4j.driver.Record;
-import org.neo4j.driver.types.TypeSystem;
 import org.springframework.data.neo4j.core.Neo4jClient;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +37,7 @@ public class PathRepository implements IPathRepository {
 
     @Override
     @Logged(value = {"graphName", "sourceId", "targetId"})
-    public AStarResult aStar(String graphName, UUID sourceId, UUID targetId) {
+    public Optional<AStarResult> aStar(String graphName, UUID sourceId, UUID targetId) {
         return client
                 .query(A_STAR_QUERY)
                 .bindAll(Map.of(
@@ -48,13 +46,8 @@ public class PathRepository implements IPathRepository {
                         "graphName", graphName
                 ))
                 .fetchAs(AStarResult.class)
-                .mappedBy(this::aStarResult)
-                .one()
-                .orElseThrow(PathNotFoundException::new);
-    }
-
-    private AStarResult aStarResult(TypeSystem typeSystem, Record fetched) {
-        return mapper.map(typeSystem, AStarResult.class, fetched);
+                .mappedBy((typeSystem, fetched) -> mapper.map(typeSystem, AStarResult.class, fetched))
+                .one();
     }
 
 }

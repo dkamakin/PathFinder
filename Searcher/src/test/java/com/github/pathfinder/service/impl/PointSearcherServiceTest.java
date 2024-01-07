@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SearcherNeo4jTest
-@Import({PointSearcherService.class, PointService.class, ProjectionService.class})
+@Import({PointSearcherService.class})
 class PointSearcherServiceTest {
 
     @Autowired

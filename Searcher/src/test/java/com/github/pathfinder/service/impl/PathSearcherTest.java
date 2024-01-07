@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SearcherNeo4jTest
-@Import({PointService.class, ProjectionService.class, PathSearcher.class, PathRepository.class})
+@Import({PathSearcher.class, PathRepository.class})
 class PathSearcherTest {
 
     static Path RESOURCES      = Paths.get("src", "test", "resources");

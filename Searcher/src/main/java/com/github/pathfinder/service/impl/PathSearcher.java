@@ -5,6 +5,7 @@ import com.github.pathfinder.core.interfaces.ReadTransactional;
 import com.github.pathfinder.data.path.AStarResult;
 import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.repository.IPathRepository;
+import com.github.pathfinder.searcher.api.exception.PathNotFoundException;
 import com.github.pathfinder.service.IPathSearcher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,9 @@ public class PathSearcher implements IPathSearcher {
     @Override
     @ReadTransactional
     public AStarResult aStar(String graphName, PointNode source, PointNode target) {
-        return searcherRepository.aStar(graphName, source.getId(), target.getId());
+        return searcherRepository
+                .aStar(graphName, source.getId(), target.getId())
+                .orElseThrow(PathNotFoundException::new);
     }
 
 }

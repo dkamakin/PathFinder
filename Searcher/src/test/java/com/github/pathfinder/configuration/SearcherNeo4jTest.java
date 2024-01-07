@@ -1,5 +1,6 @@
 package com.github.pathfinder.configuration;
 
+import com.github.pathfinder.database.repository.impl.ProjectionRepository;
 import com.github.pathfinder.service.impl.ChunkService;
 import com.github.pathfinder.service.impl.PointService;
 import com.github.pathfinder.service.impl.ProjectionService;
@@ -25,6 +26,7 @@ import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORT
         CoordinateConfiguration.class,
         Neo4jTestTemplate.class,
         ProjectionService.class,
+        ProjectionRepository.class,
         PointService.class,
         ChunkService.class})
 public @interface SearcherNeo4jTest {
