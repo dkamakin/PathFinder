@@ -1,13 +1,11 @@
 package com.github.pathfinder.service.impl;
 
-import com.github.pathfinder.configuration.CoordinateConfiguration;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.repository.PointRepository;
 import com.github.pathfinder.service.IChunkService;
 import com.github.pathfinder.service.IPointService;
-import com.github.pathfinder.service.IProjectionService;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PointService implements IPointService {
 
-    private final PointRepository         pointRepository;
-    private final CoordinateConfiguration coordinateConfiguration;
-    private final IProjectionService      projectionService;
-    private final IChunkService chunkService;
+    private final PointRepository    pointRepository;
+    private final PointConnector     pointConnector;
+    private final ProjectionOperator projectionOperator;
+    private final IChunkService      chunkService;
 
     @Override
     @Transactional
@@ -41,21 +39,10 @@ public class PointService implements IPointService {
     }
 
     @Override
-    @Transactional
     @Logged("chunkIds")
     public void createConnections(List<Integer> chunkIds) {
-        pointRepository.createConnections(coordinateConfiguration.getDistanceAccuracyMeters());
-        projectionService.deleteAll();
-        projectionService.createProjection(UUID.randomUUID().toString());
-        setConnected(chunkIds);
-    }
-
-    private void setConnected(List<Integer> chunkIds) {
-        var chunks = chunkService.chunks(chunkIds);
-
-        chunks.forEach(ChunkNode::connected);
-
-        chunkService.saveAll(chunks);
+        pointConnector.createConnections(chunkIds);
+        projectionOperator.replaceAll(UUID.randomUUID().toString());
     }
 
 }

@@ -36,8 +36,8 @@ class PointServiceTest {
         var targetPoint = PointFixtures.randomPointNode();
         var connection  = new PointRelation(12D, 13D, targetPoint);
         var secondPoint = PointFixtures.randomPointNode();
-        var id     = 1234;
-        var actual = target.saveAll(id, List.of(sourcePoint.add(connection), secondPoint));
+        var id          = 1234;
+        var actual      = target.saveAll(id, List.of(sourcePoint.add(connection), secondPoint));
 
         assertThat(actual)
                 .hasSize(2)
