@@ -42,10 +42,12 @@
 
         <insert tableName="index_box">
             <column name="id">1</column>
-            <column name="MIN_LATITUDE">45.163884</column>
-            <column name="MIN_LONGITUDE">19.859762</column>
-            <column name="MAX_LATITUDE">45.170420</column>
-            <column name="MAX_LONGITUDE">19.872508</column>
+            <column name="CONNECTED">false</column>
+            <column name="SAVED">false</column>
+            <column name="MIN_LATITUDE">45.136524</column>
+            <column name="MIN_LONGITUDE">19.836845</column>
+            <column name="MAX_LATITUDE">45.179012</column>
+            <column name="MAX_LONGITUDE">19.923534</column>
         </insert>
 
     </changeSet>

@@ -2,6 +2,7 @@ package com.github.pathfinder.indexer.service.impl;
 
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.core.interfaces.ReadTransactional;
+import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.indexer.configuration.IndexerConfiguration;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import com.github.pathfinder.indexer.database.repository.IndexBoxRepository;
@@ -22,13 +23,16 @@ public class IndexBoxService implements BoxService {
 
     private final IndexBoxRepository   boxRepository;
     private final IndexerConfiguration indexerConfiguration;
+    private final IDateTimeSupplier dateTimeSupplier;
 
     @Override
     @ReadTransactional
     @Logged(ignoreReturnValue = false)
     public List<IndexBoxEntity> notSavedOrConnected() {
+        log.info("Indexer configuration: {}", indexerConfiguration);
         return boxRepository.notSavedOrConnected(indexerConfiguration.getRetryChunkSaveDelay(),
-                                                 indexerConfiguration.getRetryChunkConnectDelay());
+                                                 indexerConfiguration.getRetryChunkConnectDelay(),
+                                                 dateTimeSupplier.instant());
     }
 
     @Override
