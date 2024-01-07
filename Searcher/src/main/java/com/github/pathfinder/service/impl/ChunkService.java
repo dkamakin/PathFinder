@@ -26,12 +26,8 @@ public class ChunkService implements IChunkService {
     @Override
     @Transactional
     @Logged(value = "chunkNode", ignoreReturnValue = false)
-    public List<ChunkNode> setConnected(List<Integer> ids) {
-        var chunks = chunks(ids);
-
-        chunks.forEach(ChunkNode::connected);
-
-        return chunkRepository.saveAll(chunks);
+    public List<ChunkNode> saveAll(List<ChunkNode> nodes) {
+        return chunkRepository.saveAll(nodes);
     }
 
     @Override

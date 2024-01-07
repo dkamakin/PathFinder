@@ -7,7 +7,7 @@ public interface IChunkService {
 
     ChunkNode save(ChunkNode node);
 
-    List<ChunkNode> setConnected(List<Integer> ids);
+    List<ChunkNode> saveAll(List<ChunkNode> nodes);
 
     List<ChunkNode> chunks(List<Integer> ids);
 

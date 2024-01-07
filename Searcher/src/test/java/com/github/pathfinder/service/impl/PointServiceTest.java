@@ -62,6 +62,26 @@ class PointServiceTest {
                 .matches(chunk -> chunk.getId() == id);
     }
 
+    @Test void createConnections_ChunksNotFound_NoException() {
+        target.saveAll(1, List.of(PointFixtures.randomPointNodeBuilder().passabilityCoefficient(2D)
+                                          .location(44.82744118518296, 20.419457053285115, 1D).build()));
+        target.saveAll(2, List.of(PointFixtures.randomPointNodeBuilder().passabilityCoefficient(1D)
+                                          .location(44.827410791880155, 20.419468330585666, 1D).build()));
+
+        var ids            = List.of(1, 2);
+        var notExistingIds = List.of(134, 43);
+
+        assertThat(chunkService.chunks(notExistingIds)).isEmpty();
+
+        assertThat(chunkService.chunks(ids)).hasSameSizeAs(ids).allMatch(Predicate.not(ChunkNode::isConnected));
+
+        target.createConnections(notExistingIds);
+
+        assertThat(chunkService.chunks(notExistingIds)).isEmpty();
+
+        assertThat(chunkService.chunks(ids)).hasSameSizeAs(ids).allMatch(Predicate.not(ChunkNode::isConnected));
+    }
+
     @Test
     void createConnections_ChunksFound_MarkChunksAsConnected() {
         target.saveAll(1, List.of(PointFixtures.randomPointNodeBuilder()

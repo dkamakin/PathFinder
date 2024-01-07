@@ -47,7 +47,15 @@ public class PointService implements IPointService {
         pointRepository.createConnections(coordinateConfiguration.getDistanceAccuracyMeters());
         projectionService.deleteAll();
         projectionService.createProjection(UUID.randomUUID().toString());
-        chunkService.setConnected(chunkIds);
+        setConnected(chunkIds);
+    }
+
+    private void setConnected(List<Integer> chunkIds) {
+        var chunks = chunkService.chunks(chunkIds);
+
+        chunks.forEach(ChunkNode::connected);
+
+        chunkService.saveAll(chunks);
     }
 
 }

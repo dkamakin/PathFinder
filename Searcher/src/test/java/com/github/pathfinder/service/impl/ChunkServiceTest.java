@@ -55,32 +55,4 @@ class ChunkServiceTest {
                 .allMatch(Predicate.not(ChunkNode::isConnected));
     }
 
-    @Test
-    void setConnected_SomeChunksFound_MarkAsConnected() {
-        var existingIds = List.of(123, 45, 898);
-
-        existingIds.stream().map(this::chunkNode).forEach(target::save);
-
-        var request = Stream.concat(existingIds.stream(), Stream.of(8345, 8123)).toList();
-        var actual  = target.setConnected(request);
-
-        assertThat(actual)
-                .hasSameSizeAs(existingIds)
-                .allMatch(node -> existingIds.contains(node.getId()))
-                .allMatch(node -> StringUtils.isNotEmpty(node.getInternalId()))
-                .allMatch(ChunkNode::isConnected);
-    }
-
-    @Test
-    void setConnected_NothingFound_NoAction() {
-        var existing = target.save(chunkNode(444));
-        var actual   = target.setConnected(List.of(1, 2, 3));
-
-        assertThat(actual).isEmpty();
-        assertThat(target.chunks(List.of(existing.getId())))
-                .hasSize(1)
-                .first()
-                .matches(Predicate.not(ChunkNode::isConnected));
-    }
-
 }
