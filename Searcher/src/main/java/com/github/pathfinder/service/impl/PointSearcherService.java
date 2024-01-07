@@ -1,6 +1,5 @@
 package com.github.pathfinder.service.impl;
 
-import com.github.pathfinder.configuration.CoordinateConfiguration;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.core.data.Coordinate;
 import com.github.pathfinder.core.interfaces.ReadTransactional;
@@ -20,23 +19,14 @@ import org.springframework.stereotype.Service;
 public class PointSearcherService implements IPointSearcherService {
 
     private final PointSearcherRepository searcherRepository;
-    private final CoordinateConfiguration coordinateConfiguration;
 
     @Override
     @ReadTransactional
     @Logged("coordinate")
     public PointNode findNearest(Coordinate coordinate) {
-        var accuracy = accuracy();
-
-        log.info("Searching the nearest point to {}, accuracy: {}", coordinate, accuracy);
-
         return searcherRepository
-                .findNearest(coordinate.latitude(), coordinate.longitude(), accuracy)
+                .findNearest(coordinate.latitude(), coordinate.longitude())
                 .orElseThrow(() -> new PointNotFoundException(coordinate));
-    }
-
-    private Double accuracy() {
-        return coordinateConfiguration.getDistanceAccuracyMeters();
     }
 
 }

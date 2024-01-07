@@ -13,13 +13,11 @@ public interface PointSearcherRepository extends Neo4jRepository<PointNode, Stri
     @Query("""
             MATCH (node:Point)
             WITH node, point.distance(node.location2d, point({latitude: $latitude, longitude: $longitude})) AS distance
-            WHERE distance <= $accuracyMeters
             RETURN node
             ORDER BY distance
             LIMIT 1
             """)
     Optional<PointNode> findNearest(@Param("latitude") Double latitude,
-                                    @Param("longitude") Double longitude,
-                                    @Param("accuracyMeters") Double accuracyMeters);
+                                    @Param("longitude") Double longitude);
 
 }
