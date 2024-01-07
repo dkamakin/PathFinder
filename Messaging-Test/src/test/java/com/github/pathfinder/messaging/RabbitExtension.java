@@ -6,7 +6,7 @@ import org.testcontainers.containers.RabbitMQContainer;
 
 public class RabbitExtension implements BeforeAllCallback {
 
-    private static final String RABBIT_IMAGE = "rabbitmq:3.12-management-alpine";
+    private static final String RABBIT_IMAGE = "rabbitmq:3.12.12-management-alpine";
 
     private final RabbitMQContainer rabbitMQContainer;
 
