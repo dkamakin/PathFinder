@@ -14,9 +14,9 @@ public class ProjectionOperator {
 
     @Logged
     @Transactional
-    public void replaceAll(String newGraphName) {
+    public void replaceDefault() {
         projectionService.deleteAll();
-        projectionService.createProjection(newGraphName);
+        projectionService.createDefaultProjection();
     }
 
 }

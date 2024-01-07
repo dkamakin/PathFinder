@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ProjectionService implements IProjectionService {
 
+    public static final String DEFAULT_GRAPH = "pathfinder-default";
+
     private final IProjectionRepository projectionRepository;
 
     @Override
@@ -52,7 +54,18 @@ public class ProjectionService implements IProjectionService {
     @ReadTransactional
     @Logged(ignoreReturnValue = false)
     public Optional<String> defaultGraphName() {
-        return projectionRepository.all().stream().findFirst();
+        return Optional.of(DEFAULT_GRAPH).filter(projectionRepository::exists);
+    }
+
+    @Override
+    @Transactional
+    @Logged("graphName")
+    public synchronized String createDefaultProjection() {
+        var projection = DEFAULT_GRAPH;
+
+        log.info("Create default projection result: {}", createProjection(projection)); // NOSONAR
+
+        return projection;
     }
 
 }

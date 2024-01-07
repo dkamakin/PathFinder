@@ -56,15 +56,13 @@ class PathSearcherTest {
     @ParameterizedTest
     @MethodSource("testPathFileStream")
     void aStar_PathExists_ReturnCorrectPath(TestPathFile deserialized) {
-        var graphName = "test";
+        var graphName = projectionService.createDefaultProjection();
         var testFile  = new TestFile(deserialized);
 
         testTemplate.saveAll(testFile.nodes());
 
         var sourcePoint = testFile.node(deserialized.sourceId());
         var targetPoint = testFile.node(deserialized.targetId());
-
-        projectionService.createProjection(graphName);
 
         var actual = target.aStar(graphName, sourcePoint, targetPoint);
 
@@ -77,13 +75,11 @@ class PathSearcherTest {
 
     @Test
     void aStar_PathDoesNotExist_PathNotFoundException() {
-        var graphName   = "test";
+        var graphName   = projectionService.createDefaultProjection();
         var sourcePoint = PointFixtures.randomPointNode();
         var targetPoint = PointFixtures.randomPointNode();
 
         testTemplate.saveAll(List.of(sourcePoint, targetPoint));
-
-        projectionService.createProjection(graphName);
 
         assertThatThrownBy(() -> target.aStar(graphName, sourcePoint, targetPoint))
                 .isInstanceOf(PathNotFoundException.class);

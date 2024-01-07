@@ -115,16 +115,13 @@ class PointServiceTest {
                 .location(44.82755949185502, 20.413331663727266, 1D).build();
         var randomPoint    = PointFixtures.randomPointNode();
         var randomRelation = new PointRelation(1D, 1D, randomPoint);
-        var graphName      = "test";
 
         testTemplate.saveAll(List.of(firstPoint, secondPoint, tooFarAwayPoint.add(randomRelation)));
-        projectionService.createProjection(graphName);
 
         target.createConnections(List.of());
 
         var actual = testTemplate.allNodes();
 
-        assertThat(projectionService.exists(graphName)).isFalse();
         assertThat(projectionService.defaultGraphName()).isNotEmpty();
 
         assertThat(actual)

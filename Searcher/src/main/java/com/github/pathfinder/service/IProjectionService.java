@@ -13,4 +13,6 @@ public interface IProjectionService {
 
     Optional<String> defaultGraphName();
 
+    String createDefaultProjection();
+
 }

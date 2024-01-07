@@ -7,7 +7,6 @@ import com.github.pathfinder.database.repository.PointRepository;
 import com.github.pathfinder.service.IChunkService;
 import com.github.pathfinder.service.IPointService;
 import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -42,7 +41,7 @@ public class PointService implements IPointService {
     @Logged("chunkIds")
     public void createConnections(List<Integer> chunkIds) {
         pointConnector.createConnections(chunkIds);
-        projectionOperator.replaceAll(UUID.randomUUID().toString());
+        projectionOperator.replaceDefault();
     }
 
 }
