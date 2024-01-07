@@ -64,12 +64,13 @@ class ProjectionServiceTest {
 
     @Test
     void defaultGraphName_ProjectionsExists_ReturnDefault() {
-        var sourcePoint      = PointFixtures.randomPointNode();
-        var connection       = new PointRelation(12D, 13D, PointFixtures.randomPointNode());
-        var defaultGraphName = target.createDefaultProjection();
-        var anotherGraphName = defaultGraphName + 'a';
+        var sourcePoint = PointFixtures.randomPointNode();
+        var connection  = new PointRelation(12D, 13D, PointFixtures.randomPointNode());
 
         testTemplate.saveAll(List.of(sourcePoint.add(connection)));
+
+        var defaultGraphName = target.createDefaultProjection();
+        var anotherGraphName = defaultGraphName + 'a';
 
         assertThat(target.createProjection(anotherGraphName)).isTrue();
         assertThat(target.defaultGraphName()).contains(defaultGraphName);

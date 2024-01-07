@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ProjectionService implements IProjectionService {
 
-    public static final String DEFAULT_GRAPH = "pathfinder-default";
+    private static final String DEFAULT_GRAPH = "pathfinder-default";
 
     private final IProjectionRepository projectionRepository;
 
