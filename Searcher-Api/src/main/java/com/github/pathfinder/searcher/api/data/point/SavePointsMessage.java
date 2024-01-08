@@ -3,7 +3,7 @@ package com.github.pathfinder.searcher.api.data.point;
 import com.google.common.base.MoreObjects;
 import java.util.List;
 
-public record SavePointsMessage(Integer id, List<Point> points) {
+public record SavePointsMessage(int id, List<Point> points) {
 
     @Override
     public String toString() {

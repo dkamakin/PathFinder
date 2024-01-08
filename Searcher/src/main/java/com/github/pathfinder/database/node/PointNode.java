@@ -32,7 +32,6 @@ public class PointNode {
     public static class Token {
 
         public static final String NODE_NAME               = "Point";
-        public static final String CONNECTION              = "CONNECTION";
         public static final String ID                      = "id";
         public static final String ALTITUDE                = "altitude";
         public static final String LONGITUDE               = "longitude";
@@ -52,7 +51,7 @@ public class PointNode {
     private UUID id;
 
     @ToString.Exclude
-    @Relationship(type = Token.CONNECTION)
+    @Relationship(type = PointRelation.Token.TYPE)
     private Set<PointRelation> relations;
 
     @NotNull

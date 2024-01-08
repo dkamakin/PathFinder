@@ -17,4 +17,14 @@ public interface ChunkRepository extends Neo4jRepository<ChunkNode, String> {
             """)
     List<ChunkNode> find(@Param("ids") List<Integer> ids);
 
+    List<ChunkNode> findChunkNodeByIdIn(@Param("ids") List<Integer> ids);
+
+    @Query("""
+            MATCH (chunk:Chunk)
+            WHERE chunk.id IN $ids
+            SET chunk.connected = $connected
+            """)
+    void markConnected(@Param("ids") List<Integer> ids,
+                       @Param("connected") boolean connected);
+
 }

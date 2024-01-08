@@ -5,10 +5,9 @@ import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.node.PointRelation;
+import com.github.pathfinder.service.IDefaultProjectionService;
 import com.github.pathfinder.service.IPointService;
-import com.github.pathfinder.service.IProjectionService;
 import java.util.List;
-import java.util.function.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ class PointServiceTest {
     Neo4jTestTemplate testTemplate;
 
     @Autowired
-    IProjectionService projectionService;
+    IDefaultProjectionService projectionService;
 
     @Autowired
     ChunkService chunkService;
@@ -38,6 +37,9 @@ class PointServiceTest {
         var secondPoint = PointFixtures.randomPointNode();
         var id          = 1234;
         var actual      = target.saveAll(id, List.of(sourcePoint.add(connection), secondPoint));
+        var noiseChunk  = chunkService.save(ChunkNode.builder().id(id + 1).build());
+
+        System.out.println("Noise chunk: " + noiseChunk);
 
         assertThat(actual)
                 .hasSize(2)
@@ -53,10 +55,13 @@ class PointServiceTest {
                         .matches(saved -> StringUtils.isNotEmpty(saved.getInternalId()))
                         .isEqualTo(secondPoint));
 
-        assertThat(chunkService.chunks(List.of(id)))
+        assertThat(chunkService.extendedChunks(List.of(id)))
                 .hasSize(1)
                 .first()
-                .matches(chunk -> chunk.getId() == id);
+                .matches(chunk -> chunk.getId() == id)
+                .satisfies(chunk -> assertThat(chunk.getPointRelations())
+                        .hasSameSizeAs(actual)
+                        .allMatch(relation -> actual.contains(relation.getTarget())));
     }
 
     @Test
@@ -71,13 +76,13 @@ class PointServiceTest {
 
         assertThat(chunkService.chunks(notExistingIds)).isEmpty();
 
-        assertThat(chunkService.chunks(ids)).hasSameSizeAs(ids).allMatch(Predicate.not(ChunkNode::isConnected));
+        assertThat(chunkService.chunks(ids)).hasSameSizeAs(ids).noneMatch(ChunkNode::isConnected);
 
         target.createConnections(notExistingIds);
 
         assertThat(chunkService.chunks(notExistingIds)).isEmpty();
 
-        assertThat(chunkService.chunks(ids)).hasSameSizeAs(ids).allMatch(Predicate.not(ChunkNode::isConnected));
+        assertThat(chunkService.chunks(ids)).hasSameSizeAs(ids).noneMatch(ChunkNode::isConnected);
     }
 
     @Test
@@ -93,7 +98,7 @@ class PointServiceTest {
 
         assertThat(chunkService.chunks(ids))
                 .hasSameSizeAs(ids)
-                .allMatch(Predicate.not(ChunkNode::isConnected));
+                .noneMatch(ChunkNode::isConnected);
 
         target.createConnections(ids);
 
@@ -115,10 +120,12 @@ class PointServiceTest {
                 .location(44.82755949185502, 20.413331663727266, 1D).build();
         var randomPoint    = PointFixtures.randomPointNode();
         var randomRelation = new PointRelation(1D, 1D, randomPoint);
+        var chunkId        = 1;
 
-        testTemplate.saveAll(List.of(firstPoint, secondPoint, tooFarAwayPoint.add(randomRelation)));
+        assertThat(projectionService.defaultGraphName()).isEmpty();
 
-        target.createConnections(List.of());
+        target.saveAll(chunkId, List.of(firstPoint, secondPoint, tooFarAwayPoint.add(randomRelation)));
+        target.createConnections(List.of(chunkId));
 
         var actual = testTemplate.allNodes();
 

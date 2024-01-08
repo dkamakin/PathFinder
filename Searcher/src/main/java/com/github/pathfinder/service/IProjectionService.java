@@ -1,7 +1,6 @@
 package com.github.pathfinder.service;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IProjectionService {
 
@@ -10,9 +9,5 @@ public interface IProjectionService {
     List<String> deleteAll();
 
     boolean exists(String graphName);
-
-    Optional<String> defaultGraphName();
-
-    String createDefaultProjection();
 
 }

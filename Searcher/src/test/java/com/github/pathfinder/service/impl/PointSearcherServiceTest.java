@@ -6,7 +6,6 @@ import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.core.data.Coordinate;
 import com.github.pathfinder.searcher.api.exception.PointNotFoundException;
 import com.github.pathfinder.service.IPointSearcherService;
-import com.github.pathfinder.service.IPointService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +19,6 @@ class PointSearcherServiceTest {
 
     @Autowired
     IPointSearcherService target;
-
-    @Autowired
-    IPointService pointService;
 
     @Autowired
     Neo4jTestTemplate testTemplate;

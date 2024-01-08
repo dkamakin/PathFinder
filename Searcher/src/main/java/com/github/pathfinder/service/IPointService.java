@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface IPointService {
 
-    List<PointNode> saveAll(Integer chunkId, List<PointNode> nodes);
+    List<PointNode> saveAll(int chunkId, List<PointNode> nodes);
 
     void createConnections(List<Integer> chunkIds);
 

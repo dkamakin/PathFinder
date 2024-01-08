@@ -73,7 +73,7 @@ class SearcherListenerTest {
     @Test
     void find_Request_CallService() {
         var message  = new GetChunksMessage(List.of(1, 2, 3));
-        var node     = new ChunkNode(1);
+        var node     = ChunkNode.builder().id(1).build();
         var expected = new Chunk(node.getId(), node.isConnected());
 
         whenNeedToGetChunks(message.ids(), List.of(node));
@@ -128,7 +128,7 @@ class SearcherListenerTest {
                 .passabilityCoefficient(point.passabilityCoefficient())
                 .build();
         var pointNodes = List.of(expected);
-        var id = 1;
+        var id         = 1;
 
         whenNeedToSave(pointNodes);
 

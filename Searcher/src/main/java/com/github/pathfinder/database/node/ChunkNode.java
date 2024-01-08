@@ -1,6 +1,7 @@
 package com.github.pathfinder.database.node;
 
 import com.google.common.base.Objects;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
+import org.springframework.data.neo4j.core.schema.Relationship;
 
 @Getter
 @ToString
@@ -37,8 +39,17 @@ public class ChunkNode {
     @Property(Token.CONNECTED)
     private boolean connected;
 
-    public ChunkNode(int id) {
-        this.id = id;
+    @ToString.Exclude
+    @Relationship(type = ChunkPointRelation.Token.TYPE)
+    private Set<ChunkPointRelation> pointRelations;
+
+    protected ChunkNode(int id, Set<ChunkPointRelation> pointRelations) {
+        this.pointRelations = pointRelations;
+        this.id             = id;
+    }
+
+    public static ChunkNodeBuilder builder() {
+        return new ChunkNodeBuilder();
     }
 
     public void connected() {

@@ -11,4 +11,8 @@ public interface IChunkService {
 
     List<ChunkNode> chunks(List<Integer> ids);
 
+    List<ChunkNode> extendedChunks(List<Integer> ids);
+
+    void markConnected(List<Integer> ids, boolean connected);
+
 }

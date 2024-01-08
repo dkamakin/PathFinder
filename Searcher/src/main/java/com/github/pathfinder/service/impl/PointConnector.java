@@ -2,7 +2,6 @@ package com.github.pathfinder.service.impl;
 
 import com.github.pathfinder.configuration.CoordinateConfiguration;
 import com.github.pathfinder.core.aspect.Logged;
-import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.repository.PointConnectionRepository;
 import com.github.pathfinder.service.IChunkService;
 import java.util.List;
@@ -21,16 +20,8 @@ public class PointConnector {
     @Logged
     @Transactional
     public void createConnections(List<Integer> chunkIds) {
-        setConnected(chunkIds);
-        pointConnectionRepository.createConnections(coordinateConfiguration.getDistanceAccuracyMeters());
-    }
-
-    private void setConnected(List<Integer> chunkIds) {
-        var chunks = chunkService.chunks(chunkIds);
-
-        chunks.forEach(ChunkNode::connected);
-
-        chunkService.saveAll(chunks);
+        chunkService.markConnected(chunkIds, true);
+        pointConnectionRepository.createConnections(coordinateConfiguration.getDistanceAccuracyMeters(), chunkIds);
     }
 
 }

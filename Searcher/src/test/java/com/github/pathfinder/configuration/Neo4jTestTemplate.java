@@ -28,6 +28,10 @@ public class Neo4jTestTemplate {
         projectionService.deleteAll();
     }
 
+    public PointNode save(PointNode node) {
+        return saveAll(List.of(node)).getFirst();
+    }
+
     public List<PointNode> saveAll(List<PointNode> nodes) {
         return pointService.saveAll(1, nodes);
     }

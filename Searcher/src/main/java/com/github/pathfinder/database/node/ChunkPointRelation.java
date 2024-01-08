@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.UtilityClass;
-import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.RelationshipId;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import org.springframework.data.neo4j.core.schema.TargetNode;
@@ -19,34 +18,24 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 @NoArgsConstructor
 @AllArgsConstructor
 @RelationshipProperties
-public class PointRelation {
+public class ChunkPointRelation {
 
     @UtilityClass
     public static class Token {
 
-        public static final String DISTANCE_METERS = "distanceMeters";
-        public static final String WEIGHT          = "weight";
-        public static final String TYPE            = "CONNECTION";
+        public static final String TYPE = "IN_CHUNK";
 
     }
 
     @RelationshipId
     private String id;
 
-    @Property(Token.DISTANCE_METERS)
-    private double distanceMeters;
-
-    @Property(Token.WEIGHT)
-    private double weight;
-
     @NotNull
     @TargetNode
     private PointNode target;
 
-    public PointRelation(Double distanceMeters, Double weight, PointNode target) {
-        this.distanceMeters = distanceMeters;
-        this.weight         = weight;
-        this.target         = target;
+    public ChunkPointRelation(PointNode target) {
+        this.target = target;
     }
 
     @Override
@@ -57,14 +46,13 @@ public class PointRelation {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PointRelation that = (PointRelation) o;
-        return Objects.equal(distanceMeters, that.distanceMeters) &&
-                Objects.equal(weight, that.weight);
+        ChunkPointRelation that = (ChunkPointRelation) o;
+        return Objects.equal(target, that.target);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(distanceMeters, weight);
+        return Objects.hashCode(target);
     }
 
 }

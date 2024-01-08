@@ -14,28 +14,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ProjectionServiceTest {
 
     @Autowired
-    PointService pointService;
-
-    @Autowired
     IProjectionService target;
 
     @Autowired
     Neo4jTestTemplate testTemplate;
-
-    @Test
-    void createDefaultProjection_MultipleCalls_CreateSingleProjection() {
-        var sourcePoint = PointFixtures.randomPointNode();
-        var connection  = new PointRelation(12D, 13D, PointFixtures.randomPointNode());
-
-        testTemplate.saveAll(List.of(sourcePoint.add(connection)));
-
-        var graphName = target.createDefaultProjection();
-
-        assertThat(graphName).isEqualTo(target.createDefaultProjection());
-
-        assertThat(target.exists(graphName)).isTrue();
-        assertThat(target.deleteAll()).hasSize(1).first().isEqualTo(graphName);
-    }
 
     @Test
     void deleteAll_ProjectionsExists_DeleteAll() {
@@ -55,25 +37,6 @@ class ProjectionServiceTest {
     @Test
     void deleteAll_NoProjections_EmptyResult() {
         assertThat(target.deleteAll()).isEmpty();
-    }
-
-    @Test
-    void defaultGraphName_NoProjections_EmptyResult() {
-        assertThat(target.defaultGraphName()).isEmpty();
-    }
-
-    @Test
-    void defaultGraphName_ProjectionsExists_ReturnDefault() {
-        var sourcePoint = PointFixtures.randomPointNode();
-        var connection  = new PointRelation(12D, 13D, PointFixtures.randomPointNode());
-
-        testTemplate.saveAll(List.of(sourcePoint.add(connection)));
-
-        var defaultGraphName = target.createDefaultProjection();
-        var anotherGraphName = defaultGraphName + 'a';
-
-        assertThat(target.createProjection(anotherGraphName)).isTrue();
-        assertThat(target.defaultGraphName()).contains(defaultGraphName);
     }
 
     @Test

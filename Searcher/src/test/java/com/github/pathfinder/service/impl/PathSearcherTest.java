@@ -8,9 +8,8 @@ import com.github.pathfinder.core.configuration.CoreConfiguration;
 import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.repository.impl.PathRepository;
 import com.github.pathfinder.searcher.api.exception.PathNotFoundException;
+import com.github.pathfinder.service.IDefaultProjectionService;
 import com.github.pathfinder.service.IPathSearcher;
-import com.github.pathfinder.service.IPointService;
-import com.github.pathfinder.service.IProjectionService;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,10 +32,7 @@ class PathSearcherTest {
     static Path TEST_FILE_PATH = RESOURCES.resolve("paths.json");
 
     @Autowired
-    IPointService pointService;
-
-    @Autowired
-    IProjectionService projectionService;
+    IDefaultProjectionService projectionService;
 
     @Autowired
     IPathSearcher target;
