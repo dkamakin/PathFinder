@@ -1,6 +1,7 @@
 package com.github.pathfinder.database.node;
 
 import com.github.pathfinder.core.data.Coordinate;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -11,7 +12,6 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.UtilityClass;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
@@ -22,7 +22,6 @@ import org.springframework.data.neo4j.types.GeographicPoint2d;
 import org.springframework.data.neo4j.types.GeographicPoint3d;
 
 @Getter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Node(PointNode.Token.NODE_NAME)
@@ -50,7 +49,6 @@ public class PointNode {
     @Property(Token.ID)
     private UUID id;
 
-    @ToString.Exclude
     @Relationship(type = PointRelation.Token.TYPE)
     private Set<PointRelation> relations;
 
@@ -110,6 +108,22 @@ public class PointNode {
     public PointNode add(PointRelation relation) {
         relations.add(relation);
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("internalId", internalId)
+                .add("id", id)
+                .add("relations", relations.size())
+                .add("location3d", location3d)
+                .add("location2d", location2d)
+                .add("altitude", altitude)
+                .add("latitude", latitude)
+                .add("longitude", longitude)
+                .add("landType", landType)
+                .add("passabilityCoefficient", passabilityCoefficient)
+                .toString();
     }
 
     @Override

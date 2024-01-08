@@ -44,10 +44,10 @@
             <column name="id">1</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.136524</column>
-            <column name="MIN_LONGITUDE">19.836845</column>
-            <column name="MAX_LATITUDE">45.179012</column>
-            <column name="MAX_LONGITUDE">19.923534</column>
+            <column name="MIN_LATITUDE">45.133618</column>
+            <column name="MIN_LONGITUDE">19.715652</column>
+            <column name="MAX_LATITUDE">45.189054</column>
+            <column name="MAX_LONGITUDE">19.827919</column>
         </insert>
 
     </changeSet>
