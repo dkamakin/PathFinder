@@ -19,6 +19,10 @@ public interface DtoMapper {
 
     List<CoordinateDto> map(List<PointNode> points);
 
+    default CoordinateDto coordinateDto(PointNode node) {
+        return new CoordinateDto(node.longitude(), node.latitude());
+    }
+
     FindPathRequest map(FindPathDto dto);
 
 }
