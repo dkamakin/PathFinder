@@ -14,6 +14,7 @@ import com.github.pathfinder.searcher.api.data.ConnectChunksMessage;
 import com.github.pathfinder.searcher.api.data.GetChunksMessage;
 import com.github.pathfinder.searcher.api.data.point.Point;
 import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
+import com.github.pathfinder.service.IPointConnector;
 import com.github.pathfinder.service.IPointService;
 import com.github.pathfinder.service.impl.ChunkService;
 import java.util.List;
@@ -43,6 +44,9 @@ class SearcherListenerTest {
     SearcherApi searcherApi;
 
     @MockBean
+    IPointConnector pointConnector;
+
+    @MockBean
     IPointService pointService;
 
     @SpyBean
@@ -59,7 +63,7 @@ class SearcherListenerTest {
     }
 
     void whenNeedToThrowOnCreateConnections(RuntimeException exception) {
-        doThrow(exception).when(pointService).createConnections(anyList());
+        doThrow(exception).when(pointConnector).createConnections(anyList());
     }
 
     void whenNeedToGetChunks(List<Integer> ids, List<ChunkNode> expected) {
@@ -105,7 +109,7 @@ class SearcherListenerTest {
 
         searcherApi.createConnections(new ConnectChunksMessage(chunks));
 
-        verify(pointService, timeout(MessagingTestConstant.DEFAULT_TIMEOUT.toMillis()).times(2))
+        verify(pointConnector, timeout(MessagingTestConstant.DEFAULT_TIMEOUT.toMillis()).times(2))
                 .createConnections(chunks);
         verify(deadLetterListener).createConnections(any());
     }
@@ -116,7 +120,7 @@ class SearcherListenerTest {
 
         searcherApi.createConnections(new ConnectChunksMessage(chunks));
 
-        verify(pointService, timeout(MessagingTestConstant.DEFAULT_TIMEOUT.toMillis())).createConnections(chunks);
+        verify(pointConnector, timeout(MessagingTestConstant.DEFAULT_TIMEOUT.toMillis())).createConnections(chunks);
     }
 
     @Test

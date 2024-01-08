@@ -7,6 +7,4 @@ public interface IPointService {
 
     List<PointNode> saveAll(int chunkId, List<PointNode> nodes);
 
-    void createConnections(List<Integer> chunkIds);
-
 }

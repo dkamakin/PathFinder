@@ -10,6 +10,7 @@ import com.github.pathfinder.searcher.api.data.GetChunksMessage;
 import com.github.pathfinder.searcher.api.data.GetChunksResponse;
 import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
 import com.github.pathfinder.service.IChunkService;
+import com.github.pathfinder.service.IPointConnector;
 import com.github.pathfinder.service.IPointService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +23,14 @@ import static com.github.pathfinder.searcher.api.configuration.SearcherMessaging
 @AmqpListener(queues = DEFAULT_QUEUE_NAME, errorHandler = RethrowingToSenderErrorHandler.NAME)
 public class SearcherListener {
 
-    private final IPointService pointService;
-    private final IChunkService chunkService;
+    private final IPointService   pointService;
+    private final IChunkService   chunkService;
+    private final IPointConnector pointConnector;
 
     @Logged
     @AmqpHandler
     public void connect(ConnectChunksMessage request) {
-        pointService.createConnections(request.ids());
+        pointConnector.createConnections(request.ids());
     }
 
     @Logged

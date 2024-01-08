@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class PointService implements IPointService {
 
     private final PointRepository pointRepository;
-    private final PointConnector  pointConnector;
     private final IChunkService   chunkService;
 
     @Override
@@ -38,12 +37,6 @@ public class PointService implements IPointService {
                                   .build());
 
         return saved;
-    }
-
-    @Override
-    @Logged("chunkIds")
-    public void createConnections(List<Integer> chunkIds) {
-        pointConnector.createConnections(chunkIds);
     }
 
 }
