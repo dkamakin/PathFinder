@@ -1,11 +1,8 @@
 package com.github.pathfinder.configuration;
 
-import com.github.pathfinder.database.repository.impl.ProjectionRepository;
 import com.github.pathfinder.service.impl.ChunkService;
-import com.github.pathfinder.service.impl.DefaultProjectionService;
 import com.github.pathfinder.service.impl.PointConnector;
 import com.github.pathfinder.service.impl.PointService;
-import com.github.pathfinder.service.impl.ProjectionService;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -27,10 +24,7 @@ import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORT
 @Import({Neo4jTestConfiguration.class,
         CoordinateConfiguration.class,
         Neo4jTestTemplate.class,
-        ProjectionService.class,
         PointConnector.class,
-        ProjectionRepository.class,
-        DefaultProjectionService.class,
         PointService.class,
         ChunkService.class})
 public @interface SearcherNeo4jTest {

@@ -19,17 +19,9 @@ public class PathRepository implements IPathRepository {
             MATCH (source:Point {id: $sourceId})
             WITH source
             MATCH (target:Point {id: $targetId})
-            CALL gds.shortestPath.astar.stream($graphName, {
-              sourceNode:        source,
-              targetNode:        target,
-              concurrency:       1,
-              logProgress:       false,
-              latitudeProperty:  'latitude',
-              longitudeProperty: 'longitude',
-              relationshipWeightProperty: 'weight'
-            })
-            YIELD path, totalCost
-            RETURN nodes(path) as path, totalCost
+            CALL apoc.algo.aStarConfig(source, target, 'CONNECTION', {weight: 'weight', pointPropName: 'location2d'})
+            YIELD path, weight
+            RETURN nodes(path) as path, weight as totalCost
             """;
 
     private final Neo4jClient client;
@@ -37,13 +29,12 @@ public class PathRepository implements IPathRepository {
 
     @Override
     @Logged(value = {"graphName", "sourceId", "targetId"})
-    public Optional<AStarResult> aStar(String graphName, UUID sourceId, UUID targetId) {
+    public Optional<AStarResult> aStar(UUID sourceId, UUID targetId) {
         return client
                 .query(A_STAR_QUERY)
                 .bindAll(Map.of(
                         "sourceId", sourceId.toString(),
-                        "targetId", targetId.toString(),
-                        "graphName", graphName
+                        "targetId", targetId.toString()
                 ))
                 .fetchAs(AStarResult.class)
                 .mappedBy((typeSystem, fetched) -> mapper.map(typeSystem, AStarResult.class, fetched))

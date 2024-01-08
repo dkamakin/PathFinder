@@ -5,7 +5,6 @@ import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.node.PointRelation;
-import com.github.pathfinder.service.IDefaultProjectionService;
 import com.github.pathfinder.service.IPointService;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -22,9 +21,6 @@ class PointServiceTest {
 
     @Autowired
     Neo4jTestTemplate testTemplate;
-
-    @Autowired
-    IDefaultProjectionService projectionService;
 
     @Autowired
     ChunkService chunkService;
@@ -122,14 +118,10 @@ class PointServiceTest {
         var randomRelation = new PointRelation(1D, 1D, randomPoint);
         var chunkId        = 1;
 
-        assertThat(projectionService.defaultGraphName()).isEmpty();
-
         target.saveAll(chunkId, List.of(firstPoint, secondPoint, tooFarAwayPoint.add(randomRelation)));
         target.createConnections(List.of(chunkId));
 
         var actual = testTemplate.allNodes();
-
-        assertThat(projectionService.defaultGraphName()).isNotEmpty();
 
         assertThat(actual)
                 .hasSize(4)

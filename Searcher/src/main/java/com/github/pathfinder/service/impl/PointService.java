@@ -6,7 +6,6 @@ import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.repository.PointRepository;
 import com.github.pathfinder.mapper.NodeMapper;
 import com.github.pathfinder.service.IChunkService;
-import com.github.pathfinder.service.IDefaultProjectionService;
 import com.github.pathfinder.service.IPointService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PointService implements IPointService {
 
-    private final PointRepository           pointRepository;
-    private final PointConnector            pointConnector;
-    private final IDefaultProjectionService projectionService;
-    private final IChunkService             chunkService;
+    private final PointRepository pointRepository;
+    private final PointConnector  pointConnector;
+    private final IChunkService   chunkService;
 
     @Override
     @Transactional
@@ -46,7 +44,6 @@ public class PointService implements IPointService {
     @Logged("chunkIds")
     public void createConnections(List<Integer> chunkIds) {
         pointConnector.createConnections(chunkIds);
-        projectionService.recreateDefaultProjection();
     }
 
 }

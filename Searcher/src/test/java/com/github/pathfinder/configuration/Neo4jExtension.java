@@ -22,8 +22,7 @@ public class Neo4jExtension implements BeforeAllCallback, BeforeEachCallback {
 
     @Override
     public void beforeAll(ExtensionContext context) {
-        neo4j = new Neo4jContainer<>(DockerImageName.parse(Constant.IMAGE_NAME))
-                .withLabsPlugins(Neo4jLabsPlugin.GRAPH_DATA_SCIENCE);
+        neo4j = new Neo4jContainer<>(DockerImageName.parse(Constant.IMAGE_NAME)).withLabsPlugins(Neo4jLabsPlugin.APOC);
 
         neo4j.start();
 

@@ -5,7 +5,6 @@ import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.node.PointRelation;
 import com.github.pathfinder.service.IPointService;
-import com.github.pathfinder.service.IProjectionService;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +18,11 @@ public class Neo4jTestTemplate {
 
     private final Neo4jTemplate       neo4jTemplate;
     private final TestNeo4jRepository testRepository;
-    private final IProjectionService  projectionService;
-    private final IPointService pointService;
+    private final IPointService       pointService;
 
     @Transactional
     public void cleanDatabase() {
         Set.of(PointNode.class, PointRelation.class, ChunkNode.class).forEach(neo4jTemplate::deleteAll);
-        projectionService.deleteAll();
     }
 
     public PointNode save(PointNode node) {

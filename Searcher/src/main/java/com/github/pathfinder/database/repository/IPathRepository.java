@@ -6,6 +6,6 @@ import java.util.UUID;
 
 public interface IPathRepository {
 
-    Optional<AStarResult> aStar(String graphName, UUID sourceId, UUID targetId);
+    Optional<AStarResult> aStar(UUID sourceId, UUID targetId);
 
 }

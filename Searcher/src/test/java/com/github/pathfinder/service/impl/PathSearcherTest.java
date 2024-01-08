@@ -8,7 +8,6 @@ import com.github.pathfinder.core.configuration.CoreConfiguration;
 import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.repository.impl.PathRepository;
 import com.github.pathfinder.searcher.api.exception.PathNotFoundException;
-import com.github.pathfinder.service.IDefaultProjectionService;
 import com.github.pathfinder.service.IPathSearcher;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,9 +31,6 @@ class PathSearcherTest {
     static Path TEST_FILE_PATH = RESOURCES.resolve("paths.json");
 
     @Autowired
-    IDefaultProjectionService projectionService;
-
-    @Autowired
     IPathSearcher target;
 
     @Autowired
@@ -56,12 +52,10 @@ class PathSearcherTest {
 
         testTemplate.saveAll(testFile.nodes());
 
-        var graphName = projectionService.createDefaultProjection();
-
         var sourcePoint = testFile.node(deserialized.sourceId());
         var targetPoint = testFile.node(deserialized.targetId());
 
-        var actual = target.aStar(graphName, sourcePoint, targetPoint);
+        var actual = target.aStar(sourcePoint, targetPoint);
 
         assertThat(actual)
                 .satisfies(found -> assertThat(found.path())
@@ -77,10 +71,7 @@ class PathSearcherTest {
 
         testTemplate.saveAll(List.of(sourcePoint, targetPoint));
 
-        var graphName = projectionService.createDefaultProjection();
-
-        assertThatThrownBy(() -> target.aStar(graphName, sourcePoint, targetPoint))
-                .isInstanceOf(PathNotFoundException.class);
+        assertThatThrownBy(() -> target.aStar(sourcePoint, targetPoint)).isInstanceOf(PathNotFoundException.class);
     }
 
 }

@@ -19,9 +19,9 @@ public class PathSearcher implements IPathSearcher {
     @Logged
     @Override
     @ReadTransactional
-    public AStarResult aStar(String graphName, PointNode source, PointNode target) {
+    public AStarResult aStar(PointNode source, PointNode target) {
         return searcherRepository
-                .aStar(graphName, source.getId(), target.getId())
+                .aStar(source.getId(), target.getId())
                 .orElseThrow(PathNotFoundException::new);
     }
 
