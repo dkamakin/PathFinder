@@ -6,6 +6,6 @@ import java.util.List;
 
 public record AStarResult(@CollectionType(PointNode.class)
                           List<PointNode> path,
-                          Double totalCost) {
+                          Double meters) {
 
 }

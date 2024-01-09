@@ -21,7 +21,7 @@ public class PathRepository implements IPathRepository {
             MATCH (target:Point {id: $targetId})
             CALL apoc.algo.aStarConfig(source, target, 'CONNECTION', {weight: 'weight', pointPropName: 'location2d'})
             YIELD path, weight
-            RETURN nodes(path) as path, weight as totalCost
+            RETURN nodes(path) as path, weight as meters
             """;
 
     private final Neo4jClient client;

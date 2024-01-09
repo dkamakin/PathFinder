@@ -76,14 +76,14 @@ class PathEndpointTest {
         var request   = FIND_PATH_REQUEST;
         var longitude = 23D;
         var latitude  = 22.5D;
-        var totalCost = 100D;
+        var meters    = 100D;
         var expected = new FoundPathDto(
                 List.of(new CoordinateDto(longitude, latitude)),
-                totalCost
+                meters
         );
         var response = new AStarResult(
                 List.of(PointNode.builder().passabilityCoefficient(1D).location(latitude, longitude, 1D).build()),
-                totalCost
+                meters
         );
 
         whenNeedToReturn(DtoMapper.INSTANCE.map(request), response);

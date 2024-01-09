@@ -46,12 +46,12 @@ public record TestPathFile(List<TestFilePoint> points,
                              String landType,
                              @JsonProperty("connections")
                              Set<Connection> connections) {
-            this.id                     = id;
-            this.altitude               = altitude;
-            this.longitude              = longitude;
-            this.latitude               = latitude;
-            this.landType               = landType;
-            this.connections            = NullHelper.notNull(connections, Set::of);
+            this.id          = id;
+            this.altitude    = altitude;
+            this.longitude   = longitude;
+            this.latitude    = latitude;
+            this.landType    = landType;
+            this.connections = NullHelper.notNull(connections, Set::of);
         }
 
         public record Connection(UUID targetId,
@@ -62,22 +62,22 @@ public record TestPathFile(List<TestFilePoint> points,
                               @JsonProperty("weight")
                               Double weight) {
                 this.targetId = targetId;
-                this.weight = weight;
+                this.weight   = weight;
             }
         }
 
     }
 
     public record TestExpectation(List<UUID> path,
-                                  Double totalCost) {
+                                  Double meters) {
 
         @JsonCreator
         public TestExpectation(@JsonProperty("path")
                                List<UUID> path,
-                               @JsonProperty("totalCost")
-                               Double totalCost) {
-            this.path      = path;
-            this.totalCost = totalCost;
+                               @JsonProperty("meters")
+                               Double meters) {
+            this.path   = path;
+            this.meters = meters;
         }
     }
 

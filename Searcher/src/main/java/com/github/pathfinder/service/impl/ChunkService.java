@@ -44,10 +44,9 @@ public class ChunkService implements IChunkService {
         return chunkRepository.findChunkNodeByIdIn(ids);
     }
 
-
     @Override
-    @Logged("ids")
     @Transactional
+    @Logged(value = {"ids", "connected"})
     public void markConnected(List<Integer> ids, boolean connected) {
         chunkRepository.markConnected(ids, connected);
     }

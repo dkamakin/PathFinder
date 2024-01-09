@@ -61,7 +61,7 @@ class PathSearcherTest {
                 .satisfies(found -> assertThat(found.path())
                         .map(PointNode::getId)
                         .isEqualTo(deserialized.expected().path()))
-                .matches(found -> found.totalCost().equals(deserialized.expected().totalCost()));
+                .matches(found -> found.meters().equals(deserialized.expected().meters()));
     }
 
     @Test
