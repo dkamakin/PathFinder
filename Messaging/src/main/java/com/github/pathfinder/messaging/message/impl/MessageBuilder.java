@@ -1,6 +1,6 @@
 package com.github.pathfinder.messaging.message.impl;
 
-import com.github.pathfinder.messaging.configuration.AmqpConfiguration;
+import com.github.pathfinder.messaging.configuration.MessagingConfiguration;
 import com.github.pathfinder.messaging.message.IMessage;
 import com.github.pathfinder.messaging.message.IMessageBuilder;
 import java.util.function.Function;
@@ -11,15 +11,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MessageBuilder implements IMessageBuilder {
 
-    private final AmqpConfiguration amqpConfiguration;
+    private final MessagingConfiguration messagingConfiguration;
 
     @Override
     public IRoutingKeySetter direct() {
-        return routingKeySetter(AmqpConfiguration::getDirectExchangeName);
+        return routingKeySetter(MessagingConfiguration::getDirectExchangeName);
     }
 
-    private IRoutingKeySetter routingKeySetter(Function<AmqpConfiguration, String> exchangeNameExtractor) {
-        return new RoutingKeySetter(exchangeNameExtractor.apply(amqpConfiguration));
+    private IRoutingKeySetter routingKeySetter(Function<MessagingConfiguration, String> exchangeNameExtractor) {
+        return new RoutingKeySetter(exchangeNameExtractor.apply(messagingConfiguration));
     }
 
     @RequiredArgsConstructor
@@ -43,5 +43,6 @@ public class MessageBuilder implements IMessageBuilder {
         public <T> IMessage<T> with(T data) {
             return new Message<>(exchangeName, routingKey, data);
         }
+
     }
 }

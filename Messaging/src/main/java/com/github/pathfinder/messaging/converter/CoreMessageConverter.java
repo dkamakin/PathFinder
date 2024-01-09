@@ -8,8 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.support.converter.DefaultClassMapper;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.amqp.support.converter.MessageConversionException;
 import org.springframework.amqp.support.converter.SmartMessageConverter;
 import org.springframework.stereotype.Component;
 
@@ -22,22 +22,20 @@ public class CoreMessageConverter implements SmartMessageConverter {
 
     @Override
     @NotNull
-    public Object fromMessage(@NotNull Message message, @NotNull Object conversionHint)
-            throws MessageConversionException {
+    public Object fromMessage(@NotNull Message message, @NotNull Object conversionHint) {
         tryHandleException(message);
         return messageConverter.fromMessage(message);
     }
 
     @NotNull
     @Override
-    public Message toMessage(@NotNull Object object, @NotNull MessageProperties messageProperties)
-            throws MessageConversionException {
+    public Message toMessage(@NotNull Object object, @NotNull MessageProperties messageProperties) {
         return messageConverter.toMessage(object, messageProperties);
     }
 
     @NotNull
     @Override
-    public Object fromMessage(@NotNull Message message) throws MessageConversionException {
+    public Object fromMessage(@NotNull Message message) {
         tryHandleException(message);
         return messageConverter.fromMessage(message);
     }
@@ -58,7 +56,7 @@ public class CoreMessageConverter implements SmartMessageConverter {
     }
 
     private boolean isError(Message message) {
-        return isErrorType(message.getMessageProperties().getHeader(MessageHeaders.TYPE_ID));
+        return isErrorType(message.getMessageProperties().getHeader(DefaultClassMapper.DEFAULT_CLASSID_FIELD_NAME));
     }
 
     private boolean isErrorType(String typeId) {

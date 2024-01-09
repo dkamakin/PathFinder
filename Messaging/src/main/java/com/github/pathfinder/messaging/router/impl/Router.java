@@ -1,6 +1,6 @@
 package com.github.pathfinder.messaging.router.impl;
 
-import com.github.pathfinder.messaging.exception.MessageRoutingException;
+import com.github.pathfinder.messaging.exception.MessagingTimeoutException;
 import com.github.pathfinder.messaging.message.IMessage;
 import com.github.pathfinder.messaging.router.IAMQPRouter;
 import com.github.pathfinder.messaging.router.IMessageSender;
@@ -18,7 +18,12 @@ public class Router implements IAMQPRouter.IRouter {
     public <T> T sendAndReceive(Class<T> expected) {
         return messageSender
                 .sendAndReceive(message, expected)
-                .orElseThrow(MessageRoutingException::new);
+                .orElseThrow(MessagingTimeoutException::new);
+    }
+
+    @Override
+    public void send() {
+        messageSender.send(message);
     }
 
 }

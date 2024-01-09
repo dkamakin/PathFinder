@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class PathService implements IPathService {
 
     private final IPointSearcherService pointSearcher;
-    private final IPathSearcher pathSearcher;
+    private final IPathSearcher         pathSearcher;
 
     @Override
     @Logged("request")
@@ -26,7 +26,7 @@ public class PathService implements IPathService {
         var source = pointSearcher.findNearest(request.source());
         var target = pointSearcher.findNearest(request.target());
 
-        return pathSearcher.aStar(request.health().getGraphName(), source, target);
+        return pathSearcher.aStar(source, target);
     }
 
 }

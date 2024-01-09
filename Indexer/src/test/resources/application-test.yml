@@ -1,0 +1,40 @@
+spring:
+  cloud:
+    config:
+      enabled: false
+    bus:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
+  datasource:
+    url: jdbc:h2:mem:foo;DB_CLOSE_ON_EXIT=FALSE
+    password: ''
+    username: sa
+logging:
+  level:
+    org:
+      hibernate:
+        sql: debug
+        type: trace
+    root: debug
+index:
+  retry:
+    chunk:
+      save: PT5M
+      connection: PT1H
+  delay: PT1M
+elevation:
+  client:
+    uri: "https://api.open-elevation.com/api/v1/lookup"
+    batchSize: 20000
+osm:
+  client:
+    overpass:
+      url: "https://overpass-api.de/api/"

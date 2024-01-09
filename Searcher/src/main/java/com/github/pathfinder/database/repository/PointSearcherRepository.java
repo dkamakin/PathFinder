@@ -11,10 +11,10 @@ import org.springframework.stereotype.Repository;
 public interface PointSearcherRepository extends Neo4jRepository<PointNode, String> {
 
     @Query("""
-            MATCH (point:Point)
-            WITH point, (abs($latitude - point.latitude) + abs($longitude  - point.longitude)) as distanceToExpected
-            RETURN point
-            ORDER BY distanceToExpected
+            MATCH (node:Point)
+            WITH node, point.distance(node.location2d, point({latitude: $latitude, longitude: $longitude})) AS distance
+            RETURN node
+            ORDER BY distance
             LIMIT 1
             """)
     Optional<PointNode> findNearest(@Param("latitude") Double latitude,

@@ -1,37 +1,27 @@
 package com.github.pathfinder;
 
-import com.github.pathfinder.data.Coordinate;
-import com.github.pathfinder.data.point.Point;
-import com.github.pathfinder.database.node.LandType;
-import java.util.Set;
+import com.github.pathfinder.core.data.Coordinate;
+import com.github.pathfinder.database.node.PointNode;
+import com.github.pathfinder.database.node.PointNodeBuilder;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class PointFixtures {
 
+    public static final String     LAND_TYPE  = "DUNE";
     public static final double     LATITUDE   = 20.457924760622614;
     public static final double     LONGITUDE  = 44.81660396625469;
-    public static final Coordinate COORDINATE = new Coordinate(LONGITUDE, LATITUDE);
+    public static final Coordinate COORDINATE = new Coordinate(LATITUDE, LONGITUDE);
 
-    public static Point.PointConnection pointConnection() {
-        return new Point.PointConnection(PointFixtures.point(), randomDouble());
+    public static PointNode randomPointNode() {
+        return randomPointNodeBuilder().build();
     }
 
-    public static Point point() {
-        return pointBuilder().build();
-    }
-
-    public static Point pointWithConnection() {
-        return pointBuilder().connections(Set.of(pointConnection())).build();
-    }
-
-    public static Point.PointBuilder pointBuilder() {
-        return Point.builder().altitude(randomDouble()).longitude(randomDouble()).latitude(randomDouble())
-                .landType(LandType.DUNE);
-    }
-
-    private static Double randomDouble() {
-        return Math.random();
+    public static PointNodeBuilder randomPointNodeBuilder() {
+        return PointNode.builder()
+                .location(Math.random(), Math.random(), Math.random())
+                .passabilityCoefficient(Math.random())
+                .landType(LAND_TYPE);
     }
 
 }

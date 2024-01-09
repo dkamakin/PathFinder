@@ -5,6 +5,6 @@ import com.github.pathfinder.database.node.PointNode;
 
 public interface IPathSearcher {
 
-    AStarResult aStar(String graphName, PointNode source, PointNode target);
+    AStarResult aStar(PointNode source, PointNode target);
 
 }

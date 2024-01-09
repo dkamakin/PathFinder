@@ -1,9 +1,11 @@
 package com.github.pathfinder.core.tools.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pathfinder.core.exception.DeserializeException;
 import com.github.pathfinder.core.exception.SerializeException;
+import com.github.pathfinder.core.interfaces.IThrowingFunction;
 import java.io.IOException;
 import java.io.OutputStream;
 import lombok.RequiredArgsConstructor;
@@ -36,10 +38,18 @@ public class JsonTools {
     }
 
     public <T> T deserialize(String json, Class<T> expectedClass) {
+        return deserialize(objectMapper -> objectMapper.readValue(json, expectedClass));
+    }
+
+    public <T> T deserialize(String json, TypeReference<T> typeReference) {
+        return deserialize(objectMapper -> objectMapper.readValue(json, typeReference));
+    }
+
+    private <T> T deserialize(IThrowingFunction<ObjectMapper, T, JsonProcessingException> function) {
         try {
-            return mapper.readValue(json, expectedClass);
+            return function.apply(mapper);
         } catch (JsonProcessingException e) {
-            log.error("Failed to deserialize {}", json, e);
+            log.error("Failed to deserialize", e);
             throw new DeserializeException(e);
         }
     }

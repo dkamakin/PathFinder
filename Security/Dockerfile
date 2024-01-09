@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17.0.8_7-jdk-focal
+FROM eclipse-temurin:21.0.1_12-jre-jammy
 
 ARG MODULE_NAME=Security
 ARG JAR_FILE_NAME=$MODULE_NAME.jar
@@ -6,4 +6,4 @@ ARG JAR_FILE_PATH=build/libs/$JAR_FILE_NAME
 ENV JAR_FILE_ENV=$JAR_FILE_NAME
 
 COPY $JAR_FILE_PATH .
-ENTRYPOINT java -jar $JAR_FILE_ENV
+ENTRYPOINT java -jar "$JAR_FILE_ENV"

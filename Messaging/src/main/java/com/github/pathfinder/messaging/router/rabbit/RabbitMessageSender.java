@@ -28,6 +28,12 @@ public class RabbitMessageSender implements IMessageSender {
         );
     }
 
+    @Override
+    @Logged(logException = true, value = "message")
+    public <T> void send(IMessage<T> message) {
+        rabbitTemplate.convertAndSend(message.exchangeName(), message.routingKey(), message.data());
+    }
+
     private <T> Optional<T> handleReceived(Object received, Class<T> expected) {
         return Optional.ofNullable(received).map(expected::cast);
     }

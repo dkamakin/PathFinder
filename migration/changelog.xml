@@ -7,5 +7,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <includeAll path="/scripts/security"/>
+    <includeAll path="/scripts/indexer"/>
 
 </databaseChangeLog>

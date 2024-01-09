@@ -1,12 +1,10 @@
 package com.github.pathfinder.service;
 
-import com.github.pathfinder.data.point.Point;
 import com.github.pathfinder.database.node.PointNode;
+import java.util.List;
 
 public interface IPointService {
 
-    PointNode save(Point point);
-
-    PointNode save(PointNode point);
+    List<PointNode> saveAll(int chunkId, List<PointNode> nodes);
 
 }

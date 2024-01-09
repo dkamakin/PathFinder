@@ -1,7 +1,9 @@
 queue:
-  name: security-api
-direct-exchange:
-  name: direct-exchange
+  security:
+    name: pathfinder.queue.security.api
+exchange:
+  direct:
+    name: pathfinder.exchange.direct
 spring:
   cloud:
     config:
