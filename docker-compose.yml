@@ -4,6 +4,7 @@ services:
   configuration:
     build: ./Configuration
     container_name: configuration
+    restart: on-failure
     environment:
       RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
@@ -20,6 +21,7 @@ services:
       PORT: ${SECURITY_PORT}
     ports:
       - "${SECURITY_PORT}:${SECURITY_PORT}"
+    restart: on-failure
     depends_on:
       postgresql:
         condition: service_healthy
@@ -31,12 +33,14 @@ services:
       PORT: ${INDEXER_PORT}
     ports:
       - "${INDEXER_PORT}:${INDEXER_PORT}"
+    restart: on-failure
     depends_on:
       postgresql:
         condition: service_healthy
   searcher:
     build: ./Searcher
     container_name: searcher
+    restart: on-failure
     environment:
       CONFIG_URI: http://configuration:${CONFIGURATION_PORT}
       PORT: ${SEARCHER_PORT}
@@ -71,12 +75,12 @@ services:
       NEO4J_server_default__listen__address: neo4j
       NEO4J_PLUGINS: '["apoc"]'
       NEO4J_dbms_memory_transaction_total_max: 0
-      NEO4J_server_memory_heap_initial__size: 1.5G
-      NEO4J_server_memory_heap_max__size: 1.5G
+      NEO4J_server_memory_heap_initial__size: 2.5G
+      NEO4J_server_memory_heap_max__size: 2.5G
       NEO4J_server_default__advertised__address: neo4j
       NEO4J_server_bolt_advertised__address: :${NEO4J_PORT}
       NEO4J_initial_dbms_default__database: ${NEO4J_DB_NAME}
-    restart: on-failure
+    mem_limit: 3G
     volumes:
       - neo4j:/data
   liquibase:
