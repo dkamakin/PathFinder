@@ -69,7 +69,6 @@ services:
   neo4j:
     image: neo4j:5.15.0
     container_name: neo4j
-    mem_limit: 2G
     environment:
       NEO4J_AUTH: ${NEO4J_USERNAME}/${NEO4J_PASSWORD}
       NEO4J_server_default__listen__address: neo4j
