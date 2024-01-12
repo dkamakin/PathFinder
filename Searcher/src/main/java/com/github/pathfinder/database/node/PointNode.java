@@ -123,4 +123,5 @@ public class PointNode {
     public int hashCode() {
         return Objects.hashCode(id, location3d, location2d, landType, passabilityCoefficient);
     }
+
 }
