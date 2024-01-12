@@ -15,14 +15,14 @@ public interface DtoMapper {
 
     DtoMapper INSTANCE = Mappers.getMapper(DtoMapper.class);
 
-    FoundPathDto map(AStarResult aStarResult);
+    FoundPathDto foundPathDto(AStarResult aStarResult);
 
-    List<CoordinateDto> map(List<PointNode> points);
+    List<CoordinateDto> coordinates(List<PointNode> points);
 
     default CoordinateDto coordinateDto(PointNode node) {
         return new CoordinateDto(node.longitude(), node.latitude());
     }
 
-    FindPathRequest map(FindPathDto dto);
+    FindPathRequest findPathRequest(FindPathDto dto);
 
 }

@@ -5,8 +5,8 @@ import com.github.pathfinder.core.data.Coordinate;
 import com.github.pathfinder.core.exception.BadRequestException;
 import com.github.pathfinder.core.exception.ErrorCode;
 import com.github.pathfinder.core.exception.ServiceException;
-import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.node.PointNode;
+import com.github.pathfinder.database.node.projection.SimpleChunk;
 import com.github.pathfinder.messaging.MessagingTestConstant;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.Chunk;
@@ -16,7 +16,7 @@ import com.github.pathfinder.searcher.api.data.point.Point;
 import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
 import com.github.pathfinder.service.IPointConnector;
 import com.github.pathfinder.service.IPointService;
-import com.github.pathfinder.service.impl.ChunkService;
+import com.github.pathfinder.service.impl.ChunkGetterService;
 import java.util.List;
 import java.util.UUID;
 import lombok.SneakyThrows;
@@ -53,7 +53,7 @@ class SearcherListenerTest {
     DeadLetterListener deadLetterListener;
 
     @MockBean
-    ChunkService chunkService;
+    ChunkGetterService chunkGetterService;
 
     @Captor
     ArgumentCaptor<List<PointNode>> pointNodesCaptor;
@@ -66,19 +66,19 @@ class SearcherListenerTest {
         doThrow(exception).when(pointConnector).createConnections(anyList());
     }
 
-    void whenNeedToGetChunks(List<Integer> ids, List<ChunkNode> expected) {
-        when(chunkService.chunks(ids)).thenReturn(expected);
+    void whenNeedToGetChunks(List<Integer> ids, List<SimpleChunk> expected) {
+        when(chunkGetterService.simple(ids)).thenReturn(expected);
     }
 
     void whenNeedToThrowOnGetSavedChunks(RuntimeException expected) {
-        when(chunkService.chunks(anyList())).thenThrow(expected);
+        when(chunkGetterService.simple(anyList())).thenThrow(expected);
     }
 
     @Test
     void find_Request_CallService() {
         var message  = new GetChunksMessage(List.of(1, 2, 3));
-        var node     = ChunkNode.builder().id(1).build();
-        var expected = new Chunk(node.getId(), node.isConnected());
+        var node     = new SimpleChunk(1, true);
+        var expected = new Chunk(node.id(), node.connected());
 
         whenNeedToGetChunks(message.ids(), List.of(node));
 

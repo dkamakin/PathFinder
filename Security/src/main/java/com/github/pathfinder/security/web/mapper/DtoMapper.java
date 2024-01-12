@@ -25,8 +25,8 @@ public interface DtoMapper {
     SessionRefreshRequest sessionRefreshRequest(SessionRefreshRequestDto request);
 
     @Mapping(target = "value", source = "value")
-    Token map(String value);
+    Token token(String value);
 
-    String map(Token value);
+    String string(Token value);
 
 }

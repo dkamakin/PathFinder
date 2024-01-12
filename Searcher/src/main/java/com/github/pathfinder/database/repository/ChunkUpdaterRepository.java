@@ -8,16 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ChunkRepository extends Neo4jRepository<ChunkNode, String> {
-
-    @Query("""
-            MATCH (chunk:Chunk)
-            WHERE chunk.id IN $ids
-            RETURN chunk
-            """)
-    List<ChunkNode> find(@Param("ids") List<Integer> ids);
-
-    List<ChunkNode> findChunkNodeByIdIn(@Param("ids") List<Integer> ids);
+public interface ChunkUpdaterRepository extends Neo4jRepository<ChunkNode, String> {
 
     @Query("""
             MATCH (chunk:Chunk)

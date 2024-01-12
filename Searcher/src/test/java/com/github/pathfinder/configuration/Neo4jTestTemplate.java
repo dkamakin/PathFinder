@@ -1,5 +1,7 @@
 package com.github.pathfinder.configuration;
 
+import com.github.pathfinder.configuration.repository.TestChunkNodeRepository;
+import com.github.pathfinder.configuration.repository.TestPointNodeRepository;
 import com.github.pathfinder.core.interfaces.ReadTransactional;
 import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.node.PointNode;
@@ -16,9 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class Neo4jTestTemplate {
 
-    private final Neo4jTemplate       neo4jTemplate;
-    private final TestNeo4jRepository testRepository;
-    private final IPointService       pointService;
+    private final Neo4jTemplate           neo4jTemplate;
+    private final TestPointNodeRepository pointRepository;
+    private final IPointService           pointService;
+    private final TestChunkNodeRepository chunkRepository;
 
     @Transactional
     public void cleanDatabase() {
@@ -34,8 +37,13 @@ public class Neo4jTestTemplate {
     }
 
     @ReadTransactional
-    public List<PointNode> allNodes() {
-        return testRepository.findAll();
+    public List<PointNode> allPointNodes() {
+        return pointRepository.findAll();
+    }
+
+    @ReadTransactional
+    public List<ChunkNode> chunkNodes(List<Integer> ids) {
+        return chunkRepository.findAllByIdIn(ids);
     }
 
 }

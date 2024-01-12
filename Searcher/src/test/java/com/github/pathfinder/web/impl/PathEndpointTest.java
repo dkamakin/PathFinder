@@ -86,7 +86,7 @@ class PathEndpointTest {
                 meters
         );
 
-        whenNeedToReturn(DtoMapper.INSTANCE.map(request), response);
+        whenNeedToReturn(DtoMapper.INSTANCE.findPathRequest(request), response);
 
         var json = mockMvc.perform(post("/path")
                                            .contentType(MediaType.APPLICATION_JSON)

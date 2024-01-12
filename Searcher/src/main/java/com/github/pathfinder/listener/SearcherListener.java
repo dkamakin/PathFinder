@@ -9,7 +9,7 @@ import com.github.pathfinder.searcher.api.data.ConnectChunksMessage;
 import com.github.pathfinder.searcher.api.data.GetChunksMessage;
 import com.github.pathfinder.searcher.api.data.GetChunksResponse;
 import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
-import com.github.pathfinder.service.IChunkService;
+import com.github.pathfinder.service.IChunkGetterService;
 import com.github.pathfinder.service.IPointConnector;
 import com.github.pathfinder.service.IPointService;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +23,9 @@ import static com.github.pathfinder.searcher.api.configuration.SearcherMessaging
 @AmqpListener(queues = DEFAULT_QUEUE_NAME, errorHandler = RethrowingToSenderErrorHandler.NAME)
 public class SearcherListener {
 
-    private final IPointService   pointService;
-    private final IChunkService   chunkService;
-    private final IPointConnector pointConnector;
+    private final IPointService       pointService;
+    private final IChunkGetterService chunkGetterService;
+    private final IPointConnector     pointConnector;
 
     @Logged
     @AmqpHandler
@@ -42,7 +42,7 @@ public class SearcherListener {
     @Logged
     @AmqpHandler
     public GetChunksResponse chunks(GetChunksMessage request) {
-        return NodeMapper.MAPPER.getChunksResponse(chunkService.chunks(request.ids()));
+        return NodeMapper.MAPPER.getChunksResponse(chunkGetterService.simple(request.ids()));
     }
 
 }

@@ -1,6 +1,6 @@
 package com.github.pathfinder.configuration;
 
-import com.github.pathfinder.service.impl.ChunkService;
+import com.github.pathfinder.service.impl.ChunkUpdaterService;
 import com.github.pathfinder.service.impl.PointService;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -24,7 +24,7 @@ import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORT
         CoordinateConfiguration.class,
         Neo4jTestTemplate.class,
         PointService.class,
-        ChunkService.class})
+        ChunkUpdaterService.class})
 public @interface SearcherNeo4jTest {
 
 }

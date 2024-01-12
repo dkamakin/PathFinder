@@ -5,7 +5,7 @@ import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.repository.PointRepository;
 import com.github.pathfinder.mapper.NodeMapper;
-import com.github.pathfinder.service.IChunkService;
+import com.github.pathfinder.service.IChunkUpdaterService;
 import com.github.pathfinder.service.IPointService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PointService implements IPointService {
 
-    private final PointRepository pointRepository;
-    private final IChunkService   chunkService;
+    private final PointRepository      pointRepository;
+    private final IChunkUpdaterService chunkService;
 
     @Override
     @Transactional

@@ -1,5 +1,6 @@
 package com.github.pathfinder.listener;
 
+import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.messaging.listener.AmqpHandler;
 import com.github.pathfinder.messaging.listener.AmqpListener;
 import com.github.pathfinder.searcher.api.data.ConnectChunksMessage;
@@ -16,6 +17,7 @@ public class DeadLetterListener {
 
     private final SearcherListener searcherListener;
 
+    @Logged
     @AmqpHandler
     public void createConnections(ConnectChunksMessage message) {
         searcherListener.connect(message);

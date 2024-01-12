@@ -1,6 +1,7 @@
 package com.github.pathfinder.service.impl;
 
 import com.github.pathfinder.PointFixtures;
+import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.node.PointRelation;
@@ -18,7 +19,10 @@ class PointServiceTest {
     IPointService target;
 
     @Autowired
-    ChunkService chunkService;
+    ChunkUpdaterService chunkService;
+
+    @Autowired
+    Neo4jTestTemplate testTemplate;
 
     @Test
     void saveAll_PointsAreConnected_StoreConnection() {
@@ -46,7 +50,7 @@ class PointServiceTest {
                         .matches(saved -> StringUtils.isNotEmpty(saved.getInternalId()))
                         .isEqualTo(secondPoint));
 
-        assertThat(chunkService.extendedChunks(List.of(id)))
+        assertThat(testTemplate.chunkNodes(List.of(id)))
                 .hasSize(1)
                 .first()
                 .matches(chunk -> chunk.getId() == id)

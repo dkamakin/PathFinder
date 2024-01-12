@@ -28,7 +28,7 @@ public class PathRepository implements IPathRepository {
     private final ValueMapper mapper;
 
     @Override
-    @Logged(value = {"graphName", "sourceId", "targetId"})
+    @Logged(value = {"sourceId", "targetId"})
     public Optional<AStarResult> aStar(UUID sourceId, UUID targetId) {
         return client
                 .query(A_STAR_QUERY)

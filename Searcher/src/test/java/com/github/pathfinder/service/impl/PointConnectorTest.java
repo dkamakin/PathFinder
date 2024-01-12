@@ -3,8 +3,8 @@ package com.github.pathfinder.service.impl;
 import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
-import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.node.PointRelation;
+import com.github.pathfinder.database.node.projection.SimpleChunk;
 import com.github.pathfinder.service.IPointService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withinPercentage;
 
 @SearcherNeo4jTest
-@Import({PointConnector.class})
+@Import({PointConnector.class, ChunkGetterService.class})
 class PointConnectorTest {
 
     @Autowired
@@ -27,7 +27,7 @@ class PointConnectorTest {
     Neo4jTestTemplate testTemplate;
 
     @Autowired
-    ChunkService chunkService;
+    ChunkGetterService chunkGetterService;
 
     @Test
     void createConnections_ChunksNotFound_NoException() {
@@ -39,15 +39,15 @@ class PointConnectorTest {
         var ids            = List.of(1, 2);
         var notExistingIds = List.of(134, 43);
 
-        assertThat(chunkService.chunks(notExistingIds)).isEmpty();
+        assertThat(chunkGetterService.simple(notExistingIds)).isEmpty();
 
-        assertThat(chunkService.chunks(ids)).hasSameSizeAs(ids).noneMatch(ChunkNode::isConnected);
+        assertThat(chunkGetterService.simple(ids)).hasSameSizeAs(ids).noneMatch(SimpleChunk::connected);
 
         target.createConnections(notExistingIds);
 
-        assertThat(chunkService.chunks(notExistingIds)).isEmpty();
+        assertThat(chunkGetterService.simple(notExistingIds)).isEmpty();
 
-        assertThat(chunkService.chunks(ids)).hasSameSizeAs(ids).noneMatch(ChunkNode::isConnected);
+        assertThat(chunkGetterService.simple(ids)).hasSameSizeAs(ids).noneMatch(SimpleChunk::connected);
     }
 
     @Test
@@ -61,15 +61,15 @@ class PointConnectorTest {
 
         var ids = List.of(1, 2);
 
-        assertThat(chunkService.chunks(ids))
+        assertThat(chunkGetterService.simple(ids))
                 .hasSameSizeAs(ids)
-                .noneMatch(ChunkNode::isConnected);
+                .noneMatch(SimpleChunk::connected);
 
         target.createConnections(ids);
 
-        assertThat(chunkService.chunks(ids))
+        assertThat(chunkGetterService.simple(ids))
                 .hasSameSizeAs(ids)
-                .allMatch(ChunkNode::isConnected);
+                .allMatch(SimpleChunk::connected);
     }
 
     @Test
@@ -90,7 +90,7 @@ class PointConnectorTest {
         pointService.saveAll(chunkId, List.of(firstPoint, secondPoint, tooFarAwayPoint.add(randomRelation)));
         target.createConnections(List.of(chunkId));
 
-        var actual = testTemplate.allNodes();
+        var actual = testTemplate.allPointNodes();
 
         assertThat(actual)
                 .hasSize(4)

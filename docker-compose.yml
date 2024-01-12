@@ -77,6 +77,8 @@ services:
       NEO4J_server_bolt_advertised__address: :${NEO4J_PORT}
       NEO4J_initial_dbms_default__database: ${NEO4J_DB_NAME}
     restart: on-failure
+    volumes:
+      - neo4j:/data
   liquibase:
     build: ./migration
     container_name: liquibase
@@ -88,3 +90,5 @@ services:
     depends_on:
       postgresql:
         condition: service_healthy
+volumes:
+  neo4j:
