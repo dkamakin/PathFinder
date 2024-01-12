@@ -48,7 +48,7 @@ public class PointCreator {
     }
 
     private OsmLandType landType(OsmExtendedNode extendedNode) {
-        return extendedNode.node().tags().natural().flatMap(OsmLandType::from).orElseGet(this::unknownType);
+        return OsmLandType.from(extendedNode.node().tags()).orElseGet(this::unknownType);
     }
 
     private OsmLandType unknownType() {

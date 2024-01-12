@@ -1,5 +1,6 @@
 package com.github.pathfinder.indexer.service.impl;
 
+import com.github.pathfinder.core.data.Coordinate;
 import com.github.pathfinder.core.executor.PlatformExecutor;
 import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.indexer.configuration.IndexerRetryConfiguration;
@@ -84,10 +85,10 @@ class OsmIndexActorTest {
         runnableCaptor.getAllValues().forEach(Runnable::run);
 
         verify(indexTask).accept(new IndexBox(entity.getId(),
-                                              new IndexBox.BoxCoordinate(entity.getMin().getLatitude(),
-                                                                         entity.getMin().getLongitude()),
-                                              new IndexBox.BoxCoordinate(entity.getMax().getLatitude(),
-                                                                         entity.getMax().getLongitude())));
+                                              new Coordinate(entity.getMin().getLatitude(),
+                                                             entity.getMin().getLongitude()),
+                                              new Coordinate(entity.getMax().getLatitude(),
+                                                             entity.getMax().getLongitude())));
 
         verifyNoInteractions(searcherApi);
     }
@@ -146,10 +147,10 @@ class OsmIndexActorTest {
         runnableCaptor.getAllValues().forEach(Runnable::run);
 
         verify(indexTask).accept(new IndexBox(forSave.getId(),
-                                              new IndexBox.BoxCoordinate(forSave.getMin().getLatitude(),
-                                                                         forSave.getMin().getLongitude()),
-                                              new IndexBox.BoxCoordinate(forSave.getMax().getLatitude(),
-                                                                         forSave.getMax().getLongitude())));
+                                              new Coordinate(forSave.getMin().getLatitude(),
+                                                             forSave.getMin().getLongitude()),
+                                              new Coordinate(forSave.getMax().getLatitude(),
+                                                             forSave.getMax().getLongitude())));
 
         verify(searcherApi).createConnections(new ConnectChunksMessage(List.of(forConnection.getId())));
 

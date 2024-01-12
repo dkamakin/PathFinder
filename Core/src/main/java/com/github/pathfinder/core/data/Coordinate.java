@@ -2,7 +2,7 @@ package com.github.pathfinder.core.data;
 
 import lombok.experimental.UtilityClass;
 
-public record Coordinate(Double latitude, Double longitude) {
+public record Coordinate(double latitude, double longitude) {
 
     @UtilityClass
     public static final class Constraint {

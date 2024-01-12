@@ -1,20 +1,25 @@
 package com.github.pathfinder.indexer.client.osm;
 
-import com.github.pathfinder.indexer.data.index.IndexBox;
+import com.github.pathfinder.indexer.data.osm.OsmBox;
 import com.github.pathfinder.indexer.data.osm.OsmElement;
 import com.github.pathfinder.indexer.data.osm.OsmNode;
 import java.util.List;
-import java.util.Map;
 
 public interface OsmClient {
 
     List<OsmNode> nodes(List<Long> ids);
 
-    List<OsmElement> elements(IndexBox box);
+    List<OsmElement> elements(OsmBox box);
 
     interface IOverpassQueryBuilder {
 
-        String bind(Map<String, Object> arguments);
+        IOverpassQueryBuilder nodes(List<Long> ids);
+
+        IOverpassQueryBuilder node(OsmBox box);
+
+        IOverpassQueryBuilder way(OsmBox box);
+
+        String asBody();
 
     }
 

@@ -3,6 +3,7 @@ package com.github.pathfinder.indexer.service.osm.impl;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
+import com.github.pathfinder.indexer.data.OsmMapper;
 import com.github.pathfinder.indexer.data.index.IndexBox;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import com.github.pathfinder.indexer.service.BoxService;
@@ -34,7 +35,7 @@ public class OsmIndexer implements IOsmIndexer {
     @Logged("box")
     @Transactional
     public void process(IndexBox box) {
-        var elements = client.elements(box);
+        var elements = client.elements(OsmMapper.INSTANCE.osmBox(box));
 
         log.info("Query result: {} elements", elements.size());
 

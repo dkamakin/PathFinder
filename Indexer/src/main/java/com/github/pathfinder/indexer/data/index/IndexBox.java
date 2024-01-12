@@ -1,9 +1,7 @@
 package com.github.pathfinder.indexer.data.index;
 
-public record IndexBox(int id, BoxCoordinate min, BoxCoordinate max) {
+import com.github.pathfinder.core.data.Coordinate;
 
-    public record BoxCoordinate(Double latitude, Double longitude) {
-
-    }
+public record IndexBox(int id, Coordinate min, Coordinate max) {
 
 }

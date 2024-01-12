@@ -1,49 +1,63 @@
 package com.github.pathfinder.indexer.data.osm;
 
-import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import static java.util.Map.entry;
 
-public enum OsmLandType {
-    UNKNOWN(1),
-    SAND(3),
-    BEACH(3),
-    COASTLINE(3),
-    WETLAND(-1),
-    WATER(-1),
-    BAY(-1),
-    WOOD(5),
-    GRASSLAND(1),
-    HEATH(1),
-    SCRUB(2),
-    BARE_ROCK(6),
-    FELL(1.5),
-    PENINSULA(1),
-    GLACIER(20),
-    CREVASSE(100),
-    DUNE(7),
-    GULLY(10),
-    SCREE(5),
-    STONES(15),
-    STONE(15),
-    MOOR(2),
-    TUNDRA(5),
-    MUD(30);
+public record OsmLandType(String name, double coefficient) {
 
-    final double coefficient;
+    private static final Map<String, Double> LAND_TYPES = Map.ofEntries(
+            entry("beach", 3D),
+            entry("sand", 3D),
+            entry("coastline", 3D),
+            entry("wetland", -1D),
+            entry("water", -1D),
+            entry("bay", -1D),
+            entry("wood", 5D),
+            entry("fell", 1.5D),
+            entry("grassland", 1D),
+            entry("heath", 1D),
+            entry("moor", 2D),
+            entry("tundra", 5D),
+            entry("mud", 30D),
+            entry("tree_row", 5D),
+            entry("tree", 5D),
+            entry("shrubbery", 5D),
+            entry("stone", 15D),
+            entry("scree", 5D),
+            entry("gully", 10D),
+            entry("dune", 7D),
+            entry("crevasse", 100D),
+            entry("glacier", 20D),
+            entry("peninsula", 1D),
+            entry("bare_rock", 6D),
+            entry("scrub", 2D),
+            entry("volcano", -1D),
+            entry("valley", 3D),
+            entry("sinkhole", -1D),
+            entry("saddle", 5D),
+            entry("ridge", 5D),
+            entry("peak", 5D),
+            entry("hill", 2D),
+            entry("cliff", 7D)
+    );
 
-    OsmLandType(double coefficient) {
-        this.coefficient = coefficient;
-    }
-
-    public double coefficient() {
-        return coefficient;
-    }
+    private static final List<String> LAND_TYPE_KEYS = List.of("natural", "surface", "landcover");
+    public static final  OsmLandType  UNKNOWN        = new OsmLandType("unknown", 1F);
 
     public static Optional<OsmLandType> from(String type) {
-        String upperCaseType = type.toUpperCase();
+        return Optional.ofNullable(LAND_TYPES.get(type)).map(found -> new OsmLandType(type, found));
+    }
 
-        return Arrays.stream(values())
-                .filter(value -> value.name().equals(upperCaseType))
+    public static Optional<OsmLandType> from(OsmTags tags) {
+        return LAND_TYPE_KEYS.stream()
+                .map(tags::get)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(OsmLandType::from)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .findFirst();
     }
 

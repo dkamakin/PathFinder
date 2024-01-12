@@ -1,26 +1,40 @@
 package com.github.pathfinder.indexer.client.osm.impl;
 
 import com.github.pathfinder.indexer.client.osm.OsmClient;
-import java.util.Map;
-import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
+import com.github.pathfinder.indexer.data.osm.OsmBox;
+import java.util.List;
 
-@RequiredArgsConstructor
 public class OverpassQueryBuilder implements OsmClient.IOverpassQueryBuilder {
 
-    private static final char PREFIX = '$';
+    private final OverpassQueryPartsBuilder builder;
 
-    private final String query;
+    public OverpassQueryBuilder() {
+        this.builder = new OverpassQueryPartsBuilder();
+    }
 
     @Override
-    public String bind(Map<String, Object> arguments) {
-        var result = query;
+    public OsmClient.IOverpassQueryBuilder nodes(List<Long> ids) {
+        return performAndReturnThis(() -> builder.nodes(ids));
+    }
 
-        for (var entry : arguments.entrySet()) {
-            result = StringUtils.replace(result, PREFIX + entry.getKey(), entry.getValue().toString());
-        }
+    @Override
+    public OsmClient.IOverpassQueryBuilder node(OsmBox box) {
+        return performAndReturnThis(() -> builder.node(box));
+    }
 
-        return result;
+    @Override
+    public OsmClient.IOverpassQueryBuilder way(OsmBox box) {
+        return performAndReturnThis(() -> builder.way(box));
+    }
+
+    @Override
+    public String asBody() {
+        return builder.asBody();
+    }
+
+    private OsmClient.IOverpassQueryBuilder performAndReturnThis(Runnable action) {
+        action.run();
+        return this;
     }
 
 }

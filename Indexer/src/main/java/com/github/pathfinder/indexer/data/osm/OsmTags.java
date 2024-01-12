@@ -7,11 +7,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OsmTags {
 
-    private static final String NATURAL = "natural";
-
     private final Map<String, String> tags;
 
-    public Optional<String> natural() {
-        return Optional.ofNullable(tags.get(OsmTags.NATURAL));
+    public Optional<String> get(String key) {
+        return Optional.ofNullable(tags.get(key));
     }
+
 }

@@ -21,21 +21,21 @@ public class SearcherApi {
     private final SearcherMessagingConfiguration messagingConfiguration;
     private final IMessageBuilder                messageBuilder;
 
-    @Logged
+    @Logged("request")
     public void save(SavePointsMessage request) {
         amqpRouter.route(messageBuilder.direct()
                                  .routingKey(messagingConfiguration.getDefaultQueueName())
                                  .with(request)).send();
     }
 
-    @Logged
+    @Logged("request")
     public void createConnections(ConnectChunksMessage request) {
         amqpRouter.route(messageBuilder.direct()
                                  .routingKey(messagingConfiguration.getDefaultQueueName())
                                  .with(request)).send();
     }
 
-    @Logged(ignoreReturnValue = false)
+    @Logged(ignoreReturnValue = false, value = "request")
     public GetChunksResponse chunks(GetChunksMessage request) {
         return amqpRouter.route(messageBuilder.direct()
                                         .routingKey(messagingConfiguration.getDefaultQueueName())
