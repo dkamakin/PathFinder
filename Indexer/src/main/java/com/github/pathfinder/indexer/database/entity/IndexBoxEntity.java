@@ -99,15 +99,13 @@ public class IndexBoxEntity {
         return saved == that.saved &&
                 connected == that.connected &&
                 Objects.equal(id, that.id) &&
-                Objects.equal(saveRequestTimestamp, that.saveRequestTimestamp) &&
-                Objects.equal(connectionRequestTimestamp, that.connectionRequestTimestamp) &&
                 Objects.equal(min, that.min) &&
                 Objects.equal(max, that.max);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, saved, connected, saveRequestTimestamp, connectionRequestTimestamp, min, max);
+        return Objects.hashCode(id, saved, connected, min, max);
     }
 
 }
