@@ -71,7 +71,7 @@ public class ActualizeService implements IActualizeService {
         }
 
         if (box.isConnected() != chunk.connected()) {
-            log.info("Detected a change: the box connection status has changed, current: {}. actual: {}",
+            log.info("Detected a change: the box connection status has changed, current: {}, actual: {}",
                      box.isConnected(), chunk.connected());
             box.setConnected(chunk.connected());
         }
