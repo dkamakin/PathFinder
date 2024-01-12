@@ -16,8 +16,6 @@ public record OsmLandType(String name, double coefficient) {
             entry("bay", -1D),
             entry("wood", 5D),
             entry("fell", 1.5D),
-            entry("grassland", 1D),
-            entry("heath", 1D),
             entry("moor", 2D),
             entry("tundra", 5D),
             entry("mud", 30D),
@@ -30,7 +28,6 @@ public record OsmLandType(String name, double coefficient) {
             entry("dune", 7D),
             entry("crevasse", 100D),
             entry("glacier", 20D),
-            entry("peninsula", 1D),
             entry("bare_rock", 6D),
             entry("scrub", 2D),
             entry("volcano", -1D),
@@ -40,7 +37,10 @@ public record OsmLandType(String name, double coefficient) {
             entry("ridge", 5D),
             entry("peak", 5D),
             entry("hill", 2D),
-            entry("cliff", 7D)
+            entry("cliff", 7D),
+            entry("unpaved", 3D),
+            entry("compacted", 2D),
+            entry("dirt", 3D)
     );
 
     private static final List<String> LAND_TYPE_KEYS = List.of("natural", "surface", "landcover");
