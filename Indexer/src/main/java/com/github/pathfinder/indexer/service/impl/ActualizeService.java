@@ -30,31 +30,44 @@ public class ActualizeService implements IActualizeService {
     @Transactional
     @Logged(ignoreReturnValue = false)
     public void perform() {
-        var notSavedOrConnectedBoxes = boxService.notSavedOrConnected();
+        var boxes = boxService.all();
 
-        if (CollectionUtils.isEmpty(notSavedOrConnectedBoxes)) {
-            log.info("Not saved or connected boxes not found");
+        if (CollectionUtils.isEmpty(boxes)) {
+            log.info("Nothing to actualize");
             return;
         }
 
-        var chunks        = searcherApi.chunks(getChunksMessage(notSavedOrConnectedBoxes)).chunks();
+        var chunks        = searcherApi.chunks(getChunksMessage(boxes)).chunks();
         var indexedChunks = indexChunks(chunks);
 
-        notSavedOrConnectedBoxes.forEach(box -> actualize(box, indexedChunks));
+        boxes.forEach(box -> actualize(box, indexedChunks));
     }
 
     private void actualize(IndexBoxEntity box, Map<Integer, Chunk> chunks) {
         Optional.ofNullable(chunks.get(box.getId()))
-                .ifPresentOrElse(chunk -> actualize(box, chunk),
-                                 () -> log.info("Box is not saved yet: {}", box));
+                .ifPresentOrElse(chunk -> handle(box, chunk), () -> handleNotFound(box));
     }
 
-    private void actualize(IndexBoxEntity box, Chunk chunk) {
+    private void handleNotFound(IndexBoxEntity box) {
+        log.info("Box is not found: {}", box);
+
+        if (box.isSaved()) {
+            log.warn("Box was set as saved, but not found in the last try");
+            box.setSaved(false);
+        }
+
+        if (box.isConnected()) {
+            log.warn("Box was set as connected, but not found in the last try");
+            box.setConnected(false);
+        }
+    }
+
+    private void handle(IndexBoxEntity box, Chunk chunk) {
         log.info("Actualize {}, chunk: {}", box, chunk);
 
         if (!box.isSaved()) {
             log.info("Detected a change: the box was saved");
-            box.saved();
+            box.setSaved(true);
         }
 
         if (box.isConnected() != chunk.connected()) {

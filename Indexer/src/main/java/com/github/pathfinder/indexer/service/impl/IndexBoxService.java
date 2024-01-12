@@ -24,18 +24,18 @@ public class IndexBoxService implements BoxService {
     private final IndexBoxRepository boxRepository;
     private final IDateTimeSupplier  dateTimeSupplier;
 
+    @Logged
     @Override
     @ReadTransactional
-    @Logged(ignoreReturnValue = false)
-    public List<IndexBoxEntity> notSavedOrConnected() {
-        return boxRepository.notSavedOrConnected();
+    public List<IndexBoxEntity> all() {
+        return Lists.newArrayList(boxRepository.findAll());
     }
 
     @Override
     @ReadTransactional
     @Logged(ignoreReturnValue = false, value = {"saveDelay", "connectDelay"})
-    public List<IndexBoxEntity> notSavedOrConnected(Duration saveDelay, Duration connectDelay) {
-        return boxRepository.notSavedOrConnected(saveDelay, connectDelay, dateTimeSupplier.instant());
+    public List<IndexBoxEntity> operableBoxes(Duration saveDelay, Duration connectDelay) {
+        return boxRepository.operableBoxes(saveDelay, connectDelay, dateTimeSupplier.now());
     }
 
     @Override
@@ -43,13 +43,6 @@ public class IndexBoxService implements BoxService {
     @Logged(ignoreReturnValue = false, value = "id")
     public Optional<IndexBoxEntity> box(Integer id) {
         return boxRepository.findById(id);
-    }
-
-    @Override
-    @ReadTransactional
-    @Logged(ignoreReturnValue = false, value = "ids")
-    public List<IndexBoxEntity> boxes(List<Integer> ids) {
-        return Lists.newArrayList(boxRepository.findAllById(ids));
     }
 
 }

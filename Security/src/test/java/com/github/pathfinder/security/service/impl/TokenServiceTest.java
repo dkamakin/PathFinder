@@ -38,8 +38,8 @@ class TokenServiceTest {
     @Autowired
     ITokenService target;
 
-    void whenNeedToGetTime(Instant expected) {
-        when(timeSupplier.instant()).thenReturn(expected);
+    void whenNeedToGetNow(Instant expected) {
+        when(timeSupplier.now()).thenReturn(expected);
     }
 
     void assertPayload(JwtPayload expected, Token... tokens) {
@@ -56,7 +56,7 @@ class TokenServiceTest {
 
     @Test
     void issue_SameUserAndDevice_RefreshNotEqualsToAccess() {
-        whenNeedToGetTime(Instant.now());
+        whenNeedToGetNow(Instant.now());
 
         var payload = SecurityFixtures.JWT_PAYLOAD;
         var tokens  = target.issue(payload);
@@ -75,7 +75,7 @@ class TokenServiceTest {
     void payload_ExpiredTokenProvided_InvalidTokenException() {
         var now = Instant.now();
 
-        whenNeedToGetTime(now);
+        whenNeedToGetNow(now);
 
         var payload             = SecurityFixtures.JWT_PAYLOAD;
         var tokens              = target.issue(payload);
@@ -96,7 +96,7 @@ class TokenServiceTest {
 
     @Test
     void payload_TokenIsValid_ReturnUserInfo() {
-        whenNeedToGetTime(Instant.now());
+        whenNeedToGetNow(Instant.now());
 
         var payload = SecurityFixtures.JWT_PAYLOAD;
         var token   = target.issue(payload);

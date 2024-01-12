@@ -13,7 +13,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,7 +22,6 @@ import lombok.experimental.UtilityClass;
 @Entity
 @Getter
 @ToString
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = IndexBoxEntity.Token.TABLE)
@@ -49,6 +47,7 @@ public class IndexBoxEntity {
     @SequenceGenerator(name = Token.ID_GENERATOR, sequenceName = Token.ID_SEQUENCE, allocationSize = 1)
     private Integer id;
 
+    @Setter
     @Column(name = Token.SAVED)
     private boolean saved;
 
@@ -74,8 +73,18 @@ public class IndexBoxEntity {
     @Embedded
     private MaxBoxCoordinate max;
 
-    public void saved() {
-        this.saved = true;
+    public IndexBoxEntity(boolean saved, boolean connected, Instant saveRequestTimestamp,
+                          Instant connectionRequestTimestamp, MinBoxCoordinate min, MaxBoxCoordinate max) {
+        this.saved                      = saved;
+        this.connected                  = connected;
+        this.saveRequestTimestamp       = saveRequestTimestamp;
+        this.connectionRequestTimestamp = connectionRequestTimestamp;
+        this.min                        = min;
+        this.max                        = max;
+    }
+
+    public static IndexBoxEntityBuilder builder() {
+        return new IndexBoxEntityBuilder();
     }
 
     @Override
@@ -87,11 +96,18 @@ public class IndexBoxEntity {
             return false;
         }
         IndexBoxEntity that = (IndexBoxEntity) o;
-        return Objects.equal(min, that.min) && Objects.equal(max, that.max);
+        return saved == that.saved &&
+                connected == that.connected &&
+                Objects.equal(id, that.id) &&
+                Objects.equal(saveRequestTimestamp, that.saveRequestTimestamp) &&
+                Objects.equal(connectionRequestTimestamp, that.connectionRequestTimestamp) &&
+                Objects.equal(min, that.min) &&
+                Objects.equal(max, that.max);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(min, max);
+        return Objects.hashCode(id, saved, connected, saveRequestTimestamp, connectionRequestTimestamp, min, max);
     }
+
 }

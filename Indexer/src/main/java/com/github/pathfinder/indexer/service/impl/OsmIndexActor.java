@@ -3,7 +3,7 @@ package com.github.pathfinder.indexer.service.impl;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.core.executor.PlatformExecutor;
 import com.github.pathfinder.core.tools.IDateTimeSupplier;
-import com.github.pathfinder.indexer.configuration.IndexerConfiguration;
+import com.github.pathfinder.indexer.configuration.IndexerRetryConfiguration;
 import com.github.pathfinder.indexer.data.EntityMapper;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import com.github.pathfinder.indexer.service.BoxService;
@@ -23,53 +23,32 @@ import org.springframework.util.CollectionUtils;
 @RequiredArgsConstructor
 public class OsmIndexActor {
 
-    private final SearcherApi          searcherApi;
-    private final BoxService           boxService;
-    private final IDateTimeSupplier    dateTimeSupplier;
-    private final OsmIndexTask         task;
-    private final PlatformExecutor     executor;
-    private final IndexerConfiguration indexerConfiguration;
+    private final SearcherApi               searcherApi;
+    private final BoxService                boxService;
+    private final IDateTimeSupplier         dateTimeSupplier;
+    private final OsmIndexTask              task;
+    private final PlatformExecutor          executor;
+    private final IndexerRetryConfiguration retryConfiguration;
 
     @Logged
     @Transactional
     public void perform() {
-        var notSavedOrConnected = notSavedOrConnected();
+        var operableBoxes = operableBoxes();
 
-        if (CollectionUtils.isEmpty(notSavedOrConnected)) {
-            log.info("Not saved or connected boxes not found");
+        if (CollectionUtils.isEmpty(operableBoxes)) {
+            log.info("Operable boxes are not found");
             return;
         }
 
-        notSavedOrConnected.stream()
-                .filter(Predicate.not(IndexBoxEntity::isSaved))
-                .forEach(this::save);
-
-        if (isNeedToConnect(notSavedOrConnected)) {
-            connect(notSavedOrConnected);
-        }
+        operableBoxes.stream().filter(Predicate.not(IndexBoxEntity::isSaved)).forEach(this::save);
+        connect(operableBoxes.stream()
+                        .filter(IndexBoxEntity::isSaved)
+                        .filter(Predicate.not(IndexBoxEntity::isConnected))
+                        .toList());
     }
 
-    private boolean isNeedToConnect(List<IndexBoxEntity> boxes) {
-        var allConnected = true;
-
-        for (var box : boxes) {
-            if (!box.isSaved()) {
-                log.info("No need to connect: some of the boxes are not saved");
-                return false;
-            }
-
-            if (!box.isConnected()) {
-                log.info("Detected a not connected box: {}", box);
-                allConnected = false;
-            }
-        }
-
-        return !allConnected;
-    }
-
-    private List<IndexBoxEntity> notSavedOrConnected() {
-        return boxService.notSavedOrConnected(indexerConfiguration.getRetryChunkSaveDelay(),
-                                              indexerConfiguration.getRetryChunkConnectDelay());
+    private List<IndexBoxEntity> operableBoxes() {
+        return boxService.operableBoxes(retryConfiguration.getSaveDelay(), retryConfiguration.getConnectDelay());
     }
 
     private void save(IndexBoxEntity box) {
@@ -77,13 +56,18 @@ public class OsmIndexActor {
     }
 
     private void connect(List<IndexBoxEntity> boxes) {
-        var ids = ids(boxes);
+        log.info("Boxes are filtered for connection: {}", boxes);
 
-        searcherApi.createConnections(new ConnectChunksMessage(ids));
+        if (CollectionUtils.isEmpty(boxes)) {
+            log.info("No boxes for connection");
+            return;
+        }
 
-        var timestamp = dateTimeSupplier.instant();
+        searcherApi.createConnections(new ConnectChunksMessage(ids(boxes)));
 
-        boxService.boxes(ids).forEach(box -> box.setConnectionRequestTimestamp(timestamp));
+        var timestamp = dateTimeSupplier.now();
+
+        boxes.forEach(box -> box.setConnectionRequestTimestamp(timestamp));
     }
 
     private List<Integer> ids(List<IndexBoxEntity> boxes) {

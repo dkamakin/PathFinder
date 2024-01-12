@@ -7,12 +7,10 @@ import java.util.Optional;
 
 public interface BoxService {
 
-    List<IndexBoxEntity> notSavedOrConnected();
+    List<IndexBoxEntity> all();
 
-    List<IndexBoxEntity> notSavedOrConnected(Duration saveDelay, Duration connectDelay);
+    List<IndexBoxEntity> operableBoxes(Duration saveDelay, Duration connectDelay);
 
     Optional<IndexBoxEntity> box(Integer id);
-
-    List<IndexBoxEntity> boxes(List<Integer> ids);
 
 }

@@ -1,4 +1,4 @@
-package com.github.pathfinder.indexer;
+package com.github.pathfinder.indexer.configuration;
 
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;

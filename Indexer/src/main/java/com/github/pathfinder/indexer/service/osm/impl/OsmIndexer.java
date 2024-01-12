@@ -48,7 +48,7 @@ public class OsmIndexer implements IOsmIndexer {
 
     private void save(IndexBoxEntity box, List<Point> points) {
         searcherApi.save(new SavePointsMessage(box.getId(), points));
-        box.setSaveRequestTimestamp(dateTimeSupplier.instant());
+        box.setSaveRequestTimestamp(dateTimeSupplier.now());
     }
 
 }

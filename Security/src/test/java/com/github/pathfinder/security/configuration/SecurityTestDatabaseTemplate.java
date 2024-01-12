@@ -7,23 +7,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.jdbc.JdbcTestUtils;
-import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 @TestComponent
 @RequiredArgsConstructor
 public class SecurityTestDatabaseTemplate {
 
-    private final TransactionTemplate transactionTemplate;
-    private final JdbcTemplate        jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
+    @Transactional
     public void cleanDatabase() {
-        transactionTemplate.execute(status -> {
-            JdbcTestUtils.deleteFromTables(jdbcTemplate,
-                                           UserRefreshTokenEntity.Token.TABLE,
-                                           UserRolesEntity.Token.TABLE,
-                                           UserEntity.Token.TABLE);
-            return null;
-        });
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,
+                                       UserRefreshTokenEntity.Token.TABLE,
+                                       UserRolesEntity.Token.TABLE,
+                                       UserEntity.Token.TABLE);
     }
 
 }

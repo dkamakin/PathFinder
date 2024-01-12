@@ -1,24 +1,21 @@
-package com.github.pathfinder.indexer;
+package com.github.pathfinder.indexer.configuration;
 
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.jdbc.JdbcTestUtils;
-import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 @TestComponent
 @RequiredArgsConstructor
 public class IndexerTestDatabaseTemplate {
 
-    private final TransactionTemplate transactionTemplate;
-    private final JdbcTemplate        jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
+    @Transactional
     public void cleanDatabase() {
-        transactionTemplate.execute(status -> {
-            JdbcTestUtils.deleteFromTables(jdbcTemplate, IndexBoxEntity.Token.TABLE);
-            return null;
-        });
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, IndexBoxEntity.Token.TABLE);
     }
 
 }

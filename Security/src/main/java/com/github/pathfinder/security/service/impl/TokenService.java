@@ -30,7 +30,7 @@ public class TokenService implements ITokenService {
     @Override
     @Logged(ignoreReturnValue = false)
     public Tokens issue(JwtPayload payload) {
-        var now                  = timeSupplier.instant();
+        var now                  = timeSupplier.now();
         var builder              = jwtTools.builder().withPayload(payload(payload)).withIssuedAt(now);
         var accessTokenLifetime  = jwtTools.getConfiguration().getAccessTokenLifetime();
         var refreshTokenLifetime = jwtTools.getConfiguration().getRefreshTokenLifetime();
