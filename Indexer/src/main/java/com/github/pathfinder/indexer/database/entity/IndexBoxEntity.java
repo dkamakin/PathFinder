@@ -92,9 +92,11 @@ public class IndexBoxEntity {
         if (this == o) {
             return true;
         }
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+
         IndexBoxEntity that = (IndexBoxEntity) o;
         return saved == that.saved &&
                 connected == that.connected &&

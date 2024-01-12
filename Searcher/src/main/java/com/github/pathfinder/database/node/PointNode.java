@@ -110,6 +110,7 @@ public class PointNode {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+
         PointNode pointNode = (PointNode) o;
         return Objects.equal(id, pointNode.id) &&
                 Objects.equal(location3d, pointNode.location3d) &&

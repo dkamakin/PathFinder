@@ -15,6 +15,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,6 +26,10 @@ public class WestNordOstOsmClient implements OsmClient {
     @Logged
     @Override
     public List<OsmNode> nodes(List<Long> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
+            return List.of();
+        }
+
         return queryElements("""
                                      (
                                      %s;

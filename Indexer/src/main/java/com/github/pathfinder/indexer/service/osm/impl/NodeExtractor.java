@@ -26,7 +26,7 @@ public class NodeExtractor {
     }
 
     private List<OsmNode> nodes(Map<Boolean, List<OsmElement>> partitionedElementsByIsWay) {
-        var nodes = extractNodes(partitionedElementsByIsWay);
+        var nodes = handleNodes(partitionedElementsByIsWay.get(false));
 
         return Stream.concat(
                 nodes.values().stream(),
@@ -34,10 +34,8 @@ public class NodeExtractor {
         ).toList();
     }
 
-    private Map<Long, OsmNode> extractNodes(Map<Boolean, List<OsmElement>> partitionedElementsByIsWay) {
-        return partitionedElementsByIsWay.get(false).stream()
-                .map(OsmElement::asNode)
-                .collect(Collectors.toMap(OsmNode::id, Function.identity()));
+    private Map<Long, OsmNode> handleNodes(List<OsmElement> nodes) {
+        return nodes.stream().map(OsmElement::asNode).collect(Collectors.toMap(OsmNode::id, Function.identity()));
     }
 
     private boolean isWay(OsmElement element) {
