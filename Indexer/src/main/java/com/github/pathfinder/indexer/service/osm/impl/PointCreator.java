@@ -34,7 +34,7 @@ public class PointCreator {
         var landType = landType(extendedNode);
 
         if (extendedNode.elevation().elevation() == 0D) {
-            log.warn("An elevation for the node {} at the sea level", extendedNode);
+            log.warn("An elevation for the node {} is at the sea level", extendedNode);
             statistics.addUnknownElevationNode();
             return Optional.empty();
         }
