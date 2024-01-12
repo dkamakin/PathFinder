@@ -5,6 +5,7 @@ import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.database.node.PointRelation;
 import com.github.pathfinder.database.node.projection.SimpleChunk;
+import com.github.pathfinder.database.repository.impl.PointConnectionRepository;
 import com.github.pathfinder.service.IPointService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withinPercentage;
 
 @SearcherNeo4jTest
-@Import({PointConnector.class, ChunkGetterService.class})
+@Import({PointConnector.class, ChunkGetterService.class, PointConnectionRepository.class})
 class PointConnectorTest {
 
     @Autowired

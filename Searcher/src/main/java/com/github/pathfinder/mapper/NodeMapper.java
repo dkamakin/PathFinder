@@ -40,4 +40,6 @@ public interface NodeMapper {
 
     List<Chunk> chunks(List<SimpleChunk> chunks);
 
+    Chunk chunk(SimpleChunk node);
+
 }

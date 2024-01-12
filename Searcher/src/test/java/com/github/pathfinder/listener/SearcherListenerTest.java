@@ -75,7 +75,7 @@ class SearcherListenerTest {
     }
 
     @Test
-    void find_Request_CallService() {
+    void chunks_Request_CallService() {
         var message  = new GetChunksMessage(List.of(1, 2, 3));
         var node     = new SimpleChunk(1, true);
         var expected = new Chunk(node.id(), node.connected());
