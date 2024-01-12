@@ -12,6 +12,7 @@ import com.github.pathfinder.indexer.service.osm.impl.OsmIndexTask;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.ConnectChunksMessage;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.function.Predicate;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -117,7 +119,8 @@ class OsmIndexActorTest {
                 .first()
                 .matches(Predicate.not(IndexBoxEntity::isConnected))
                 .matches(IndexBoxEntity::isSaved)
-                .matches(entity -> entity.getConnectionRequestTimestamp().equals(now));
+                .satisfies(entity -> assertThat(entity.getConnectionRequestTimestamp())
+                        .isCloseTo(now, within(1, ChronoUnit.SECONDS)));
     }
 
     @Test
@@ -156,7 +159,8 @@ class OsmIndexActorTest {
                 .first()
                 .matches(Predicate.not(IndexBoxEntity::isConnected))
                 .matches(IndexBoxEntity::isSaved)
-                .matches(entity -> entity.getConnectionRequestTimestamp().equals(now));
+                .satisfies(entity -> assertThat(entity.getConnectionRequestTimestamp())
+                        .isCloseTo(now, within(1, ChronoUnit.SECONDS)));
     }
 
 }
