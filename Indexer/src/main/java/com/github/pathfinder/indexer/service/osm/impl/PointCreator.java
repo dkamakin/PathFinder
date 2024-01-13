@@ -35,14 +35,14 @@ public class PointCreator {
     private Optional<Point> createPointRequest(OsmExtendedNode extendedNode) {
         var landType = landType(extendedNode);
 
-        if (extendedNode.elevation().elevation() == 0D) {
+        if (extendedNode.elevation().value() == 0D) {
             log.warn("An elevation for the node {} is at the sea level", extendedNode);
             statistics.addUnknownElevationNode();
             return Optional.empty();
         }
 
         return Optional.of(
-                new Point(extendedNode.elevation().elevation(),
+                new Point(extendedNode.elevation().value(),
                           extendedNode.node().coordinate(),
                           landType.name(),
                           landType.coefficient())

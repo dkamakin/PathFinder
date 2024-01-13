@@ -52,11 +52,13 @@ public class OsmElementsIndexer {
     }
 
     private List<OsmNode> concatNodes(Map<Long, List<OsmWay>> reverseWayIndex, Map<Long, OsmNode> nodes) {
-        var waysNodes = osmClient.nodes(reverseWayIndex.keySet().stream()
-                                                .filter(Predicate.not(nodes::containsKey))
-                                                .toList());
+        var wayNodesIds = reverseWayIndex.keySet().stream().filter(Predicate.not(nodes::containsKey)).toList();
 
-        log.info("Fetches {} new nodes from ways", waysNodes.size());
+        log.info("Got {} nodes ids from ways", wayNodesIds.size());
+
+        var waysNodes = osmClient.nodes(wayNodesIds);
+
+        log.info("Fetched {} new nodes from ways", waysNodes.size());
 
         return Stream.concat(waysNodes.stream(), nodes.values().stream()).toList();
     }
