@@ -6,7 +6,7 @@ import com.github.pathfinder.data.path.AStarResult;
 import com.github.pathfinder.data.path.FindPathRequest;
 import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.security.api.role.SecurityRoles;
-import com.github.pathfinder.service.IPathService;
+import com.github.pathfinder.service.IPathSearcher;
 import com.github.pathfinder.web.dto.CoordinateDto;
 import com.github.pathfinder.web.dto.path.FindPathDto;
 import com.github.pathfinder.web.dto.path.FoundPathDto;
@@ -47,7 +47,7 @@ class PathEndpointTest {
     MockMvc mockMvc;
 
     @MockBean
-    IPathService pathService;
+    IPathSearcher pathSearcher;
 
     static Stream<FindPathDto> invalidFindPaths() {
         return Stream.of(
@@ -67,7 +67,7 @@ class PathEndpointTest {
     }
 
     void whenNeedToReturn(FindPathRequest request, AStarResult response) {
-        when(pathService.find(request)).thenReturn(response);
+        when(pathSearcher.aStar(request)).thenReturn(response);
     }
 
     @Test
@@ -113,7 +113,7 @@ class PathEndpointTest {
                 )
                 .andExpect(status().isBadRequest());
 
-        verifyNoInteractions(pathService);
+        verifyNoInteractions(pathSearcher);
     }
 
 }

@@ -5,6 +5,8 @@ import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.core.configuration.CoreConfiguration;
+import com.github.pathfinder.core.data.Coordinate;
+import com.github.pathfinder.data.path.FindPathRequest;
 import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.repository.impl.PathRepository;
 import com.github.pathfinder.searcher.api.exception.PathNotFoundException;
@@ -45,6 +47,10 @@ class PathSearcherTest {
         }).stream();
     }
 
+    Coordinate coordinate(PointNode node) {
+        return new Coordinate(node.latitude(), node.longitude());
+    }
+
     @ParameterizedTest
     @MethodSource("testPathFileStream")
     void aStar_PathExists_ReturnCorrectPath(TestPathFile deserialized) {
@@ -54,8 +60,9 @@ class PathSearcherTest {
 
         var sourcePoint = testFile.node(deserialized.sourceId());
         var targetPoint = testFile.node(deserialized.targetId());
+        var request     = new FindPathRequest(coordinate(sourcePoint), coordinate(targetPoint));
 
-        var actual = target.aStar(sourcePoint, targetPoint);
+        var actual = target.aStar(request);
 
         assertThat(actual)
                 .satisfies(found -> assertThat(found.path())
@@ -68,10 +75,11 @@ class PathSearcherTest {
     void aStar_PathDoesNotExist_PathNotFoundException() {
         var sourcePoint = PointFixtures.randomPointNode();
         var targetPoint = PointFixtures.randomPointNode();
+        var request     = new FindPathRequest(coordinate(sourcePoint), coordinate(targetPoint));
 
         testTemplate.saveAll(List.of(sourcePoint, targetPoint));
 
-        assertThatThrownBy(() -> target.aStar(sourcePoint, targetPoint)).isInstanceOf(PathNotFoundException.class);
+        assertThatThrownBy(() -> target.aStar(request)).isInstanceOf(PathNotFoundException.class);
     }
 
 }
