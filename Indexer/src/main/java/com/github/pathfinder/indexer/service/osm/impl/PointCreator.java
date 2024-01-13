@@ -1,7 +1,9 @@
 package com.github.pathfinder.indexer.service.osm.impl;
 
+import com.github.pathfinder.indexer.data.osm.OsmExtendedBoxIndex;
 import com.github.pathfinder.indexer.data.osm.OsmExtendedNode;
 import com.github.pathfinder.indexer.data.osm.OsmLandType;
+import com.github.pathfinder.indexer.data.osm.OsmWay;
 import com.github.pathfinder.searcher.api.data.point.Point;
 import java.util.List;
 import java.util.Optional;
@@ -10,16 +12,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PointCreator {
 
-    private final List<OsmExtendedNode>  nodes;
+    private final OsmExtendedBoxIndex    index;
     private final PointCreatorStatistics statistics;
 
-    public PointCreator(List<OsmExtendedNode> nodes) {
-        this.nodes      = nodes;
+    public PointCreator(OsmExtendedBoxIndex index) {
+        this.index      = index;
         this.statistics = new PointCreatorStatistics();
     }
 
     public List<Point> points() {
-        var result = nodes.stream()
+        var result = index.nodes().stream()
                 .map(this::createPointRequest)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -48,7 +50,22 @@ public class PointCreator {
     }
 
     private OsmLandType landType(OsmExtendedNode extendedNode) {
-        return OsmLandType.from(extendedNode.node().tags()).orElseGet(this::unknownType);
+        return OsmLandType
+                .from(extendedNode.node().tags())
+                .orElseGet(() -> landTypeFromWay(extendedNode).orElseGet(this::unknownType));
+    }
+
+    private Optional<OsmLandType> landTypeFromWay(OsmExtendedNode extendedNode) {
+        return findMostDifficultLandType(index.ways(extendedNode));
+    }
+
+    private Optional<OsmLandType> findMostDifficultLandType(List<OsmWay> ways) {
+        return ways.stream()
+                .map(OsmWay::tags)
+                .map(OsmLandType::from)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .max(OsmLandType.comparator());
     }
 
     private OsmLandType unknownType() {

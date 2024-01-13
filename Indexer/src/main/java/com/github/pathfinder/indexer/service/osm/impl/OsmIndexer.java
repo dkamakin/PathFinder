@@ -40,6 +40,7 @@ public class OsmIndexer implements IOsmIndexer {
         log.info("Query result: {} elements", elements.size());
 
         if (CollectionUtils.isEmpty(elements)) {
+            log.info("No points found for {}", box);
             return;
         }
 

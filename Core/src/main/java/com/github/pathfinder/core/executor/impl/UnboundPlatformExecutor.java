@@ -11,10 +11,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class UnboundPlatformExecutor implements PlatformExecutor {
 
+    private static final String THREAD_PREFIX = "platform-";
+
     private final ExecutorService executor;
 
     public UnboundPlatformExecutor() {
-        this.executor = Executors.newVirtualThreadPerTaskExecutor();
+        this.executor = Executors.newThreadPerTaskExecutor(Thread.ofVirtual().name(THREAD_PREFIX, 0L).factory());
     }
 
     @Logged

@@ -1,5 +1,6 @@
 package com.github.pathfinder.indexer.data.osm;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,11 +41,28 @@ public record OsmLandType(String name, double coefficient) {
             entry("cliff", 7D),
             entry("unpaved", 3D),
             entry("compacted", 2D),
-            entry("dirt", 3D)
+            entry("dirt", 3D),
+            entry("stream", -1D)
     );
 
-    private static final List<String> LAND_TYPE_KEYS = List.of("natural", "surface", "landcover");
+    private static final List<String> LAND_TYPE_KEYS = List.of("natural", "surface", "landcover", "waterway");
     public static final  OsmLandType  UNKNOWN        = new OsmLandType("unknown", 1F);
+
+    public static Comparator<OsmLandType> comparator() {
+        return (first, second) -> compare(first.coefficient, second.coefficient);
+    }
+
+    private static int compare(double firstCoefficient, double secondCoefficient) {
+        if (firstCoefficient < 0) {
+            return 1;
+        }
+
+        if (secondCoefficient < 0) {
+            return -1;
+        }
+
+        return Double.compare(firstCoefficient, secondCoefficient);
+    }
 
     public static Optional<OsmLandType> from(String type) {
         return Optional.ofNullable(LAND_TYPES.get(type)).map(found -> new OsmLandType(type, found));

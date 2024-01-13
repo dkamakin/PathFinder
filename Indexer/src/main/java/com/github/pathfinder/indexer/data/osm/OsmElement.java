@@ -4,6 +4,8 @@ public interface OsmElement {
 
     OsmElementType type();
 
+    OsmTags tags();
+
     default OsmNode asNode() {
         throw new IllegalArgumentException("The object is not a node");
     }

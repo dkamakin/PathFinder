@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,8 +14,29 @@ class OsmLandTypeTest {
         return Stream.of(
                 "natural",
                 "surface",
-                "landcover"
+                "landcover",
+                "waterway"
         );
+    }
+
+    static Stream<Arguments> compareArguments() {
+        return Stream.of(
+                Arguments.of(-1D, 1D, 1),
+                Arguments.of(1D, 1D, 0),
+                Arguments.of(10D, 1D, 1),
+                Arguments.of(-1D, 100D, 1),
+                Arguments.of(1D, 10D, -1),
+                Arguments.of(100D, -1D, -1)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("compareArguments")
+    void comparator_DifferentCases_ValidComparing(double first, double second, int expected) {
+        var actual = OsmLandType.comparator().compare(new OsmLandType("first", first),
+                                                      new OsmLandType("second", second));
+
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test

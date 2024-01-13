@@ -12,19 +12,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OsmPointExtractor {
 
-    private final NodeExtractor      nodeExtractor;
+    private final OsmElementsIndexer osmElementsIndexer;
     private final ElevationExtractor elevationExtractor;
 
     public List<Point> points(List<OsmElement> elements) {
-        var nodes = nodeExtractor.nodes(elements);
+        var index    = osmElementsIndexer.index(elements);
+        var extended = elevationExtractor.extend(index);
 
-        log.info("Extracted {} nodes from {} elements", nodes.size(), elements.size());
-
-        var extendedNodes = elevationExtractor.extend(nodes);
-
-        log.info("Fetched {} elevations", extendedNodes.size());
-
-        return new PointCreator(extendedNodes).points();
+        return new PointCreator(extended).points();
     }
 
 }
