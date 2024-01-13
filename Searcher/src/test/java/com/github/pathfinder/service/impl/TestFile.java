@@ -2,7 +2,6 @@ package com.github.pathfinder.service.impl;
 
 import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.node.PointRelation;
-import com.github.pathfinder.searcher.api.exception.PointNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,7 +26,7 @@ public class TestFile {
         return nodes.stream()
                 .filter(node -> node.getId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new PointNotFoundException(id));
+                .orElseThrow(() -> new IllegalArgumentException("Point not found: " + id));
     }
 
     public List<PointNode> nodes() {
@@ -56,7 +55,8 @@ public class TestFile {
     }
 
     private TestPathFile.TestFilePoint point(UUID id) {
-        return Optional.ofNullable(pointsMap.get(id)).orElseThrow(() -> new PointNotFoundException(id));
+        return Optional.ofNullable(pointsMap.get(id))
+                .orElseThrow(() -> new IllegalArgumentException("Point not found: " + id));
     }
 
     private Map<UUID, TestPathFile.TestFilePoint> pointsMap(TestPathFile testPathFile) {
