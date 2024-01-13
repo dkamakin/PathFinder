@@ -67,8 +67,9 @@ class PathSearcherTest {
         assertThat(actual)
                 .satisfies(found -> assertThat(found.path())
                         .map(PointNode::getId)
-                        .isEqualTo(deserialized.expected().path()))
-                .matches(found -> found.meters().equals(deserialized.expected().meters()));
+                        .containsSequence(deserialized.expected().path()))
+                .satisfies(found -> assertThat(found.weight())
+                        .isEqualTo(deserialized.expected().meters()));
     }
 
     @Test

@@ -51,7 +51,7 @@ public class TestFile {
         var point  = point(connection.targetId());
         var entity = pointNode(point);
 
-        return new PointRelation(connection.weight(), connection.weight(), entity);
+        return new PointRelation(connection.meters(), connection.weight(), entity);
     }
 
     private TestPathFile.TestFilePoint point(UUID id) {

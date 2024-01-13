@@ -29,11 +29,17 @@ public class OsmElementsIndexer {
 
     @Logged(ignoreReturnValue = false)
     public OsmBoxIndex index(List<OsmElement> elements) {
-        var partitionedElementsByIsWay = elements.stream().collect(Collectors.partitioningBy(this::isWay));
-        var nodes                      = handleNodes(partitionedElementsByIsWay.get(false));
-        var reverseWayIndex            = reverseWayIndex(partitionedElementsByIsWay.get(true));
+        var elementsPartitionedByIsWay = preprocess(elements);
+        var nodes                      = handleNodes(elementsPartitionedByIsWay.get(false));
+        var reverseWayIndex            = reverseWayIndex(elementsPartitionedByIsWay.get(true));
 
         return new OsmBoxIndex(concatNodes(reverseWayIndex, nodes), reverseWayIndex);
+    }
+
+    private Map<Boolean, List<OsmElement>> preprocess(List<OsmElement> elements) {
+        return elements.stream()
+                .filter(OsmElementFilter::isSupported)
+                .collect(Collectors.partitioningBy(this::isWay));
     }
 
     private Map<Long, List<OsmWay>> reverseWayIndex(List<OsmElement> ways) {

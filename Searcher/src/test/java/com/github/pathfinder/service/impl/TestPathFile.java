@@ -55,13 +55,17 @@ public record TestPathFile(List<TestFilePoint> points,
         }
 
         public record Connection(UUID targetId,
+                                 Double meters,
                                  Double weight) {
 
             public Connection(@JsonProperty("targetId")
                               UUID targetId,
                               @JsonProperty("weight")
+                              Double meters,
+                              @JsonProperty("weight")
                               Double weight) {
                 this.targetId = targetId;
+                this.meters   = meters;
                 this.weight   = weight;
             }
         }
@@ -74,7 +78,7 @@ public record TestPathFile(List<TestFilePoint> points,
         @JsonCreator
         public TestExpectation(@JsonProperty("path")
                                List<UUID> path,
-                               @JsonProperty("meters")
+                               @JsonProperty("weight")
                                Double meters) {
             this.path   = path;
             this.meters = meters;

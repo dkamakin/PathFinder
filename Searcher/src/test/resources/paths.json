@@ -10,6 +10,7 @@
         "connections": [
           {
             "targetId": "fc7fd6e8-701f-47f5-991a-c7d27e11f6b2",
+            "meters": 2,
             "weight": 1
           }
         ]
@@ -25,7 +26,7 @@
     "sourceId": "63138770-81b0-4cb0-b5ac-cca6bad24ae0",
     "targetId": "fc7fd6e8-701f-47f5-991a-c7d27e11f6b2",
     "expected": {
-      "meters": 1,
+      "meters": 2,
       "path": [
         "63138770-81b0-4cb0-b5ac-cca6bad24ae0",
         "fc7fd6e8-701f-47f5-991a-c7d27e11f6b2"
@@ -43,14 +44,17 @@
         "connections": [
           {
             "targetId": "1c286276-8966-4054-83a4-dd6354774363",
+            "meters": 2,
             "weight": 1
           },
           {
             "targetId": "2a2508e3-77a6-468b-9bf4-eed57eb6a9fc",
+            "meters": 1.5,
             "weight": 0.75
           },
           {
             "targetId": "a5d681f1-1fc5-403c-ac2e-f707da026662",
+            "meters": 1,
             "weight": 0.5
           }
         ]
@@ -64,10 +68,12 @@
         "connections": [
           {
             "targetId": "949fe9f8-93a4-4519-b836-161b096a55d8",
+            "meters": 1,
             "weight": 1.5
           },
           {
             "targetId": "1ee77891-44d6-4d41-a5d5-1c8a4040ca01",
+            "meters": 2,
             "weight": 1.2512
           }
         ]
@@ -104,10 +110,102 @@
     "sourceId": "4769ed8c-f70b-4960-9628-7e878ece36a0",
     "targetId": "949fe9f8-93a4-4519-b836-161b096a55d8",
     "expected": {
-      "meters": 2.5,
+      "meters": 3,
       "path": [
         "4769ed8c-f70b-4960-9628-7e878ece36a0",
         "1c286276-8966-4054-83a4-dd6354774363",
+        "949fe9f8-93a4-4519-b836-161b096a55d8"
+      ]
+    }
+  },
+  {
+    "points": [
+      {
+        "id": "4769ed8c-f70b-4960-9628-7e878ece36a0",
+        "altitude": 1.1,
+        "latitude": 12.1,
+        "longitude": 13.1,
+        "landType": "BAY",
+        "connections": [
+          {
+            "targetId": "1c286276-8966-4054-83a4-dd6354774363",
+            "meters": 1.5,
+            "weight": 20
+          },
+          {
+            "targetId": "2a2508e3-77a6-468b-9bf4-eed57eb6a9fc",
+            "meters": 1.5,
+            "weight": 10
+          }
+        ]
+      },
+      {
+        "id": "1c286276-8966-4054-83a4-dd6354774363",
+        "altitude": 1.1,
+        "latitude": 11.1,
+        "longitude": 14.1,
+        "landType": "BAY",
+        "connections": [
+          {
+            "targetId": "949fe9f8-93a4-4519-b836-161b096a55d8",
+            "meters": 1.5,
+            "weight": 1.5
+          },
+          {
+            "targetId": "1ee77891-44d6-4d41-a5d5-1c8a4040ca01",
+            "meters": 1,
+            "weight": 1.2512
+          }
+        ]
+      },
+      {
+        "id": "949fe9f8-93a4-4519-b836-161b096a55d8",
+        "altitude": 1.1,
+        "latitude": 10.1,
+        "longitude": 14.1,
+        "landType": "BAY"
+      },
+      {
+        "id": "2a2508e3-77a6-468b-9bf4-eed57eb6a9fc",
+        "altitude": 1.1,
+        "latitude": 11.1,
+        "longitude": 13.1,
+        "landType": "BAY",
+        "connections": [
+          {
+            "targetId": "949fe9f8-93a4-4519-b836-161b096a55d8",
+            "meters": 1.5,
+            "weight": 1.5
+          },
+          {
+            "targetId": "1ee77891-44d6-4d41-a5d5-1c8a4040ca01",
+            "meters": 1,
+            "weight": 1.2512
+          }
+        ]
+      },
+      {
+        "id": "a5d681f1-1fc5-403c-ac2e-f707da026662",
+        "altitude": 1.1,
+        "latitude": 12.1,
+        "longitude": 15.1,
+        "landType": "BAY"
+      },
+      {
+        "id": "1ee77891-44d6-4d41-a5d5-1c8a4040ca01",
+        "altitude": 1.1,
+        "latitude": 12.1,
+        "longitude": 15.1,
+        "landType": "BAY"
+      }
+    ],
+    "sourceId": "4769ed8c-f70b-4960-9628-7e878ece36a0",
+    "targetId": "949fe9f8-93a4-4519-b836-161b096a55d8",
+    "expected": {
+      "meters": 3,
+      "path": [
+        "4769ed8c-f70b-4960-9628-7e878ece36a0",
+        "2a2508e3-77a6-468b-9bf4-eed57eb6a9fc",
         "949fe9f8-93a4-4519-b836-161b096a55d8"
       ]
     }

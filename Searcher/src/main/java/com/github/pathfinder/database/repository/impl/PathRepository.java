@@ -26,14 +26,14 @@ public class PathRepository implements IPathRepository {
               LIMIT 1
             CALL apoc.algo.aStarConfig(source, target, 'CONNECTION', {weight: 'weight', pointPropName: 'location2d'})
             YIELD path, weight
-            RETURN nodes(path) as path, weight as meters
+            RETURN nodes(path) as path, weight
             """;
 
     private final Neo4jClient client;
     private final ValueMapper mapper;
 
     @Override
-    @Logged(value = {"sourceId", "targetId"})
+    @Logged(value = {"sourceId", "targetId"}, ignoreReturnValue = false)
     public Optional<AStarResult> aStar(Coordinate source, Coordinate target) {
         return client
                 .query(A_STAR_QUERY)
