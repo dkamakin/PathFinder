@@ -115,4 +115,27 @@ class PointConnectorTest {
                                 .matches(relation -> relation.getTarget().equals(secondPoint))));
     }
 
+    @Test
+    void createConnections_NegativeWeightFound_DoNotConnectWithNegativeValue() {
+        var firstPoint = PointFixtures.randomPointNodeBuilder()
+                .passabilityCoefficient(1D)
+                .location(44.827410791880155, 20.419468330585666, 1D).build();
+        var secondPoint = PointFixtures.randomPointNodeBuilder()
+                .passabilityCoefficient(-2D)
+                .location(44.82744118518296, 20.419457053285115, 1D).build();
+        var chunkId = 1;
+
+        pointService.saveAll(chunkId, List.of(firstPoint, secondPoint));
+        target.createConnections(List.of(chunkId));
+
+        var actual = testTemplate.allPointNodes();
+
+        assertThat(actual)
+                .hasSize(2)
+                .anySatisfy(connected -> assertThat(connected)
+                        .isEqualTo(firstPoint)
+                        .satisfies(node -> assertThat(node.getRelations())
+                                .isEmpty()));
+    }
+
 }

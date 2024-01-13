@@ -18,7 +18,7 @@ public class PointConnectionRepository implements IPointConnectionRepository {
     private static final String CONNECTION_QUERY = """
             CALL apoc.periodic.iterate(
             'MATCH (chunk:Chunk)-[:IN_CHUNK]-(first:Point) WHERE chunk.id IN $chunkIds RETURN first',
-            'MATCH (second:Point) WHERE elementId(first) <> elementId(second) WITH first, second, point.distance(first.location3d, second.location3d) AS distanceMeters WHERE distanceMeters <= $accuracyMeters WITH first, second, distanceMeters, ((second.passabilityCoefficient + first.passabilityCoefficient) / 2) * distanceMeters AS weight MERGE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)',
+            'MATCH (second:Point) WHERE elementId(first) <> elementId(second) WITH first, second, point.distance(first.location3d, second.location3d) AS distanceMeters WHERE distanceMeters <= $accuracyMeters WITH first, second, distanceMeters, ((second.passabilityCoefficient + first.passabilityCoefficient) / 2) * distanceMeters AS weight WHERE weight > 0 MERGE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)',
             {batchSize: 1, parallel: true, concurrency: 4, params: {chunkIds: $chunkIds, accuracyMeters: $accuracyMeters}})
             YIELD batches, total, committedOperations, failedOperations, retries
             RETURN batches, total, committedOperations, failedOperations, retries

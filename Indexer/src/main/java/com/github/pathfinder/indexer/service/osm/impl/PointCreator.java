@@ -50,9 +50,8 @@ public class PointCreator {
     }
 
     private OsmLandType landType(OsmExtendedNode extendedNode) {
-        return OsmLandType
-                .from(extendedNode.node().tags())
-                .orElseGet(() -> landTypeFromWay(extendedNode).orElseGet(this::unknownType));
+        return landTypeFromWay(extendedNode)
+                .orElseGet(() -> OsmLandType.from(extendedNode.node().tags()).orElseGet(this::unknownType));
     }
 
     private Optional<OsmLandType> landTypeFromWay(OsmExtendedNode extendedNode) {
