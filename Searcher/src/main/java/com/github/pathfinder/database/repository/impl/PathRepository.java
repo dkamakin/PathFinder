@@ -24,7 +24,7 @@ public class PathRepository implements IPathRepository {
             WITH source, target, point.distance(target.location2d, point({latitude: $targetLat, longitude: $targetLon})) AS distanceTarget
               ORDER BY distanceTarget
               LIMIT 1
-            CALL apoc.algo.aStarConfig(source, target, 'CONNECTION', {weight: 'weight', pointPropName: 'location2d'})
+            CALL apoc.algo.aStarConfig(source, target, 'CONNECTION', {weight: 'weight', pointPropName: 'location2d', default: 1})
             YIELD path, weight
             RETURN nodes(path) as path, weight, reduce(meters = 0, relation in relationships(path) | meters + relation.distanceMeters) as meters
             """;

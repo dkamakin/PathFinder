@@ -125,87 +125,63 @@
       {
         "id": "4769ed8c-f70b-4960-9628-7e878ece36a0",
         "altitude": 1.1,
-        "latitude": 12.1,
-        "longitude": 13.1,
+        "latitude": 45.16745,
+        "longitude": 19.80093,
         "landType": "BAY",
         "connections": [
           {
-            "targetId": "1c286276-8966-4054-83a4-dd6354774363",
-            "meters": 1.5,
-            "weight": 20
+            "targetId": "2a2508e3-77a6-468b-9bf4-eed57eb6a9fc",
+            "meters": 96,
+            "weight": 1
           },
           {
-            "targetId": "2a2508e3-77a6-468b-9bf4-eed57eb6a9fc",
-            "meters": 1.5,
-            "weight": 10
+            "targetId": "1c286276-8966-4054-83a4-dd6354774363",
+            "meters": 98,
+            "weight": 3
           }
         ]
       },
       {
         "id": "1c286276-8966-4054-83a4-dd6354774363",
         "altitude": 1.1,
-        "latitude": 11.1,
-        "longitude": 14.1,
+        "latitude": 45.1679,
+        "longitude": 19.79985,
         "landType": "BAY",
         "connections": [
           {
             "targetId": "949fe9f8-93a4-4519-b836-161b096a55d8",
-            "meters": 1.5,
-            "weight": 1.5
-          },
-          {
-            "targetId": "1ee77891-44d6-4d41-a5d5-1c8a4040ca01",
-            "meters": 1,
-            "weight": 1.2512
+            "meters": 68,
+            "weight": 3
           }
         ]
       },
       {
         "id": "949fe9f8-93a4-4519-b836-161b096a55d8",
         "altitude": 1.1,
-        "latitude": 10.1,
-        "longitude": 14.1,
+        "latitude": 45.16758,
+        "longitude": 19.79911,
         "landType": "BAY"
       },
       {
         "id": "2a2508e3-77a6-468b-9bf4-eed57eb6a9fc",
         "altitude": 1.1,
-        "latitude": 11.1,
-        "longitude": 13.1,
+        "latitude": 45.16732,
+        "longitude": 19.79971,
         "landType": "BAY",
         "connections": [
           {
             "targetId": "949fe9f8-93a4-4519-b836-161b096a55d8",
-            "meters": 1.5,
-            "weight": 1.5
-          },
-          {
-            "targetId": "1ee77891-44d6-4d41-a5d5-1c8a4040ca01",
-            "meters": 1,
-            "weight": 1.2512
+            "meters": 55,
+            "weight": 1
           }
         ]
-      },
-      {
-        "id": "a5d681f1-1fc5-403c-ac2e-f707da026662",
-        "altitude": 1.1,
-        "latitude": 12.1,
-        "longitude": 15.1,
-        "landType": "BAY"
-      },
-      {
-        "id": "1ee77891-44d6-4d41-a5d5-1c8a4040ca01",
-        "altitude": 1.1,
-        "latitude": 12.1,
-        "longitude": 15.1,
-        "landType": "BAY"
       }
     ],
     "sourceId": "4769ed8c-f70b-4960-9628-7e878ece36a0",
     "targetId": "949fe9f8-93a4-4519-b836-161b096a55d8",
     "expected": {
-      "meters": 3,
-      "weight": 1.75,
+      "meters": 151,
+      "weight": 2,
       "path": [
         "4769ed8c-f70b-4960-9628-7e878ece36a0",
         "2a2508e3-77a6-468b-9bf4-eed57eb6a9fc",

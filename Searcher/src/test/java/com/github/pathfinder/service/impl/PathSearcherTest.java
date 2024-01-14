@@ -68,6 +68,7 @@ class PathSearcherTest {
         assertThat(actual)
                 .satisfies(found -> assertThat(found.path())
                         .map(PointNode::getId)
+                        .hasSameSizeAs(expected.path())
                         .containsSequence(expected.path()))
                 .satisfies(found -> assertThat(found.meters())
                         .isEqualTo(expected.meters()))

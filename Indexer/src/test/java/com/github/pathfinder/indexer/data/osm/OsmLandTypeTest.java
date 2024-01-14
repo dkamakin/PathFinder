@@ -29,9 +29,8 @@ class OsmLandTypeTest {
 
     @Test
     void from_HasMultipleSupportedKeys_FindFirst() {
-        var expected = new OsmLandType("sand", 3D);
-        var tags = new OsmTags(Map.of("natural", expected.name(),
-                                      "surface", "ssand"));
+        var expected = new OsmLandType("sand", 4D);
+        var tags     = new OsmTags(Map.of("natural", expected.name(), "surface", "ssand"));
 
         var actual = OsmLandType.from(tags);
 
@@ -41,7 +40,7 @@ class OsmLandTypeTest {
     @ParameterizedTest
     @MethodSource("supportedKeys")
     void from_SurfaceTagIsPresent_FindValue(String key) {
-        var expected = new OsmLandType("sand", 3D);
+        var expected = new OsmLandType("sand", 4D);
         var tags     = new OsmTags(Map.of(key, expected.name()));
 
         var actual = OsmLandType.from(tags);
