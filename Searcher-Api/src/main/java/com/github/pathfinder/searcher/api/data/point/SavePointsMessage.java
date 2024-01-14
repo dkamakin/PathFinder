@@ -9,6 +9,7 @@ public record SavePointsMessage(int id, List<Point> points) {
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("id", id)
+                .add("points", points.size())
                 .toString();
     }
 }

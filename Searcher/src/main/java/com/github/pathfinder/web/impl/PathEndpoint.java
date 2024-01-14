@@ -17,8 +17,8 @@ public class PathEndpoint implements IPathEndpoint {
 
     private final IPathSearcher pathSearcher;
 
-    @Logged
     @Override
+    @Logged("request")
     public FoundPathDto find(@Valid @RequestBody FindPathDto request) {
         var mapper = DtoMapper.INSTANCE;
 

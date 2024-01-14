@@ -33,7 +33,7 @@ public class PathRepository implements IPathRepository {
     private final ValueMapper mapper;
 
     @Override
-    @Logged(value = {"sourceId", "targetId"}, ignoreReturnValue = false)
+    @Logged(value = {"source", "target"}, ignoreReturnValue = false)
     public Optional<AStarResult> aStar(Coordinate source, Coordinate target) {
         return client
                 .query(A_STAR_QUERY)

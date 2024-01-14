@@ -16,8 +16,8 @@ public class PathSearcher implements IPathSearcher {
 
     private final IPathRepository searcherRepository;
 
-    @Logged
     @Override
+    @Logged("request")
     @ReadTransactional
     public AStarResult aStar(FindPathRequest request) {
         return searcherRepository

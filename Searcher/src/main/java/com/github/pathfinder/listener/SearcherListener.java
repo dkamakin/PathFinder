@@ -27,20 +27,20 @@ public class SearcherListener {
     private final IChunkGetterService chunkGetterService;
     private final IPointConnector     pointConnector;
 
-    @Logged
     @AmqpHandler
+    @Logged("request")
     public void connect(ConnectChunksMessage request) {
         pointConnector.createConnections(request.ids());
     }
 
-    @Logged
     @AmqpHandler
+    @Logged("request")
     public void save(SavePointsMessage request) {
         pointService.saveAll(request.id(), NodeMapper.MAPPER.pointNodes(request.points()));
     }
 
-    @Logged
     @AmqpHandler
+    @Logged("request")
     public GetChunksResponse chunks(GetChunksMessage request) {
         return NodeMapper.MAPPER.getChunksResponse(chunkGetterService.simple(request.ids()));
     }
