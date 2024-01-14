@@ -43,8 +43,8 @@ class OsmElementFilterTest {
 
     @ParameterizedTest
     @MethodSource("notSupportedElements")
-    void isSupported_NotSupported_False(OsmElement element) {
-        var actual = target.isSupported(element);
+    void test_NotSupported_False(OsmElement element) {
+        var actual = target.test(element);
 
         assertThat(actual).isFalse();
     }
@@ -52,7 +52,7 @@ class OsmElementFilterTest {
     @ParameterizedTest
     @MethodSource("supportedElements")
     void isSupported_Supported_True(OsmElement element) {
-        var actual = target.isSupported(element);
+        var actual = target.test(element);
 
         assertThat(actual).isTrue();
     }

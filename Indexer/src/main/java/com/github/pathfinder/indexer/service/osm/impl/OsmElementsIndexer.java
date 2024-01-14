@@ -38,9 +38,7 @@ public class OsmElementsIndexer {
 
     private Map<Boolean, List<OsmElement>> preprocess(List<OsmElement> elements) {
         var elementFilter = new OsmElementFilter();
-        var processed = elements.stream()
-                .filter(elementFilter::isSupported)
-                .collect(Collectors.partitioningBy(this::isWay));
+        var processed     = elements.stream().filter(elementFilter).collect(Collectors.partitioningBy(this::isWay));
 
         log.info("Filtered elements statistics: {}", elementFilter);
 
