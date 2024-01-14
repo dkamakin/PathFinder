@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Import;
 @ExtendWith(IndexerDatabaseTestExtension.class)
 @Import({IndexerTestDatabaseTemplate.class,
         IndexBoxUpdaterService.class,
+        IndexerStateBuilder.class,
         RefreshAutoConfiguration.class,
         CoreConfiguration.class})
 public @interface IndexerServiceDatabaseTest {
