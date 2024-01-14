@@ -8,6 +8,7 @@ import com.github.pathfinder.indexer.service.osm.impl.OsmElementFilter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,10 +34,17 @@ class OsmElementFilterTest {
         );
     }
 
+    OsmElementFilter target;
+
+    @BeforeEach
+    void setUp() {
+        target = new OsmElementFilter();
+    }
+
     @ParameterizedTest
     @MethodSource("notSupportedElements")
     void isSupported_NotSupported_False(OsmElement element) {
-        var actual = OsmElementFilter.isSupported(element);
+        var actual = target.isSupported(element);
 
         assertThat(actual).isFalse();
     }
@@ -44,7 +52,7 @@ class OsmElementFilterTest {
     @ParameterizedTest
     @MethodSource("supportedElements")
     void isSupported_Supported_True(OsmElement element) {
-        var actual = OsmElementFilter.isSupported(element);
+        var actual = target.isSupported(element);
 
         assertThat(actual).isTrue();
     }

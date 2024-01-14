@@ -37,9 +37,14 @@ public class OsmElementsIndexer {
     }
 
     private Map<Boolean, List<OsmElement>> preprocess(List<OsmElement> elements) {
-        return elements.stream()
-                .filter(OsmElementFilter::isSupported)
+        var elementFilter = new OsmElementFilter();
+        var processed = elements.stream()
+                .filter(elementFilter::isSupported)
                 .collect(Collectors.partitioningBy(this::isWay));
+
+        log.info("Filtered elements statistics: {}", elementFilter);
+
+        return processed;
     }
 
     private Map<Long, List<OsmWay>> reverseWayIndex(List<OsmElement> ways) {
