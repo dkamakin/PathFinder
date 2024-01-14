@@ -62,14 +62,17 @@ class PathSearcherTest {
         var targetPoint = testFile.node(deserialized.targetId());
         var request     = new FindPathRequest(coordinate(sourcePoint), coordinate(targetPoint));
 
-        var actual = target.aStar(request);
+        var actual   = target.aStar(request);
+        var expected = deserialized.expected();
 
         assertThat(actual)
                 .satisfies(found -> assertThat(found.path())
                         .map(PointNode::getId)
-                        .containsSequence(deserialized.expected().path()))
+                        .containsSequence(expected.path()))
+                .satisfies(found -> assertThat(found.meters())
+                        .isEqualTo(expected.meters()))
                 .satisfies(found -> assertThat(found.weight())
-                        .isEqualTo(deserialized.expected().meters()));
+                        .isEqualTo(expected.weight()));
     }
 
     @Test

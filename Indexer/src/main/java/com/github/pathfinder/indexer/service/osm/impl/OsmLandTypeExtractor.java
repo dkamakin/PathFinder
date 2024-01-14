@@ -13,7 +13,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class OsmLandTypeExtractor {
 
-    public static Optional<OsmLandType> maxLandType(OsmExtendedNode extendedNode, OsmExtendedBoxIndex index) {
+    public Optional<OsmLandType> maxLandType(OsmExtendedNode extendedNode, OsmExtendedBoxIndex index) {
         var wayLandType  = landTypeFromWay(extendedNode, index);
         var nodeLandType = OsmLandType.from(extendedNode.node().tags());
 

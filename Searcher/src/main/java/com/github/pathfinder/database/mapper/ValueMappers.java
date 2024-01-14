@@ -3,6 +3,7 @@ package com.github.pathfinder.database.mapper;
 import com.github.pathfinder.core.tools.impl.ReflectionTools;
 import java.util.Map;
 import java.util.Optional;
+import javax.annotation.Nullable;
 import lombok.experimental.UtilityClass;
 import org.neo4j.driver.Value;
 
@@ -32,6 +33,15 @@ public class ValueMappers {
         var map = aClass.isPrimitive() ? PRIMITIVE_MAPPERS : MAPPERS;
 
         return ReflectionTools.cast(Optional.ofNullable(map.get(aClass)));
+    }
+
+    @Nullable
+    public <T> T apply(Value value, Mapper<T> mapper) {
+        if (value.isNull()) {
+            return null;
+        }
+
+        return mapper.apply(value);
     }
 
 }

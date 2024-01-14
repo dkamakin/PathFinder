@@ -7,13 +7,16 @@ import java.util.List;
 
 public record AStarResult(@CollectionType(PointNode.class)
                           List<PointNode> path,
-                          Double weight) {
+                          Double weight,
+                          Double meters) {
 
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("path", path.size())
                 .add("weight", weight)
+                .add("meters", meters)
                 .toString();
     }
+
 }

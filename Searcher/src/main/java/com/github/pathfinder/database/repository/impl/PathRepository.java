@@ -26,7 +26,7 @@ public class PathRepository implements IPathRepository {
               LIMIT 1
             CALL apoc.algo.aStarConfig(source, target, 'CONNECTION', {weight: 'weight', pointPropName: 'location2d'})
             YIELD path, weight
-            RETURN nodes(path) as path, weight
+            RETURN nodes(path) as path, weight, reduce(meters = 0, relation in relationships(path) | meters + relation.distanceMeters) as meters
             """;
 
     private final Neo4jClient client;

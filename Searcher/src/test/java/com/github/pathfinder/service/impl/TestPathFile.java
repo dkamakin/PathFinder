@@ -73,15 +73,19 @@ public record TestPathFile(List<TestFilePoint> points,
     }
 
     public record TestExpectation(List<UUID> path,
-                                  Double meters) {
+                                  Double meters,
+                                  Double weight) {
 
         @JsonCreator
         public TestExpectation(@JsonProperty("path")
                                List<UUID> path,
                                @JsonProperty("meters")
-                               Double meters) {
+                               Double meters,
+                               @JsonProperty("weight")
+                               Double weight) {
             this.path   = path;
             this.meters = meters;
+            this.weight = weight;
         }
     }
 

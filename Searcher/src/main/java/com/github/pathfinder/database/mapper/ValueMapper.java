@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -34,11 +35,15 @@ public class ValueMapper {
         return expected.getDeclaredConstructor(types).newInstance(values);
     }
 
+    @Nullable
     public Object instantiate(TypeSystem typeSystem, Field field, MapAccessorWithDefaultValue fetched) {
-        return ValueMappers
-                .mapper(field.getType())
-                .map(mapper -> mapper.apply(get(fetched, field)))
-                .orElseGet(() -> cast(mapComplexField(typeSystem, field, fetched)));
+        var mapper = ValueMappers.mapper(field.getType());
+
+        if (mapper.isPresent()) {
+            return ValueMappers.apply(get(fetched, field), mapper.get());
+        } else {
+            return cast(mapComplexField(typeSystem, field, fetched));
+        }
     }
 
     private <T> T mapComplexField(TypeSystem typeSystem, Field field, MapAccessorWithDefaultValue fetched) {
@@ -92,13 +97,7 @@ public class ValueMapper {
         var name = field.getName();
 
         try {
-            var value = fetched.get(name);
-
-            if (value.isNull()) {
-                throw new ValueNotFoundException(name);
-            }
-
-            return value;
+            return fetched.get(name);
         } catch (ArrayIndexOutOfBoundsException e) {
             log.error("Failed to get a field", e);
             throw new ValueNotFoundException(name);

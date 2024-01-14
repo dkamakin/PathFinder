@@ -7,7 +7,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class OsmElementFilter {
 
-    public static boolean isSupported(OsmElement element) {
+    public boolean isSupported(OsmElement element) {
         return OsmLandType.from(element.tags())
                 .map(OsmLandType::coefficient)
                 .map(coefficient -> coefficient > 0)

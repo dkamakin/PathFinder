@@ -83,6 +83,7 @@ class PathEndpointTest {
         );
         var response = new AStarResult(
                 List.of(PointNode.builder().passabilityCoefficient(1D).location(latitude, longitude, 1D).build()),
+                1D,
                 meters
         );
 
