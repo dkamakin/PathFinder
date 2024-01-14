@@ -12,10 +12,10 @@ import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.function.Consumer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.UtilityClass;
 
@@ -47,19 +47,15 @@ public class IndexBoxEntity {
     @SequenceGenerator(name = Token.ID_GENERATOR, sequenceName = Token.ID_SEQUENCE, allocationSize = 1)
     private Integer id;
 
-    @Setter
     @Column(name = Token.SAVED)
     private boolean saved;
 
-    @Setter
     @Column(name = Token.CONNECTED)
     private boolean connected;
 
-    @Setter
     @Column(name = Token.SAVE_REQUEST_TIMESTAMP)
     private Instant saveRequestTimestamp;
 
-    @Setter
     @Column(name = Token.CONNECTION_REQUEST_TIMESTAMP)
     private Instant connectionRequestTimestamp;
 
@@ -85,6 +81,27 @@ public class IndexBoxEntity {
 
     public static IndexBoxEntityBuilder builder() {
         return new IndexBoxEntityBuilder();
+    }
+
+    public IndexBoxEntity setSaved(boolean saved) {
+        return setAndReturnThis(saved, x -> this.saved = x);
+    }
+
+    public IndexBoxEntity setConnected(boolean connected) {
+        return setAndReturnThis(connected, x -> this.connected = x);
+    }
+
+    public IndexBoxEntity setSaveRequestTimestamp(Instant saveRequestTimestamp) {
+        return setAndReturnThis(saveRequestTimestamp, x -> this.saveRequestTimestamp = x);
+    }
+
+    public IndexBoxEntity setConnectionRequestTimestamp(Instant connectionRequestTimestamp) {
+        return setAndReturnThis(connectionRequestTimestamp, x -> this.connectionRequestTimestamp = x);
+    }
+
+    private <T> IndexBoxEntity setAndReturnThis(T value, Consumer<T> consumer) {
+        consumer.accept(value);
+        return this;
     }
 
     @Override

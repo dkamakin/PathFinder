@@ -55,6 +55,8 @@ services:
   postgresql:
     image: postgres:15.3
     container_name: postgresql
+    volumes:
+      - postgresql:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${POSTGRES_DB_NAME}
       POSTGRES_USER: ${POSTGRES_USERNAME}
@@ -79,7 +81,6 @@ services:
       NEO4J_server_default__advertised__address: neo4j
       NEO4J_server_bolt_advertised__address: :${NEO4J_PORT}
       NEO4J_initial_dbms_default__database: ${NEO4J_DB_NAME}
-    mem_limit: 2G
     volumes:
       - neo4j:/data
   liquibase:
@@ -95,3 +96,4 @@ services:
         condition: service_healthy
 volumes:
   neo4j:
+  postgresql:

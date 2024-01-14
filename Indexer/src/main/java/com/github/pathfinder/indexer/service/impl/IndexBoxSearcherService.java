@@ -4,8 +4,8 @@ import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.core.interfaces.ReadTransactional;
 import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
-import com.github.pathfinder.indexer.database.repository.IndexBoxRepository;
-import com.github.pathfinder.indexer.service.BoxService;
+import com.github.pathfinder.indexer.database.repository.IndexBoxSearcherRepository;
+import com.github.pathfinder.indexer.service.BoxSearcherService;
 import com.google.common.collect.Lists;
 import java.time.Duration;
 import java.util.List;
@@ -19,10 +19,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RefreshScope
 @RequiredArgsConstructor
-public class IndexBoxService implements BoxService {
+public class IndexBoxSearcherService implements BoxSearcherService {
 
-    private final IndexBoxRepository boxRepository;
-    private final IDateTimeSupplier  dateTimeSupplier;
+    private final IndexBoxSearcherRepository boxRepository;
+    private final IDateTimeSupplier          dateTimeSupplier;
 
     @Logged
     @Override
@@ -33,9 +33,16 @@ public class IndexBoxService implements BoxService {
 
     @Override
     @ReadTransactional
-    @Logged(ignoreReturnValue = false, value = {"saveDelay", "connectDelay"})
-    public List<IndexBoxEntity> operableBoxes(Duration saveDelay, Duration connectDelay) {
-        return boxRepository.operableBoxes(saveDelay, connectDelay, dateTimeSupplier.now());
+    @Logged(ignoreReturnValue = false, value = {"saveDelay"})
+    public List<IndexBoxEntity> savable(Duration saveDelay) {
+        return boxRepository.savable(saveDelay, dateTimeSupplier.now());
+    }
+
+    @Override
+    @ReadTransactional
+    @Logged(ignoreReturnValue = false, value = {"connectDelay"})
+    public List<IndexBoxEntity> connectable(Duration connectDelay) {
+        return boxRepository.connectable(connectDelay, dateTimeSupplier.now());
     }
 
     @Override

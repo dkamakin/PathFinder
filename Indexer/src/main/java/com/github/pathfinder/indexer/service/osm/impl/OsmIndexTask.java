@@ -1,6 +1,6 @@
 package com.github.pathfinder.indexer.service.osm.impl;
 
-import com.github.pathfinder.indexer.data.index.IndexBox;
+import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ public class OsmIndexTask {
 
     private final OsmIndexer indexer;
 
-    public void accept(IndexBox box) {
+    public void accept(IndexBoxEntity box) {
         try {
             indexer.process(box);
         } catch (Exception e) {

@@ -2,6 +2,7 @@ package com.github.pathfinder.indexer.configuration;
 
 import com.github.pathfinder.core.ServiceDatabaseTest;
 import com.github.pathfinder.core.configuration.CoreConfiguration;
+import com.github.pathfinder.indexer.service.impl.IndexBoxUpdaterService;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -15,7 +16,7 @@ import org.springframework.context.annotation.Import;
 @Retention(RetentionPolicy.RUNTIME)
 @ExtendWith(IndexerDatabaseTestExtension.class)
 @Import({IndexerTestDatabaseTemplate.class,
-        IndexerStateBuilder.class,
+        IndexBoxUpdaterService.class,
         RefreshAutoConfiguration.class,
         CoreConfiguration.class})
 public @interface IndexerServiceDatabaseTest {

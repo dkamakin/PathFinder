@@ -4,7 +4,7 @@ import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
-import com.github.pathfinder.indexer.service.BoxService;
+import com.github.pathfinder.indexer.service.BoxSearcherService;
 import java.time.Duration;
 import java.time.Instant;
 import org.junit.jupiter.api.Test;
@@ -15,14 +15,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @IndexerServiceDatabaseTest
-@Import({IndexBoxService.class})
-class IndexBoxServiceTest {
+@Import({IndexBoxSearcherService.class})
+class IndexBoxSearcherServiceTest {
 
     @Autowired
     IndexerStateBuilder stateBuilder;
 
     @Autowired
-    BoxService target;
+    BoxSearcherService target;
 
     @MockBean
     IDateTimeSupplier dateTimeSupplier;
@@ -74,7 +74,31 @@ class IndexBoxServiceTest {
     }
 
     @Test
-    void operableBoxes_BoxesAreJustSaved_NothingReturned() {
+    void savable_BoxWasNeverSentToSave_ReturnBox() {
+        var now = Instant.now();
+
+        stateBuilder.save(IndexBoxEntity.builder()
+                                  .saved(true)
+                                  .connected(true)
+                                  .max(12, 23)
+                                  .min(32, 43)
+                                  .build());
+        var expected = stateBuilder.save(IndexBoxEntity.builder()
+                                                 .saved(false)
+                                                 .connected(false)
+                                                 .max(12, 23)
+                                                 .min(32, 43)
+                                                 .build());
+
+        whenNeedToGetNow(now);
+
+        var actual = target.savable(Duration.ofMinutes(30));
+
+        assertThat(actual).hasSize(1).first().isEqualTo(expected);
+    }
+
+    @Test
+    void savable_BoxesAreJustSaved_NothingReturned() {
         var now = Instant.now();
 
         stateBuilder.save(IndexBoxEntity.builder()
@@ -94,13 +118,13 @@ class IndexBoxServiceTest {
 
         whenNeedToGetNow(now);
 
-        var actual = target.operableBoxes(Duration.ofMinutes(30), Duration.ofMinutes(30));
+        var actual = target.savable(Duration.ofMinutes(30));
 
         assertThat(actual).isEmpty();
     }
 
     @Test
-    void operableBoxes_BoxWasSentForSavingLongTimeAgo_BoxIsReturned() {
+    void savable_BoxWasSentForSavingLongTimeAgo_BoxIsReturned() {
         var saveDelay = Duration.ofSeconds(30);
         var now       = Instant.now();
 
@@ -120,13 +144,13 @@ class IndexBoxServiceTest {
 
         whenNeedToGetNow(now.plus(saveDelay).plus(Duration.ofMinutes(30)));
 
-        var actual = target.operableBoxes(saveDelay, Duration.ZERO);
+        var actual = target.savable(saveDelay);
 
         assertThat(actual).hasSize(1).first().isEqualTo(expected);
     }
 
     @Test
-    void operableBoxes_BoxWasSentForConnectionLongTimeAgo_BoxIsReturned() {
+    void connectable_BoxWasSentForConnectionLongTimeAgo_BoxIsReturned() {
         var connectionDelay = Duration.ofSeconds(30);
         var now             = Instant.now();
 
@@ -146,13 +170,37 @@ class IndexBoxServiceTest {
 
         whenNeedToGetNow(now.plus(connectionDelay).plus(Duration.ofMinutes(30)));
 
-        var actual = target.operableBoxes(Duration.ZERO, connectionDelay);
+        var actual = target.connectable(connectionDelay);
 
         assertThat(actual).hasSize(1).first().isEqualTo(expected);
     }
 
     @Test
-    void operableBoxes_BoxWasSavedAndConnectedLongTimeAgo_NothingReturned() {
+    void connectable_BoxWasNeverSentForConnection_ReturnBox() {
+        var connectionDelay = Duration.ofSeconds(30);
+        var now             = Instant.now();
+
+        stateBuilder.save(IndexBoxEntity.builder()
+                                  .saved(true)
+                                  .connected(true)
+                                  .max(12, 23)
+                                  .min(32, 43)
+                                  .build());
+        var expected = stateBuilder.save(IndexBoxEntity.builder()
+                                                 .saved(true)
+                                                 .max(12, 23)
+                                                 .min(32, 43)
+                                                 .build());
+
+        whenNeedToGetNow(now.plus(connectionDelay).plus(Duration.ofMinutes(30)));
+
+        var actual = target.connectable(connectionDelay);
+
+        assertThat(actual).hasSize(1).first().isEqualTo(expected);
+    }
+
+    @Test
+    void connectable_BoxWasConnectedLongTimeAgo_NothingReturned() {
         var connectionDelay = Duration.ofSeconds(30);
         var now             = Instant.now();
 
@@ -164,8 +212,6 @@ class IndexBoxServiceTest {
                                   .build());
         stateBuilder.save(IndexBoxEntity.builder()
                                   .connectionRequestTimestamp(now)
-                                  .saveRequestTimestamp(now)
-                                  .saved(true)
                                   .connected(true)
                                   .max(12, 23)
                                   .min(32, 43)
@@ -173,7 +219,57 @@ class IndexBoxServiceTest {
 
         whenNeedToGetNow(now.plus(connectionDelay).plus(Duration.ofMinutes(30)));
 
-        var actual = target.operableBoxes(Duration.ZERO, connectionDelay);
+        var actual = target.connectable(connectionDelay);
+
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
+    void connectable_BoxIsNotSaved_NothingReturned() {
+        var connectionDelay = Duration.ofSeconds(30);
+        var now             = Instant.now();
+
+        stateBuilder.save(IndexBoxEntity.builder()
+                                  .saved(true)
+                                  .connected(true)
+                                  .max(12, 23)
+                                  .min(32, 43)
+                                  .build());
+        stateBuilder.save(IndexBoxEntity.builder()
+                                  .saved(false)
+                                  .connected(false)
+                                  .max(12, 23)
+                                  .min(32, 43)
+                                  .build());
+
+        whenNeedToGetNow(now.plus(connectionDelay).plus(Duration.ofMinutes(30)));
+
+        var actual = target.connectable(connectionDelay);
+
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
+    void connectable_BoxesAreJustConnected_NothingReturned() {
+        var now = Instant.now();
+
+        stateBuilder.save(IndexBoxEntity.builder()
+                                  .saved(true)
+                                  .connected(true)
+                                  .max(12, 23)
+                                  .min(32, 43)
+                                  .build());
+        stateBuilder.save(IndexBoxEntity.builder()
+                                  .saveRequestTimestamp(now)
+                                  .connectionRequestTimestamp(now)
+                                  .connected(false)
+                                  .max(12, 23)
+                                  .min(32, 43)
+                                  .build());
+
+        whenNeedToGetNow(now);
+
+        var actual = target.connectable(Duration.ofMinutes(30));
 
         assertThat(actual).isEmpty();
     }

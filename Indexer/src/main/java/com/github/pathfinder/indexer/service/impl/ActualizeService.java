@@ -2,7 +2,7 @@ package com.github.pathfinder.indexer.service.impl;
 
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
-import com.github.pathfinder.indexer.service.BoxService;
+import com.github.pathfinder.indexer.service.BoxSearcherService;
 import com.github.pathfinder.indexer.service.IActualizeService;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.Chunk;
@@ -23,14 +23,14 @@ import org.springframework.util.CollectionUtils;
 @RequiredArgsConstructor
 public class ActualizeService implements IActualizeService {
 
-    private final SearcherApi searcherApi;
-    private final BoxService  boxService;
+    private final SearcherApi        searcherApi;
+    private final BoxSearcherService boxSearcherService;
 
     @Override
     @Transactional
     @Logged(ignoreReturnValue = false)
     public void perform() {
-        var boxes = boxService.all();
+        var boxes = boxSearcherService.all();
 
         if (CollectionUtils.isEmpty(boxes)) {
             log.info("Nothing to actualize");

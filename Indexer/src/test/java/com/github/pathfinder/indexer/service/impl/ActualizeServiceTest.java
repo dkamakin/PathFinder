@@ -3,7 +3,7 @@ package com.github.pathfinder.indexer.service.impl;
 import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
-import com.github.pathfinder.indexer.service.BoxService;
+import com.github.pathfinder.indexer.service.BoxSearcherService;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.Chunk;
 import com.github.pathfinder.searcher.api.data.GetChunksMessage;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @IndexerServiceDatabaseTest
-@Import({ActualizeService.class, IndexBoxService.class})
+@Import({ActualizeService.class, IndexBoxSearcherService.class})
 class ActualizeServiceTest {
 
     @Autowired
@@ -33,7 +33,7 @@ class ActualizeServiceTest {
     IndexerStateBuilder stateBuilder;
 
     @Autowired
-    BoxService boxService;
+    BoxSearcherService boxSearcherService;
 
     void whenNeedToGetChunks(GetChunksMessage message, GetChunksResponse response) {
         when(searcherApi.chunks(message)).thenReturn(response);
@@ -52,7 +52,7 @@ class ActualizeServiceTest {
 
         whenNeedToGetChunks(new GetChunksMessage(List.of(id)), new GetChunksResponse(List.of()));
 
-        assertThat(boxService.all())
+        assertThat(boxSearcherService.all())
                 .hasSize(1)
                 .first()
                 .matches(box -> box.getId().equals(id))
@@ -61,7 +61,7 @@ class ActualizeServiceTest {
 
         target.perform();
 
-        assertThat(boxService.all())
+        assertThat(boxSearcherService.all())
                 .hasSize(1)
                 .first()
                 .matches(box -> box.getId().equals(id))
@@ -76,7 +76,7 @@ class ActualizeServiceTest {
         whenNeedToGetChunks(new GetChunksMessage(List.of(id)),
                             new GetChunksResponse(List.of(new Chunk(id, false))));
 
-        assertThat(boxService.all())
+        assertThat(boxSearcherService.all())
                 .hasSize(1)
                 .first()
                 .matches(box -> box.getId().equals(id))
@@ -85,7 +85,7 @@ class ActualizeServiceTest {
 
         target.perform();
 
-        assertThat(boxService.all())
+        assertThat(boxSearcherService.all())
                 .hasSize(1)
                 .first()
                 .matches(box -> box.getId().equals(id))
@@ -99,7 +99,7 @@ class ActualizeServiceTest {
 
         whenNeedToGetChunks(new GetChunksMessage(List.of(id)), new GetChunksResponse(List.of(new Chunk(id, true))));
 
-        assertThat(boxService.all())
+        assertThat(boxSearcherService.all())
                 .hasSize(1)
                 .first()
                 .matches(box -> box.getId().equals(id))
@@ -108,7 +108,7 @@ class ActualizeServiceTest {
 
         target.perform();
 
-        assertThat(boxService.all())
+        assertThat(boxSearcherService.all())
                 .hasSize(1)
                 .first()
                 .matches(box -> box.getId().equals(id))
@@ -126,7 +126,7 @@ class ActualizeServiceTest {
 
         whenNeedToGetChunks(new GetChunksMessage(List.of(id)), new GetChunksResponse(List.of(new Chunk(id, false))));
 
-        assertThat(boxService.all())
+        assertThat(boxSearcherService.all())
                 .hasSize(1)
                 .first()
                 .matches(box -> box.getId().equals(id))
@@ -135,7 +135,7 @@ class ActualizeServiceTest {
 
         target.perform();
 
-        assertThat(boxService.all())
+        assertThat(boxSearcherService.all())
                 .hasSize(1)
                 .first()
                 .matches(box -> box.getId().equals(id))

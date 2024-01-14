@@ -1,14 +1,12 @@
 package com.github.pathfinder.indexer.service.impl;
 
-import com.github.pathfinder.core.data.Coordinate;
 import com.github.pathfinder.core.executor.PlatformExecutor;
 import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.indexer.configuration.IndexerRetryConfiguration;
 import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
-import com.github.pathfinder.indexer.data.index.IndexBox;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
-import com.github.pathfinder.indexer.service.BoxService;
+import com.github.pathfinder.indexer.service.BoxSearcherService;
 import com.github.pathfinder.indexer.service.osm.impl.OsmIndexTask;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.ConnectChunksMessage;
@@ -29,14 +27,14 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @IndexerServiceDatabaseTest
-@Import({OsmIndexActor.class, IndexBoxService.class, IndexerRetryConfiguration.class})
+@Import({OsmIndexActor.class, IndexBoxSearcherService.class, IndexerRetryConfiguration.class})
 class OsmIndexActorTest {
 
     @Autowired
     OsmIndexActor target;
 
     @Autowired
-    BoxService boxService;
+    BoxSearcherService boxSearcherService;
 
     @MockBean
     SearcherApi searcherApi;
@@ -84,11 +82,7 @@ class OsmIndexActorTest {
 
         runnableCaptor.getAllValues().forEach(Runnable::run);
 
-        verify(indexTask).accept(new IndexBox(entity.getId(),
-                                              new Coordinate(entity.getMin().getLatitude(),
-                                                             entity.getMin().getLongitude()),
-                                              new Coordinate(entity.getMax().getLatitude(),
-                                                             entity.getMax().getLongitude())));
+        verify(indexTask).accept(entity);
 
         verifyNoInteractions(searcherApi);
     }
@@ -114,7 +108,7 @@ class OsmIndexActorTest {
         verifyNoInteractions(executor);
         verify(searcherApi).createConnections(new ConnectChunksMessage(List.of(expected.getId())));
 
-        assertThat(boxService.all())
+        assertThat(boxSearcherService.all())
                 .filteredOn(entity -> expected.getId().equals(entity.getId()))
                 .hasSize(1)
                 .first()
@@ -146,15 +140,11 @@ class OsmIndexActorTest {
 
         runnableCaptor.getAllValues().forEach(Runnable::run);
 
-        verify(indexTask).accept(new IndexBox(forSave.getId(),
-                                              new Coordinate(forSave.getMin().getLatitude(),
-                                                             forSave.getMin().getLongitude()),
-                                              new Coordinate(forSave.getMax().getLatitude(),
-                                                             forSave.getMax().getLongitude())));
+        verify(indexTask).accept(forSave);
 
         verify(searcherApi).createConnections(new ConnectChunksMessage(List.of(forConnection.getId())));
 
-        assertThat(boxService.all())
+        assertThat(boxSearcherService.all())
                 .filteredOn(entity -> forConnection.getId().equals(entity.getId()))
                 .hasSize(1)
                 .first()

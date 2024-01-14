@@ -5,11 +5,13 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
-public interface BoxService {
+public interface BoxSearcherService {
 
     List<IndexBoxEntity> all();
 
-    List<IndexBoxEntity> operableBoxes(Duration saveDelay, Duration connectDelay);
+    List<IndexBoxEntity> savable(Duration saveDelay);
+
+    List<IndexBoxEntity> connectable(Duration connectDelay);
 
     Optional<IndexBoxEntity> box(Integer id);
 
