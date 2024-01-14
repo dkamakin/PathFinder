@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UnboundPlatformExecutor implements PlatformExecutor {
 
-    private static final String THREAD_PREFIX = "platform-unbound-";
+    private static final String THREAD_PREFIX = "unbound-";
 
     private final ExecutorService executor;
 
