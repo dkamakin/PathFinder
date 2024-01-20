@@ -5,13 +5,13 @@ import com.github.pathfinder.mapper.NodeMapper;
 import com.github.pathfinder.messaging.error.RethrowingToSenderErrorHandler;
 import com.github.pathfinder.messaging.listener.AmqpHandler;
 import com.github.pathfinder.messaging.listener.AmqpListener;
-import com.github.pathfinder.searcher.api.data.ConnectChunksMessage;
+import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
 import com.github.pathfinder.searcher.api.data.GetChunksMessage;
 import com.github.pathfinder.searcher.api.data.GetChunksResponse;
 import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
 import com.github.pathfinder.service.IChunkGetterService;
+import com.github.pathfinder.service.IChunkUpdaterService;
 import com.github.pathfinder.service.IPointConnector;
-import com.github.pathfinder.service.IPointService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,20 +23,20 @@ import static com.github.pathfinder.searcher.api.configuration.SearcherMessaging
 @AmqpListener(queues = DEFAULT_QUEUE_NAME, errorHandler = RethrowingToSenderErrorHandler.NAME)
 public class SearcherListener {
 
-    private final IPointService       pointService;
-    private final IChunkGetterService chunkGetterService;
-    private final IPointConnector     pointConnector;
+    private final IChunkGetterService  chunkGetterService;
+    private final IPointConnector      pointConnector;
+    private final IChunkUpdaterService chunkUpdaterService;
 
     @AmqpHandler
     @Logged("request")
-    public void connect(ConnectChunksMessage request) {
-        pointConnector.createConnections(request.ids());
+    public void connect(ConnectChunkMessage request) {
+        pointConnector.createConnections(request.id());
     }
 
     @AmqpHandler
     @Logged("request")
     public void save(SavePointsMessage request) {
-        pointService.saveAll(request.id(), NodeMapper.MAPPER.pointNodes(request.points()));
+        chunkUpdaterService.save(NodeMapper.MAPPER.chunkNode(request.box(), request.points()));
     }
 
     @AmqpHandler

@@ -3,7 +3,7 @@ package com.github.pathfinder.listener;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.messaging.listener.AmqpHandler;
 import com.github.pathfinder.messaging.listener.AmqpListener;
-import com.github.pathfinder.searcher.api.data.ConnectChunksMessage;
+import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ public class DeadLetterListener {
 
     @Logged
     @AmqpHandler
-    public void createConnections(ConnectChunksMessage message) {
+    public void createConnections(ConnectChunkMessage message) {
         searcherListener.connect(message);
     }
 

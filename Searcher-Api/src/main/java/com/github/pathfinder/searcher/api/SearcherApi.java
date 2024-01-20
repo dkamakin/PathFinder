@@ -4,7 +4,7 @@ import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.messaging.message.IMessageBuilder;
 import com.github.pathfinder.messaging.router.IAMQPRouter;
 import com.github.pathfinder.searcher.api.configuration.SearcherMessagingConfiguration;
-import com.github.pathfinder.searcher.api.data.ConnectChunksMessage;
+import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
 import com.github.pathfinder.searcher.api.data.GetChunksMessage;
 import com.github.pathfinder.searcher.api.data.GetChunksResponse;
 import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
@@ -29,7 +29,7 @@ public class SearcherApi {
     }
 
     @Logged("request")
-    public void createConnections(ConnectChunksMessage request) {
+    public void createConnections(ConnectChunkMessage request) {
         amqpRouter.route(messageBuilder.direct()
                                  .routingKey(messagingConfiguration.getDefaultQueueName())
                                  .with(request)).send();

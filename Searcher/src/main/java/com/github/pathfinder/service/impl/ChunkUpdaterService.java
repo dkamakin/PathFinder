@@ -4,7 +4,6 @@ import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.repository.ChunkUpdaterRepository;
 import com.github.pathfinder.service.IChunkUpdaterService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,9 +23,9 @@ public class ChunkUpdaterService implements IChunkUpdaterService {
 
     @Override
     @Transactional
-    @Logged(value = {"ids", "connected"})
-    public void markConnected(List<Integer> ids, boolean connected) {
-        updaterRepository.markConnected(ids, connected);
+    @Logged(value = {"id", "connected"})
+    public void markConnected(Integer id, boolean connected) {
+        updaterRepository.markConnected(id, connected);
     }
 
 }

@@ -1,21 +1,24 @@
 package com.github.pathfinder.listener;
 
+import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.SearcherAmqpTest;
 import com.github.pathfinder.core.data.Coordinate;
 import com.github.pathfinder.core.exception.BadRequestException;
 import com.github.pathfinder.core.exception.ErrorCode;
 import com.github.pathfinder.core.exception.ServiceException;
+import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.node.projection.SimpleChunk;
 import com.github.pathfinder.messaging.MessagingTestConstant;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.Chunk;
-import com.github.pathfinder.searcher.api.data.ConnectChunksMessage;
+import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
 import com.github.pathfinder.searcher.api.data.GetChunksMessage;
+import com.github.pathfinder.searcher.api.data.IndexBox;
 import com.github.pathfinder.searcher.api.data.point.Point;
 import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
+import com.github.pathfinder.service.IChunkUpdaterService;
 import com.github.pathfinder.service.IPointConnector;
-import com.github.pathfinder.service.IPointService;
 import com.github.pathfinder.service.impl.ChunkGetterService;
 import java.util.List;
 import java.util.UUID;
@@ -29,9 +32,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
@@ -47,7 +48,7 @@ class SearcherListenerTest {
     IPointConnector pointConnector;
 
     @MockBean
-    IPointService pointService;
+    IChunkUpdaterService chunkUpdaterService;
 
     @SpyBean
     DeadLetterListener deadLetterListener;
@@ -56,14 +57,10 @@ class SearcherListenerTest {
     ChunkGetterService chunkGetterService;
 
     @Captor
-    ArgumentCaptor<List<PointNode>> pointNodesCaptor;
-
-    void whenNeedToSave(List<PointNode> expected) {
-        when(pointService.saveAll(anyInt(), any())).thenReturn(expected);
-    }
+    ArgumentCaptor<ChunkNode> chunkNodeCaptor;
 
     void whenNeedToThrowOnCreateConnections(RuntimeException exception) {
-        doThrow(exception).when(pointConnector).createConnections(anyList());
+        doThrow(exception).when(pointConnector).createConnections(any());
     }
 
     void whenNeedToGetChunks(List<Integer> ids, List<SimpleChunk> expected) {
@@ -103,50 +100,55 @@ class SearcherListenerTest {
     @Test
     @SneakyThrows
     void connect_ExceptionOccurred_Retry() {
-        var chunks = List.of(1, 2, 3);
+        var chunk = 1;
 
         whenNeedToThrowOnCreateConnections(new RuntimeException());
 
-        searcherApi.createConnections(new ConnectChunksMessage(chunks));
+        searcherApi.createConnections(new ConnectChunkMessage(chunk));
 
         verify(pointConnector, timeout(MessagingTestConstant.DEFAULT_TIMEOUT.toMillis()).times(2))
-                .createConnections(chunks);
+                .createConnections(chunk);
         verify(deadLetterListener).createConnections(any());
     }
 
     @Test
     void connect_Request_CallService() {
-        var chunks = List.of(1, 2, 3);
+        var chunk = 1;
 
-        searcherApi.createConnections(new ConnectChunksMessage(chunks));
+        searcherApi.createConnections(new ConnectChunkMessage(chunk));
 
-        verify(pointConnector, timeout(MessagingTestConstant.DEFAULT_TIMEOUT.toMillis())).createConnections(chunks);
+        verify(pointConnector, timeout(MessagingTestConstant.DEFAULT_TIMEOUT.toMillis())).createConnections(chunk);
     }
 
     @Test
     void save_ValidRequest_CallService() {
         var point = new Point(1D, new Coordinate(2D, 3D), "BAY", 4D);
-        var expected = PointNode.builder()
+        var pointNode = PointNode.builder()
                 .landType(point.landType())
                 .location(point.coordinate().latitude(), point.coordinate().longitude(), point.altitude())
                 .passabilityCoefficient(point.passabilityCoefficient())
                 .build();
-        var pointNodes = List.of(expected);
-        var id         = 1;
+        var box = new IndexBox(1, PointFixtures.randomCoordinate(), PointFixtures.randomCoordinate());
+        var chunk = ChunkNode.builder()
+                .id(box.id())
+                .min(box.min())
+                .max(box.max())
+                .points(List.of(pointNode))
+                .build();
 
-        whenNeedToSave(pointNodes);
+        searcherApi.save(new SavePointsMessage(box, List.of(point)));
 
-        searcherApi.save(new SavePointsMessage(id, List.of(point)));
+        verify(chunkUpdaterService, timeout(MessagingTestConstant.DEFAULT_TIMEOUT.toMillis()))
+                .save(chunkNodeCaptor.capture());
 
-        verify(pointService, timeout(MessagingTestConstant.DEFAULT_TIMEOUT.toMillis()))
-                .saveAll(eq(id), pointNodesCaptor.capture());
-
-        assertThat(pointNodesCaptor.getValue())
-                .hasSize(1)
-                .first()
-                .usingRecursiveComparison()
-                .ignoringFieldsOfTypes(UUID.class)
-                .isEqualTo(expected);
+        assertThat(chunkNodeCaptor.getValue())
+                .isEqualTo(chunk)
+                .satisfies(x -> assertThat(x.getPoints())
+                        .hasSize(1)
+                        .first()
+                        .usingRecursiveComparison()
+                        .ignoringFieldsOfTypes(UUID.class)
+                        .isEqualTo(pointNode));
     }
 
 }

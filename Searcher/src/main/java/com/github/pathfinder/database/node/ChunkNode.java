@@ -2,7 +2,9 @@ package com.github.pathfinder.database.node;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import java.util.Set;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.types.GeographicPoint2d;
 
 @Getter
 @NoArgsConstructor
@@ -22,9 +25,12 @@ public class ChunkNode {
     @UtilityClass
     public static class Token {
 
-        public static final String NODE_NAME = "Chunk";
-        public static final String ID        = "id";
-        public static final String CONNECTED = "connected";
+        public static final String NODE_NAME           = "Chunk";
+        public static final String ID                  = "id";
+        public static final String CONNECTED           = "connected";
+        public static final String MIN                 = "min";
+        public static final String MAX                 = "max";
+        public static final String POINT_RELATION_TYPE = "IN_CHUNK";
 
     }
 
@@ -38,12 +44,23 @@ public class ChunkNode {
     @Property(Token.CONNECTED)
     private boolean connected;
 
-    @Relationship(type = ChunkPointRelation.Token.TYPE)
-    private Set<ChunkPointRelation> pointRelations;
+    @NotNull
+    @Property(Token.MIN)
+    private GeographicPoint2d min;
 
-    protected ChunkNode(int id, Set<ChunkPointRelation> pointRelations) {
-        this.pointRelations = pointRelations;
-        this.id             = id;
+    @NotNull
+    @Property(Token.MAX)
+    private GeographicPoint2d max;
+
+    @NotEmpty
+    @Relationship(type = Token.POINT_RELATION_TYPE)
+    private List<PointNode> points;
+
+    public ChunkNode(int id, GeographicPoint2d min, GeographicPoint2d max, List<PointNode> points) {
+        this.id     = id;
+        this.min    = min;
+        this.max    = max;
+        this.points = points;
     }
 
     public static ChunkNodeBuilder builder() {
@@ -56,7 +73,9 @@ public class ChunkNode {
                 .add("internalId", internalId)
                 .add("id", id)
                 .add("connected", connected)
-                .add("pointRelations", pointRelations.size())
+                .add("min", min)
+                .add("max", max)
+                .add("pointRelations", points.size())
                 .toString();
     }
 
@@ -65,16 +84,21 @@ public class ChunkNode {
         if (this == o) {
             return true;
         }
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+
         ChunkNode chunkNode = (ChunkNode) o;
-        return id == chunkNode.id;
+        return id == chunkNode.id &&
+                connected == chunkNode.connected &&
+                Objects.equal(min, chunkNode.min) &&
+                Objects.equal(max, chunkNode.max);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(id, connected, min, max);
     }
 
 }

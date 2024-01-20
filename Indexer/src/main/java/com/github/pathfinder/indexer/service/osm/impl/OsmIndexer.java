@@ -8,7 +8,10 @@ import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import com.github.pathfinder.indexer.service.BoxUpdaterService;
 import com.github.pathfinder.indexer.service.osm.IOsmIndexer;
 import com.github.pathfinder.searcher.api.SearcherApi;
+import com.github.pathfinder.searcher.api.data.IndexBox;
+import com.github.pathfinder.searcher.api.data.point.Point;
 import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -41,8 +44,15 @@ public class OsmIndexer implements IOsmIndexer {
 
         var points = pointExtractor.points(elements);
 
-        searcherApi.save(new SavePointsMessage(box.getId(), points));
+        searcherApi.save(request(box, points));
         boxUpdaterService.save(box.setSaveRequestTimestamp(dateTimeSupplier.now()));
+    }
+
+    private SavePointsMessage request(IndexBoxEntity entity, List<Point> points) {
+        return new SavePointsMessage(new IndexBox(entity.getId(),
+                                                  EntityMapper.MAPPER.coordinate(entity.getMin()),
+                                                  EntityMapper.MAPPER.coordinate(entity.getMax())),
+                                     points);
     }
 
 }

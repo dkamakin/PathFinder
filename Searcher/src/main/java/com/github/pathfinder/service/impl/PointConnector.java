@@ -6,7 +6,6 @@ import com.github.pathfinder.core.exception.InternalServerException;
 import com.github.pathfinder.database.repository.IPointConnectionRepository;
 import com.github.pathfinder.service.IChunkUpdaterService;
 import com.github.pathfinder.service.IPointConnector;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,13 +23,13 @@ public class PointConnector implements IPointConnector {
     @Logged
     @Override
     @Transactional
-    public void createConnections(List<Integer> chunkIds) {
-        chunkService.markConnected(chunkIds, true);
+    public void createConnections(Integer chunkId) {
+        chunkService.markConnected(chunkId, true);
         var connected = pointConnectionRepository
-                .createConnections(chunkIds, coordinateConfiguration.getDistanceAccuracyMeters())
-                .orElseThrow(() -> new InternalServerException("Failed to connect the points"));
+                .createConnections(chunkId, coordinateConfiguration.getDistanceAccuracyMeters())
+                .orElseThrow(() -> new InternalServerException("Failed to connect the chunk"));
 
-        log.info("Connected: {}", connected);
+        log.info("Points inside the chunk {} has been connected: {}", chunkId, connected);
     }
 
 }

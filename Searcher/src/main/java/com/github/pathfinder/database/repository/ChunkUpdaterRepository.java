@@ -1,7 +1,6 @@
 package com.github.pathfinder.database.repository;
 
 import com.github.pathfinder.database.node.ChunkNode;
-import java.util.List;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,10 +11,10 @@ public interface ChunkUpdaterRepository extends Neo4jRepository<ChunkNode, Strin
 
     @Query("""
             MATCH (chunk:Chunk)
-            WHERE chunk.id IN $ids
+            WHERE chunk.id = $id
             SET chunk.connected = $connected
             """)
-    void markConnected(@Param("ids") List<Integer> ids,
+    void markConnected(@Param("id") Integer id,
                        @Param("connected") boolean connected);
 
 }

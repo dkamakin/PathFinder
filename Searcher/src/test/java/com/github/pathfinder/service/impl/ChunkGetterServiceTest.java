@@ -4,11 +4,9 @@ import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.database.node.ChunkNode;
-import com.github.pathfinder.database.node.ChunkPointRelation;
 import com.github.pathfinder.database.node.projection.SimpleChunk;
 import com.github.pathfinder.service.IChunkUpdaterService;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +41,7 @@ class ChunkGetterServiceTest {
     void simple_SomeChunksFound_ReturnFoundChunks() {
         var point = PointFixtures.randomPointNode();
         var populatedChunk = ChunkNode.builder().id(9999)
-                .pointRelations(Set.of(new ChunkPointRelation(point)))
+                .points(List.of(point))
                 .build();
         var existingIds = List.of(123, 45, 898, populatedChunk.getId());
 

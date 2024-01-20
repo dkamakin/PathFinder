@@ -9,10 +9,9 @@ import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import com.github.pathfinder.indexer.service.BoxSearcherService;
 import com.github.pathfinder.indexer.service.osm.impl.OsmIndexTask;
 import com.github.pathfinder.searcher.api.SearcherApi;
-import com.github.pathfinder.searcher.api.data.ConnectChunksMessage;
+import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.function.Predicate;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -106,7 +105,7 @@ class OsmIndexActorTest {
         target.perform();
 
         verifyNoInteractions(executor);
-        verify(searcherApi).createConnections(new ConnectChunksMessage(List.of(expected.getId())));
+        verify(searcherApi).createConnections(new ConnectChunkMessage(expected.getId()));
 
         assertThat(boxSearcherService.all())
                 .filteredOn(entity -> expected.getId().equals(entity.getId()))
@@ -142,7 +141,7 @@ class OsmIndexActorTest {
 
         verify(indexTask).accept(forSave);
 
-        verify(searcherApi).createConnections(new ConnectChunksMessage(List.of(forConnection.getId())));
+        verify(searcherApi).createConnections(new ConnectChunkMessage(forConnection.getId()));
 
         assertThat(boxSearcherService.all())
                 .filteredOn(entity -> forConnection.getId().equals(entity.getId()))

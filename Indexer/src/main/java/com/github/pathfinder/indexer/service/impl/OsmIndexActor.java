@@ -8,7 +8,7 @@ import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import com.github.pathfinder.indexer.service.BoxSearcherService;
 import com.github.pathfinder.indexer.service.osm.impl.OsmIndexTask;
 import com.github.pathfinder.searcher.api.SearcherApi;
-import com.github.pathfinder.searcher.api.data.ConnectChunksMessage;
+import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,15 +45,13 @@ public class OsmIndexActor {
             return;
         }
 
-        searcherApi.createConnections(new ConnectChunksMessage(ids(boxes)));
-
-        var timestamp = dateTimeSupplier.now();
-
-        boxes.forEach(box -> box.setConnectionRequestTimestamp(timestamp));
+        boxes.forEach(this::connect);
     }
 
-    private List<Integer> ids(List<IndexBoxEntity> boxes) {
-        return boxes.stream().map(IndexBoxEntity::getId).toList();
+    private void connect(IndexBoxEntity box) {
+        searcherApi.createConnections(new ConnectChunkMessage(box.getId()));
+
+        box.setConnectionRequestTimestamp(dateTimeSupplier.now());
     }
 
 }

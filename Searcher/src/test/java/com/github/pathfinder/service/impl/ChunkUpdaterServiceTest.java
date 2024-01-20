@@ -1,13 +1,14 @@
 package com.github.pathfinder.service.impl;
 
+import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.database.node.ChunkNode;
+import com.github.pathfinder.database.node.PointRelation;
 import com.github.pathfinder.database.node.projection.SimpleChunk;
 import io.micrometer.common.util.StringUtils;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
@@ -43,16 +44,44 @@ class ChunkUpdaterServiceTest {
     }
 
     @Test
-    void markConnected_SomeChunksAreMarked_UpdateChunks() {
-        var markedChunkIds    = List.of(123, 45, 898);
-        var notMarkedChunkIds = List.of(999, 98);
+    void save_ChunkWithPoint_SaveChunkAndPoint() {
+        var sourcePoint   = PointFixtures.randomPointNode();
+        var targetPoint   = PointFixtures.randomPointNode();
+        var pointRelation = new PointRelation(1.2, 1.3, targetPoint);
 
-        Stream.concat(markedChunkIds.stream(), notMarkedChunkIds.stream()).map(this::chunkNode).forEach(target::save);
+        var node = ChunkNode.builder()
+                .id(1)
+                .points(List.of(sourcePoint.add(pointRelation)))
+                .build();
 
-        target.markConnected(markedChunkIds, true);
+        assertThat(testTemplate.allPointNodes()).isEmpty();
 
-        assertThat(chunkGetterService.simple(markedChunkIds)).allMatch(SimpleChunk::connected);
-        assertThat(chunkGetterService.simple(notMarkedChunkIds)).noneMatch(SimpleChunk::connected);
+        var actual = target.save(node);
+
+        assertThat(actual)
+                .matches(Predicate.not(ChunkNode::isConnected))
+                .matches(x -> StringUtils.isNotEmpty(x.getInternalId()))
+                .matches(x -> x.getId() == node.getId());
+
+        assertThat(testTemplate.allPointNodes())
+                .hasSize(2)
+                .anySatisfy(source -> assertThat(source)
+                        .matches(x -> x.getId().equals(source.getId()))
+                        .satisfies(x -> assertThat(x.getRelations())
+                                .hasSize(1)
+                                .first()
+                                .matches(relation -> relation.getTarget().equals(targetPoint))));
+    }
+
+    @Test
+    void markConnected_ChunkExists_UpdateChunk() {
+        var chunk = target.save(chunkNode(1233));
+
+        target.markConnected(chunk.getId(), true);
+
+        assertThat(chunkGetterService.simple(List.of(chunk.getId())))
+                .first()
+                .matches(SimpleChunk::connected);
     }
 
 }
