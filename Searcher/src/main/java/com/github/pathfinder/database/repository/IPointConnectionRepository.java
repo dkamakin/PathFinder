@@ -1,10 +1,12 @@
 package com.github.pathfinder.database.repository;
 
-import com.github.pathfinder.data.connection.PointConnectionStatistics;
+import com.github.pathfinder.data.connection.IterateStatistics;
 import java.util.Optional;
 
 public interface IPointConnectionRepository {
 
-    Optional<PointConnectionStatistics> createConnections(Integer chunkId, Double accuracyMeters);
+    Optional<IterateStatistics> connectPointsInChunk(Integer chunkId, Double accuracyMeters);
+
+    Optional<IterateStatistics> connectChunkBoarders(Integer chunkId, Double accuracyMeters);
 
 }
