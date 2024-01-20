@@ -60,6 +60,16 @@
             <column name="MAX_LONGITUDE">19.890747</column>
         </insert>
 
+        <insert tableName="index_box">
+            <column name="id">3</column>
+            <column name="CONNECTED">false</column>
+            <column name="SAVED">false</column>
+            <column name="MIN_LATITUDE">45.118115</column>
+            <column name="MIN_LONGITUDE">19.647331</column>
+            <column name="MAX_LATITUDE">45.188570</column>
+            <column name="MAX_LONGITUDE">19.719429</column>
+        </insert>
+
     </changeSet>
 
 </databaseChangeLog>

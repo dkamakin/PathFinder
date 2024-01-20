@@ -30,7 +30,8 @@ class OsmElementFilterTest {
 
     static Stream<OsmElement> notSupportedElements() {
         return Stream.of(
-                new OsmWay(List.of(), new OsmTags(Map.of("natural", "water")))
+                new OsmWay(List.of(), new OsmTags(Map.of("natural", "water"))),
+                new OsmWay(List.of(), new OsmTags(Map.of("waterway", "stream")))
         );
     }
 
