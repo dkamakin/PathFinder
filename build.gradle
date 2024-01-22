@@ -35,7 +35,7 @@ subprojects {
     def postgresqlVersion = "42.7.1"
     def guavaVersion = "33.0.0-jre"
     def springRetryVersion = "2.0.5"
-    def springActuatorVersion = "3.2.1"
+    def springActuatorVersion = "3.2.2"
     def springCloudBusVersion = "4.1.0"
     def apacheCommonsVersion = "3.14.0"
     def mapStructVersion = "1.5.5.Final"
