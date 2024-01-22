@@ -27,7 +27,7 @@ public class BoxSplitter {
                                            new Coordinate(45.314495, 19.963531)));
 
         System.out.println(IntStream.range(0, result.size()).boxed()
-                                   .map(i -> xml(i, result.get(i)))
+                                   .map(i -> xml(i + 1, result.get(i)))
                                    .collect(Collectors.joining("\n")));
     }
 

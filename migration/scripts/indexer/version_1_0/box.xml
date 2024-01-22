@@ -41,7 +41,7 @@
         </createTable>
 
         <insert tableName="index_box">
-            <column name="id">0</column>
+            <column name="id">1</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
             <column name="MIN_LATITUDE">45.104546</column>
@@ -51,7 +51,7 @@
         </insert>
 
         <insert tableName="index_box">
-            <column name="id">1</column>
+            <column name="id">2</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
             <column name="MIN_LATITUDE">45.10453570792426</column>
@@ -61,7 +61,7 @@
         </insert>
 
         <insert tableName="index_box">
-            <column name="id">2</column>
+            <column name="id">3</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
             <column name="MIN_LATITUDE">45.10450696106132</column>
@@ -71,7 +71,7 @@
         </insert>
 
         <insert tableName="index_box">
-            <column name="id">3</column>
+            <column name="id">4</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
             <column name="MIN_LATITUDE">45.104497201307254</column>
@@ -81,7 +81,7 @@
         </insert>
 
         <insert tableName="index_box">
-            <column name="id">4</column>
+            <column name="id">5</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
             <column name="MIN_LATITUDE">45.104394017808154</column>
@@ -91,7 +91,7 @@
         </insert>
 
         <insert tableName="index_box">
-            <column name="id">5</column>
+            <column name="id">6</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
             <column name="MIN_LATITUDE">45.10438399357154</column>
@@ -101,7 +101,7 @@
         </insert>
 
         <insert tableName="index_box">
-            <column name="id">6</column>
+            <column name="id">7</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
             <column name="MIN_LATITUDE">45.10435602196156</column>
@@ -111,7 +111,7 @@
         </insert>
 
         <insert tableName="index_box">
-            <column name="id">7</column>
+            <column name="id">8</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
             <column name="MIN_LATITUDE">45.10434652298155</column>
