@@ -2,10 +2,10 @@ package com.github.pathfinder.indexer;
 
 import com.github.pathfinder.core.data.Coordinate;
 import com.github.pathfinder.searcher.api.data.IndexBox;
-import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.geotools.referencing.GeodeticCalculator;
 
@@ -18,7 +18,7 @@ import org.geotools.referencing.GeodeticCalculator;
 public class BoxSplitter {
 
     static final int                METERS_IN_KM    = 1000;
-    static final double             SQUARE_KM_LIMIT = 100D;
+    static final double             SQUARE_KM_LIMIT = 50D;
     static final GeodeticCalculator CALCULATOR      = new GeodeticCalculator();
 
     public static void main(String[] args) {
@@ -27,11 +27,11 @@ public class BoxSplitter {
                                            new Coordinate(45.314495, 19.963531)));
 
         System.out.println(IntStream.range(0, result.size()).boxed()
-                                   .map(i -> xml(i + 1, result.get(i)))
+                                   .map(i -> formatToLiquibaseInsert(i + 1, result.get(i)))
                                    .collect(Collectors.joining("\n")));
     }
 
-    private static String xml(int index, IndexBox box) {
+    private static String formatToLiquibaseInsert(int index, IndexBox box) {
         return """
                   <insert tableName="index_box">
                             <column name="id">%s</column>
@@ -47,12 +47,6 @@ public class BoxSplitter {
     }
 
     private static List<IndexBox> splitBox(IndexBox box) {
-        var split = Lists.<IndexBox>newArrayList();
-        splitBox(box, split);
-        return split;
-    }
-
-    private static void splitBox(IndexBox box, List<IndexBox> boxes) {
         var widthMeters  = widthMeters(box);
         var heightMeters = heightMeters(box);
         var squareKmArea = squareKm(widthMeters, heightMeters);
@@ -63,28 +57,27 @@ public class BoxSplitter {
 
         if (squareKmArea < SQUARE_KM_LIMIT) {
             log.info("Box size smaller than a limit, returning...");
-            boxes.add(box);
-            return;
+            return List.of(box);
         }
 
         log.info("Box size exceeds the limit, splitting...");
 
         CALCULATOR.setStartingGeographicPoint(box.min().longitude(), box.min().latitude());
         CALCULATOR.setDirection(90, widthMeters / 2 + 100);
+
         var halfPoint           = CALCULATOR.getDestinationGeographicPoint();
         var halfPointCoordinate = new Coordinate(halfPoint.getY(), halfPoint.getX());
 
         log.info("Half point coordinate: {}", halfPointCoordinate);
 
-        var leftBox = new IndexBox(box.id() + 1,
-                                   box.min(),
-                                   new Coordinate(box.max().latitude(), halfPoint.getX()));
-        var rightBox = new IndexBox(box.id() + 2,
-                                    halfPointCoordinate,
-                                    box.max());
+        var leftBox = splitBox(new IndexBox(box.id() + 1,
+                                            box.min(),
+                                            new Coordinate(box.max().latitude(), halfPoint.getX())));
+        var rightBox = splitBox(new IndexBox(box.id() + 2,
+                                             halfPointCoordinate,
+                                             box.max()));
 
-        splitBox(leftBox, boxes);
-        splitBox(rightBox, boxes);
+        return Stream.concat(leftBox.stream(), rightBox.stream()).toList();
     }
 
     private static double squareKm(double widthMeters, double heightMeters) {

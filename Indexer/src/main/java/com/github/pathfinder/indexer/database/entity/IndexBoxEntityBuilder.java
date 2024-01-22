@@ -5,11 +5,11 @@ import java.util.function.Consumer;
 
 public class IndexBoxEntityBuilder {
 
-    private Integer id;
-    private boolean connected;
-    private boolean saved;
-    private Instant saveRequestTimestamp;
-    private Instant connectionRequestTimestamp;
+    private Integer          id;
+    private boolean          connected;
+    private boolean          saved;
+    private Instant          saveRequestTimestamp;
+    private Instant          connectionRequestTimestamp;
     private MaxBoxCoordinate max;
     private MinBoxCoordinate min;
 

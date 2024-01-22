@@ -27,5 +27,5 @@ public @interface SwaggerDescriptionNonVoidMethod {
 
     @AliasFor(annotation = OkResponse.class, attribute = "content")
     Content[] content() default {};
-    
+
 }

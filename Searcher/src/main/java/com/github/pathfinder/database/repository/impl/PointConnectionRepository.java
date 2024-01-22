@@ -47,18 +47,19 @@ public class PointConnectionRepository implements IPointConnectionRepository {
               ((first.location2d.y >= chunk.min.y AND first.location2d.y <= chunk.max.y AND abs(first.location2d.x - chunk.max.x) < 0.001743))
             RETURN first, chunk',
             'MATCH (second:Point)
-              WHERE first <> second AND ((second.location2d.x >= chunk.min.x AND second.location2d.x <= chunk.max.x AND abs(second.location2d.y - chunk.min.y) < 0.001743) OR
+              WHERE ((second.location2d.x >= chunk.min.x AND second.location2d.x <= chunk.max.x AND abs(second.location2d.y - chunk.min.y) < 0.001743) OR
               (second.location2d.x >= chunk.min.x AND second.location2d.x <=chunk.max.x AND abs(second.location2d.y - chunk.max.y) < 0.001743) OR
               (second.location2d.y >= chunk.min.y AND second.location2d.y <=chunk.max.y AND abs(second.location2d.x - chunk.min.x) < 0.001743) OR
               ((second.location2d.y >= chunk.min.y AND second.location2d.y <=chunk.max.y AND abs(second.location2d.x - chunk.max.x) < 0.001743))) AND
                point.distance(first.location3d, second.location3d) <= $accuracyMeters AND
-               NOT ((first)-[:CONNECTION]-(second))
+               NOT ((first)-[:CONNECTION]-(second)) AND
+               first <> second
              WITH first, second, point.distance(first.location3d, second.location3d) AS distanceMeters
              WITH first, second, distanceMeters,
                  ((second.passabilityCoefficient + first.passabilityCoefficient) / 2) * distanceMeters AS weight
              MERGE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)', {batchSize:   1,
                                                                                                        parallel:    true,
-                                                                                                       concurrency: 4,
+                                                                                                       concurrency: 3,
                                                                                                        retries:     10,
                                                                                                        params:      {
                                                                                                                       chunkId:        $chunkId,

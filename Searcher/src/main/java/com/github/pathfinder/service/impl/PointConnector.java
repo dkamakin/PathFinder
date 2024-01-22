@@ -35,7 +35,7 @@ public class PointConnector implements IPointConnector {
                 .connectChunkBoarders(chunkId, coordinateConfiguration.getDistanceAccuracyMeters())
                 .orElseThrow(() -> new InternalServerException("Failed to connect the chunk boarders"));
 
-        log.info("The chunk boarders has been connected: {}", connectedBoardersStatistics);
+        log.info("The chunk {} boarders has been connected: {}", chunkId, connectedBoardersStatistics);
     }
 
 }
