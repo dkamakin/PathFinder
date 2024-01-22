@@ -69,22 +69,19 @@ services:
       timeout: 5s
       retries: 5
   neo4j:
-    image: neo4j:5.15.0
+    image: neo4j:5.15.0-community-ubi8
     container_name: neo4j
     environment:
       NEO4J_AUTH: ${NEO4J_USERNAME}/${NEO4J_PASSWORD}
       NEO4J_server_default__listen__address: neo4j
       NEO4J_PLUGINS: '["apoc"]'
-      NEO4J_dbms_memory_transaction_total_max: 0
-      NEO4J_server_memory_heap_initial__size: 1.5G
-      NEO4J_server_memory_heap_max__size: 1.7G
-      NEO4J_server_memory_pagecache_size: 1.5G
       NEO4J_dbms_security_procedures_unrestricted: apoc.*
       NEO4J_server_default__advertised__address: neo4j
       NEO4J_server_bolt_advertised__address: :${NEO4J_PORT}
       NEO4J_initial_dbms_default__database: ${NEO4J_DB_NAME}
     volumes:
       - neo4j:/data
+      - neo4j:/logs
   liquibase:
     build: ./migration
     container_name: liquibase

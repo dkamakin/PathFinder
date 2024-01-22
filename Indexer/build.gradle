@@ -1,6 +1,7 @@
 ext.set("mainClassName", 'com.github.pathfinder.indexer.IndexerApplication')
 
 dependencies {
+    def geoToolsVersion = "29.2"
     def westnordostVersion = "3.0"
 
     api project(":Core")
@@ -11,6 +12,7 @@ dependencies {
     implementation("de.westnordost:osmapi-overpass:$westnordostVersion")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
     implementation("org.springframework.cloud:spring-cloud-starter-config:$springCloudConfigVersion")
+    implementation("org.geotools:gt-main:$geoToolsVersion")
 
     testImplementation(project(':Core').sourceSets.test.output)
     testImplementation(project(':Messaging-Test').sourceSets.test.output)

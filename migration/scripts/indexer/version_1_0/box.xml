@@ -41,33 +41,83 @@
         </createTable>
 
         <insert tableName="index_box">
+            <column name="id">0</column>
+            <column name="CONNECTED">false</column>
+            <column name="SAVED">false</column>
+            <column name="MIN_LATITUDE">45.104546</column>
+            <column name="MIN_LONGITUDE">19.59343</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.641916002347287</column>
+        </insert>
+
+        <insert tableName="index_box">
             <column name="id">1</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.133618</column>
-            <column name="MIN_LONGITUDE">19.715652</column>
-            <column name="MAX_LATITUDE">45.189054</column>
-            <column name="MAX_LONGITUDE">19.827919</column>
+            <column name="MIN_LATITUDE">45.10453570792426</column>
+            <column name="MIN_LONGITUDE">19.641916002347287</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.68786083270498</column>
         </insert>
 
         <insert tableName="index_box">
             <column name="id">2</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.138461</column>
-            <column name="MIN_LONGITUDE">19.823284</column>
-            <column name="MAX_LATITUDE">45.183247</column>
-            <column name="MAX_LONGITUDE">19.890747</column>
+            <column name="MIN_LATITUDE">45.10450696106132</column>
+            <column name="MIN_LONGITUDE">19.68786083270498</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.735076303863146</column>
         </insert>
 
         <insert tableName="index_box">
             <column name="id">3</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.118115</column>
-            <column name="MIN_LONGITUDE">19.647331</column>
-            <column name="MAX_LATITUDE">45.188570</column>
-            <column name="MAX_LONGITUDE">19.719429</column>
+            <column name="MIN_LATITUDE">45.104497201307254</column>
+            <column name="MIN_LONGITUDE">19.735076303863146</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.779750603452786</column>
+        </insert>
+
+        <insert tableName="index_box">
+            <column name="id">4</column>
+            <column name="CONNECTED">false</column>
+            <column name="SAVED">false</column>
+            <column name="MIN_LATITUDE">45.104394017808154</column>
+            <column name="MIN_LONGITUDE">19.779750603452786</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.827601550618454</column>
+        </insert>
+
+        <insert tableName="index_box">
+            <column name="id">5</column>
+            <column name="CONNECTED">false</column>
+            <column name="SAVED">false</column>
+            <column name="MIN_LATITUDE">45.10438399357154</column>
+            <column name="MIN_LONGITUDE">19.827601550618454</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.87291133187315</column>
+        </insert>
+
+        <insert tableName="index_box">
+            <column name="id">6</column>
+            <column name="CONNECTED">false</column>
+            <column name="SAVED">false</column>
+            <column name="MIN_LATITUDE">45.10435602196156</column>
+            <column name="MIN_LONGITUDE">19.87291133187315</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.919491748687232</column>
+        </insert>
+
+        <insert tableName="index_box">
+            <column name="id">7</column>
+            <column name="CONNECTED">false</column>
+            <column name="SAVED">false</column>
+            <column name="MIN_LATITUDE">45.10434652298155</column>
+            <column name="MIN_LONGITUDE">19.919491748687232</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.963531</column>
         </insert>
 
     </changeSet>

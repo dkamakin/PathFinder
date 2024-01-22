@@ -15,7 +15,7 @@ public class Neo4jExtension implements BeforeAllCallback, BeforeEachCallback {
     @UtilityClass
     public static class Constant {
 
-        public static final String IMAGE_NAME = "neo4j:5.15.0";
+        public static final String IMAGE_NAME = "neo4j:5.15.0-community-ubi8";
     }
 
     Neo4jContainer<?> neo4j;

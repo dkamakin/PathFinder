@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.ExchangeBuilder;
@@ -30,6 +31,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+@Slf4j
 @Data
 @Validated
 @EnableRabbit
@@ -82,8 +84,11 @@ public class MessagingConfiguration implements RabbitListenerConfigurer {
             ConnectionFactory connectionFactory, CoreMessageConverter messageConverter) {
         var factory = new SimpleRabbitListenerContainerFactory();
 
+        log.info("Building a listener factory with configuration: {}", this);
+
         factory.setConnectionFactory(connectionFactory);
         factory.setMessageConverter(messageConverter);
+        factory.setConcurrentConsumers(concurrentConsumers);
         factory.setMaxConcurrentConsumers(concurrentConsumers);
         factory.setDefaultRequeueRejected(false);
 
