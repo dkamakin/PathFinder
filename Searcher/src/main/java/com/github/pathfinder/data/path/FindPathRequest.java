@@ -1,10 +1,7 @@
 package com.github.pathfinder.data.path;
 
-import com.github.pathfinder.data.Coordinate;
-import com.github.pathfinder.data.HealthType;
+import com.github.pathfinder.core.data.Coordinate;
 
-public record FindPathRequest(Coordinate source,
-                              Coordinate target,
-                              HealthType health) {
+public record FindPathRequest(Coordinate source, Coordinate target) {
 
 }

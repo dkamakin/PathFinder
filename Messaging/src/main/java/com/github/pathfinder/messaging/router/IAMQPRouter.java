@@ -10,6 +10,8 @@ public interface IAMQPRouter {
 
         <T> T sendAndReceive(Class<T> expected);
 
+        void send();
+
     }
 
 }

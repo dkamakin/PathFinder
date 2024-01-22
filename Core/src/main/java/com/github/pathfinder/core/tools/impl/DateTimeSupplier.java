@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DateTimeSupplier implements IDateTimeSupplier {
 
-    public Instant instant() {
+    public Instant now() {
         return Instant.now();
     }
 

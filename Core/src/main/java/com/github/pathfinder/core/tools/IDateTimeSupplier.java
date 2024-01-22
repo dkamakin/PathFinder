@@ -4,6 +4,6 @@ import java.time.Instant;
 
 public interface IDateTimeSupplier {
 
-    Instant instant();
+    Instant now();
 
 }

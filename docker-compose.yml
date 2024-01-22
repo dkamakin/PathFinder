@@ -4,6 +4,7 @@ services:
   configuration:
     build: ./Configuration
     container_name: configuration
+    restart: on-failure
     environment:
       RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
@@ -20,16 +21,33 @@ services:
       PORT: ${SECURITY_PORT}
     ports:
       - "${SECURITY_PORT}:${SECURITY_PORT}"
+    restart: on-failure
+    depends_on:
+      postgresql:
+        condition: service_healthy
+  indexer:
+    build: ./Indexer
+    container_name: indexer
+    environment:
+      CONFIG_URI: http://configuration:${CONFIGURATION_PORT}
+      PORT: ${INDEXER_PORT}
+    ports:
+      - "${INDEXER_PORT}:${INDEXER_PORT}"
+    restart: on-failure
+    depends_on:
+      postgresql:
+        condition: service_healthy
   searcher:
     build: ./Searcher
     container_name: searcher
+    restart: on-failure
     environment:
       CONFIG_URI: http://configuration:${CONFIGURATION_PORT}
       PORT: ${SEARCHER_PORT}
     ports:
       - "${SEARCHER_PORT}:${SEARCHER_PORT}"
   rabbitmq:
-    image: rabbitmq:3.12.4-management-alpine
+    image: rabbitmq:3.12.12-management-alpine
     container_name: rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
@@ -37,6 +55,8 @@ services:
   postgresql:
     image: postgres:15.3
     container_name: postgresql
+    volumes:
+      - postgresql:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${POSTGRES_DB_NAME}
       POSTGRES_USER: ${POSTGRES_USERNAME}
@@ -49,17 +69,20 @@ services:
       timeout: 5s
       retries: 5
   neo4j:
-    image: neo4j:5.8.0
+    image: neo4j:5.15.0-community-ubi8
     container_name: neo4j
     environment:
       NEO4J_AUTH: ${NEO4J_USERNAME}/${NEO4J_PASSWORD}
-      NEO4J_dbms_default__listen__address: neo4j
-      NEO4J_PLUGINS: '["graph-data-science"]'
-      NEO4J_dbms_default__advertised__address: neo4j
-      NEO4J_dbms_connector_bolt_advertised__address: :${NEO4J_PORT}
-      NEO4J_server_config_strict__validation_enabled: false
+      NEO4J_server_default__listen__address: neo4j
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_dbms_security_procedures_unrestricted: apoc.*
+      NEO4J_server_default__advertised__address: neo4j
+      NEO4J_server_bolt_advertised__address: :${NEO4J_PORT}
       NEO4J_initial_dbms_default__database: ${NEO4J_DB_NAME}
-    restart: on-failure
+      NEO4J_dbms_memory_transaction_total_max: 0
+    volumes:
+      - neo4j:/data
+      - neo4j:/logs
   liquibase:
     build: ./migration
     container_name: liquibase
@@ -71,3 +94,6 @@ services:
     depends_on:
       postgresql:
         condition: service_healthy
+volumes:
+  neo4j:
+  postgresql:

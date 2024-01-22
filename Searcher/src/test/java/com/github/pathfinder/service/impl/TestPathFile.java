@@ -3,7 +3,6 @@ package com.github.pathfinder.service.impl;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.pathfinder.core.tools.impl.NullHelper;
-import com.github.pathfinder.database.node.LandType;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -32,8 +31,8 @@ public record TestPathFile(List<TestFilePoint> points,
                                 Double altitude,
                                 Double longitude,
                                 Double latitude,
-                                LandType landType,
-                                Set<TestFileConnection> connections) {
+                                String landType,
+                                Set<Connection> connections) {
 
         public TestFilePoint(@JsonProperty("id")
                              UUID id,
@@ -44,9 +43,9 @@ public record TestPathFile(List<TestFilePoint> points,
                              @JsonProperty("latitude")
                              Double latitude,
                              @JsonProperty("landType")
-                             LandType landType,
+                             String landType,
                              @JsonProperty("connections")
-                             Set<TestFileConnection> connections) {
+                             Set<Connection> connections) {
             this.id          = id;
             this.altitude    = altitude;
             this.longitude   = longitude;
@@ -55,30 +54,38 @@ public record TestPathFile(List<TestFilePoint> points,
             this.connections = NullHelper.notNull(connections, Set::of);
         }
 
-        public record TestFileConnection(UUID targetId,
-                                         Double distance) {
+        public record Connection(UUID targetId,
+                                 Double meters,
+                                 Double weight) {
 
-            public TestFileConnection(@JsonProperty("targetId")
-                                      UUID targetId,
-                                      @JsonProperty("distance")
-                                      Double distance) {
+            public Connection(@JsonProperty("targetId")
+                              UUID targetId,
+                              @JsonProperty("meters")
+                              Double meters,
+                              @JsonProperty("weight")
+                              Double weight) {
                 this.targetId = targetId;
-                this.distance = distance;
+                this.meters   = meters;
+                this.weight   = weight;
             }
         }
 
     }
 
     public record TestExpectation(List<UUID> path,
-                                  Double totalCost) {
+                                  Double meters,
+                                  Double weight) {
 
         @JsonCreator
         public TestExpectation(@JsonProperty("path")
                                List<UUID> path,
-                               @JsonProperty("totalCost")
-                               Double totalCost) {
-            this.path      = path;
-            this.totalCost = totalCost;
+                               @JsonProperty("meters")
+                               Double meters,
+                               @JsonProperty("weight")
+                               Double weight) {
+            this.path   = path;
+            this.meters = meters;
+            this.weight = weight;
         }
     }
 

@@ -7,4 +7,15 @@ dependencyResolutionManagement {
 
 rootProject.name = 'PathFinder'
 
-include("Core", "Searcher", "Security", "Configuration", "Security-Api", "Messaging", "Core-Web", "Messaging-Test")
+include(
+        "Core",
+        "Searcher",
+        "Indexer",
+        "Security",
+        "Configuration",
+        "Security-Api",
+        "Messaging",
+        "Core-Web",
+        "Messaging-Test",
+        "Searcher-Api"
+)

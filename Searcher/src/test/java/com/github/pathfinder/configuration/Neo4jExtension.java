@@ -15,15 +15,14 @@ public class Neo4jExtension implements BeforeAllCallback, BeforeEachCallback {
     @UtilityClass
     public static class Constant {
 
-        public static final String IMAGE_NAME = "neo4j:5.8.0";
+        public static final String IMAGE_NAME = "neo4j:5.15.0-community-ubi8";
     }
 
     Neo4jContainer<?> neo4j;
 
     @Override
     public void beforeAll(ExtensionContext context) {
-        neo4j = new Neo4jContainer<>(DockerImageName.parse(Constant.IMAGE_NAME))
-                .withLabsPlugins(Neo4jLabsPlugin.GRAPH_DATA_SCIENCE);
+        neo4j = new Neo4jContainer<>(DockerImageName.parse(Constant.IMAGE_NAME)).withLabsPlugins(Neo4jLabsPlugin.APOC);
 
         neo4j.start();
 

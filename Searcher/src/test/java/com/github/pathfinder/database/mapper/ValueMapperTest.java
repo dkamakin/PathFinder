@@ -1,7 +1,7 @@
 package com.github.pathfinder.database.mapper;
 
-import com.github.pathfinder.exception.AnnotationNotFoundException;
-import com.github.pathfinder.exception.ValueNotFoundException;
+import com.github.pathfinder.searcher.api.exception.AnnotationNotFoundException;
+import com.github.pathfinder.searcher.api.exception.ValueNotFoundException;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -16,6 +16,7 @@ import org.neo4j.driver.internal.InternalRecord;
 import org.neo4j.driver.internal.types.InternalTypeSystem;
 import org.neo4j.driver.internal.value.FloatValue;
 import org.neo4j.driver.internal.value.ListValue;
+import org.neo4j.driver.internal.value.NullValue;
 import org.neo4j.driver.internal.value.StringValue;
 import org.neo4j.driver.types.MapAccessor;
 import org.neo4j.driver.types.MapAccessorWithDefaultValue;
@@ -192,6 +193,26 @@ class ValueMapperTest {
 
         assertThatThrownBy(() -> valueMapper.map(InternalTypeSystem.TYPE_SYSTEM, expectedClass, fetched))
                 .isInstanceOf(ValueNotFoundException.class);
+    }
+
+    @Test
+    void map_FoundNullValueInResponse_SetNull() {
+        var expected = new ObjectFields(1D, 1F, 1L, null, new byte[]{1, 2, 3});
+        var values = new Value[]{
+                mockValue(value -> when(value.asDouble()).thenReturn(expected.aDouble())),
+                mockValue(value -> when(value.asFloat()).thenReturn(expected.aFloat())),
+                mockValue(value -> when(value.asLong()).thenReturn(expected.aLong())),
+                NullValue.NULL,
+                mockValue(value -> when(value.asByteArray()).thenReturn(expected.byteArray()))
+        };
+        var keys = List.of(
+                "aDouble", "aFloat", "aLong", "aInt", "byteArray"
+        );
+        var fetched = new InternalRecord(keys, values);
+
+        var actual = valueMapper.map(InternalTypeSystem.TYPE_SYSTEM, expected.getClass(), fetched);
+
+        assertThat(actual).isEqualTo(expected);
     }
 
     public record NoFields() {

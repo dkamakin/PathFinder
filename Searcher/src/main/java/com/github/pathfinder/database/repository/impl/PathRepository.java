@@ -1,14 +1,13 @@
 package com.github.pathfinder.database.repository.impl;
 
+import com.github.pathfinder.core.aspect.Logged;
+import com.github.pathfinder.core.data.Coordinate;
 import com.github.pathfinder.data.path.AStarResult;
 import com.github.pathfinder.database.mapper.ValueMapper;
 import com.github.pathfinder.database.repository.IPathRepository;
-import com.github.pathfinder.exception.PathNotFoundException;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.neo4j.driver.Record;
-import org.neo4j.driver.types.TypeSystem;
 import org.springframework.data.neo4j.core.Neo4jClient;
 import org.springframework.stereotype.Component;
 
@@ -17,42 +16,36 @@ import org.springframework.stereotype.Component;
 public class PathRepository implements IPathRepository {
 
     private static final String A_STAR_QUERY = """
-            MATCH (source:Point {id: $sourceId})
-            WITH source
-            MATCH (target:Point {id: $targetId})
-            CALL gds.shortestPath.astar.stream($graphName, {
-              sourceNode:        source,
-              targetNode:        target,
-              concurrency:       1,
-              logProgress:       false,
-              latitudeProperty:  'latitude',
-              longitudeProperty: 'longitude',
-              relationshipWeightProperty: 'distance'
-            })
-            YIELD path, totalCost
-            RETURN nodes(path) as path, totalCost
+            MATCH (source:Point)
+            WITH source, point.distance(source.location2d, point({latitude: $sourceLat, longitude: $sourceLon})) AS distanceSource
+              ORDER BY distanceSource
+              LIMIT 1
+            MATCH (target:Point)
+            WITH source, target, point.distance(target.location2d, point({latitude: $targetLat, longitude: $targetLon})) AS distanceTarget
+              ORDER BY distanceTarget
+              LIMIT 1
+            CALL apoc.algo.aStarConfig(source, target, 'CONNECTION', {weight: 'weight', pointPropName: 'location2d', default: 1})
+            YIELD path, weight
+            RETURN nodes(path) as path, weight, reduce(meters = 0, relation in relationships(path) | meters + relation.distanceMeters) as meters
             """;
 
     private final Neo4jClient client;
     private final ValueMapper mapper;
 
     @Override
-    public AStarResult aStar(String graphName, UUID sourceId, UUID targetId) {
+    @Logged(value = {"source", "target"}, ignoreReturnValue = false)
+    public Optional<AStarResult> aStar(Coordinate source, Coordinate target) {
         return client
                 .query(A_STAR_QUERY)
                 .bindAll(Map.of(
-                        "sourceId", sourceId.toString(),
-                        "targetId", targetId.toString(),
-                        "graphName", graphName
+                        "sourceLat", source.latitude(),
+                        "sourceLon", source.longitude(),
+                        "targetLat", target.latitude(),
+                        "targetLon", target.longitude()
                 ))
                 .fetchAs(AStarResult.class)
-                .mappedBy(this::aStarResult)
-                .one()
-                .orElseThrow(PathNotFoundException::new);
-    }
-
-    private AStarResult aStarResult(TypeSystem typeSystem, Record fetched) {
-        return mapper.map(typeSystem, AStarResult.class, fetched);
+                .mappedBy((typeSystem, fetched) -> mapper.map(typeSystem, AStarResult.class, fetched))
+                .one();
     }
 
 }

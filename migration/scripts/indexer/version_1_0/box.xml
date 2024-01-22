@@ -1,0 +1,125 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <!-- Sequences -->
+    <changeSet id="index-box-1"
+               author="Daniil Kamakin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="index_box_id_sequence"/>
+            </not>
+        </preConditions>
+
+        <createSequence incrementBy="1" sequenceName="index_box_id_sequence" startValue="1"/>
+    </changeSet>
+
+    <!-- Tables -->
+    <changeSet id="index-box-2"
+               author="Daniil Kamakin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="index_box"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="index_box">
+            <column name="ID" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="PK_INDEX_BOX" nullable="false"/>
+            </column>
+            <column name="SAVED" type="BOOLEAN"/>
+            <column name="CONNECTED" type="BOOLEAN"/>
+            <column name="SAVE_REQUEST_TIMESTAMP" type="TIMESTAMP"/>
+            <column name="CONNECTION_REQUEST_TIMESTAMP" type="TIMESTAMP"/>
+            <column name="MIN_LATITUDE" type="DOUBLE"/>
+            <column name="MIN_LONGITUDE" type="DOUBLE"/>
+            <column name="MAX_LATITUDE" type="DOUBLE"/>
+            <column name="MAX_LONGITUDE" type="DOUBLE"/>
+        </createTable>
+
+        <insert tableName="index_box">
+            <column name="id">1</column>
+            <column name="CONNECTED">false</column>
+            <column name="SAVED">false</column>
+            <column name="MIN_LATITUDE">45.104546</column>
+            <column name="MIN_LONGITUDE">19.59343</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.641916002347287</column>
+        </insert>
+
+        <insert tableName="index_box">
+            <column name="id">2</column>
+            <column name="CONNECTED">false</column>
+            <column name="SAVED">false</column>
+            <column name="MIN_LATITUDE">45.10453570792426</column>
+            <column name="MIN_LONGITUDE">19.641916002347287</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.68786083270498</column>
+        </insert>
+
+        <insert tableName="index_box">
+            <column name="id">3</column>
+            <column name="CONNECTED">false</column>
+            <column name="SAVED">false</column>
+            <column name="MIN_LATITUDE">45.10450696106132</column>
+            <column name="MIN_LONGITUDE">19.68786083270498</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.735076303863146</column>
+        </insert>
+
+        <insert tableName="index_box">
+            <column name="id">4</column>
+            <column name="CONNECTED">false</column>
+            <column name="SAVED">false</column>
+            <column name="MIN_LATITUDE">45.104497201307254</column>
+            <column name="MIN_LONGITUDE">19.735076303863146</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.779750603452786</column>
+        </insert>
+
+        <insert tableName="index_box">
+            <column name="id">5</column>
+            <column name="CONNECTED">false</column>
+            <column name="SAVED">false</column>
+            <column name="MIN_LATITUDE">45.104394017808154</column>
+            <column name="MIN_LONGITUDE">19.779750603452786</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.827601550618454</column>
+        </insert>
+
+        <insert tableName="index_box">
+            <column name="id">6</column>
+            <column name="CONNECTED">false</column>
+            <column name="SAVED">false</column>
+            <column name="MIN_LATITUDE">45.10438399357154</column>
+            <column name="MIN_LONGITUDE">19.827601550618454</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.87291133187315</column>
+        </insert>
+
+        <insert tableName="index_box">
+            <column name="id">7</column>
+            <column name="CONNECTED">false</column>
+            <column name="SAVED">false</column>
+            <column name="MIN_LATITUDE">45.10435602196156</column>
+            <column name="MIN_LONGITUDE">19.87291133187315</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.919491748687232</column>
+        </insert>
+
+        <insert tableName="index_box">
+            <column name="id">8</column>
+            <column name="CONNECTED">false</column>
+            <column name="SAVED">false</column>
+            <column name="MIN_LATITUDE">45.10434652298155</column>
+            <column name="MIN_LONGITUDE">19.919491748687232</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.963531</column>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

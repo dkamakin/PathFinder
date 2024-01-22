@@ -2,7 +2,6 @@ package com.github.pathfinder.service.impl;
 
 import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.node.PointRelation;
-import com.github.pathfinder.exception.PointNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,7 +26,7 @@ public class TestFile {
         return nodes.stream()
                 .filter(node -> node.getId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new PointNotFoundException(id));
+                .orElseThrow(() -> new IllegalArgumentException("Point not found: " + id));
     }
 
     public List<PointNode> nodes() {
@@ -35,23 +34,29 @@ public class TestFile {
     }
 
     private PointNode pointNode(TestPathFile.TestFilePoint point) {
-        return new PointNode(point.id(), relations(point), point.altitude(), point.longitude(), point.latitude(),
-                             point.landType());
+        return PointNode.builder()
+                .id(point.id())
+                .relations(relations(point.connections()))
+                .landType(point.landType())
+                .passabilityCoefficient(1D)
+                .location(point.latitude(), point.longitude(), point.altitude())
+                .build();
     }
 
-    private Set<PointRelation> relations(TestPathFile.TestFilePoint point) {
-        return point.connections().stream().map(this::relation).collect(Collectors.toSet());
+    private Set<PointRelation> relations(Set<TestPathFile.TestFilePoint.Connection> connections) {
+        return connections.stream().map(this::relation).collect(Collectors.toSet());
     }
 
-    private PointRelation relation(TestPathFile.TestFilePoint.TestFileConnection connection) {
+    private PointRelation relation(TestPathFile.TestFilePoint.Connection connection) {
         var point  = point(connection.targetId());
         var entity = pointNode(point);
 
-        return new PointRelation(connection.distance(), entity);
+        return new PointRelation(connection.meters(), connection.weight(), entity);
     }
 
     private TestPathFile.TestFilePoint point(UUID id) {
-        return Optional.ofNullable(pointsMap.get(id)).orElseThrow(() -> new PointNotFoundException(id));
+        return Optional.ofNullable(pointsMap.get(id))
+                .orElseThrow(() -> new IllegalArgumentException("Point not found: " + id));
     }
 
     private Map<UUID, TestPathFile.TestFilePoint> pointsMap(TestPathFile testPathFile) {

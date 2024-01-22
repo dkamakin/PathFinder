@@ -20,7 +20,7 @@ public interface SecurityApiMapper {
     AuthenticationResponse authenticationResponse(Tokens token);
 
     @Mapping(target = "token", source = "token")
-    GetUserInfoRequest userInfoRequest(String token);
+    GetUserInfoMessage userInfoRequest(String token);
 
     default List<GrantedAuthority> grantedAuthority(UserInfo userInfo) {
         return List.of(new SimpleGrantedAuthority(userInfo.role()));

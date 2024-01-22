@@ -14,10 +14,12 @@ import com.github.pathfinder.security.service.ITokenService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RefreshScope
 @RequiredArgsConstructor
 public class TokenService implements ITokenService {
 
@@ -28,7 +30,7 @@ public class TokenService implements ITokenService {
     @Override
     @Logged(ignoreReturnValue = false)
     public Tokens issue(JwtPayload payload) {
-        var now                  = timeSupplier.instant();
+        var now                  = timeSupplier.now();
         var builder              = jwtTools.builder().withPayload(payload(payload)).withIssuedAt(now);
         var accessTokenLifetime  = jwtTools.getConfiguration().getAccessTokenLifetime();
         var refreshTokenLifetime = jwtTools.getConfiguration().getRefreshTokenLifetime();
