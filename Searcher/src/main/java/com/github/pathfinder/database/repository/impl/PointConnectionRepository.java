@@ -27,45 +27,44 @@ public class PointConnectionRepository implements IPointConnectionRepository {
              WITH first, second, point.distance(first.location3d, second.location3d) AS distanceMeters
              WITH first, second, distanceMeters,
                  ((second.passabilityCoefficient + first.passabilityCoefficient) / 2) * distanceMeters AS weight
-             MERGE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)', {batchSize:  1,
+             CREATE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)', {batchSize:  1,
                                                                                                       parallel:    true,
-                                                                                                      concurrency: 4,
+                                                                                                      concurrency: 3,
                                                                                                       retries:     10,
                                                                                                       params: {chunkId: $chunkId, accuracyMeters: $accuracyMeters}})
-            YIELD batches, total, committedOperations, failedOperations, retries, batch, operations
-            RETURN batches, total, committedOperations, failedOperations, retries, batch, operations
+            YIELD batches, total, committedOperations, failedOperations, retries, batch, operations, timeTaken
+            RETURN batches, total, committedOperations, failedOperations, retries, batch, operations, timeTaken
             """;
 
     private static final String CONNECT_CHUNK_BOARDERS_QUERY = """
             CALL apoc.periodic.iterate(
-            'MATCH (chunk:Chunk)
-              WHERE chunk.id = $chunkId
-            MATCH (first:Point)
-              WHERE (first.location2d.x >= chunk.min.x AND first.location2d.x <= chunk.max.x AND abs(first.location2d.y - chunk.min.y) < 0.001743) OR
-              (first.location2d.x >= chunk.min.x AND first.location2d.x <= chunk.max.x AND abs(first.location2d.y - chunk.max.y) < 0.001743) OR
-              (first.location2d.y >= chunk.min.y AND first.location2d.y <= chunk.max.y AND abs(first.location2d.x - chunk.min.x) < 0.001743) OR
-              ((first.location2d.y >= chunk.min.y AND first.location2d.y <= chunk.max.y AND abs(first.location2d.x - chunk.max.x) < 0.001743))
-            RETURN first, chunk',
-            'MATCH (second:Point)
-              WHERE ((second.location2d.x >= chunk.min.x AND second.location2d.x <= chunk.max.x AND abs(second.location2d.y - chunk.min.y) < 0.001743) OR
-              (second.location2d.x >= chunk.min.x AND second.location2d.x <=chunk.max.x AND abs(second.location2d.y - chunk.max.y) < 0.001743) OR
-              (second.location2d.y >= chunk.min.y AND second.location2d.y <=chunk.max.y AND abs(second.location2d.x - chunk.min.x) < 0.001743) OR
-              ((second.location2d.y >= chunk.min.y AND second.location2d.y <=chunk.max.y AND abs(second.location2d.x - chunk.max.x) < 0.001743))) AND
+            'MATCH (firstChunk:Chunk)-[:IN_CHUNK]->(first:Point)
+              WHERE firstChunk.id = $chunkId
+             MATCH (secondChunk:Chunk)
+                WHERE abs(firstChunk.min.x - secondChunk.max.x) <= $epsilon OR
+                                    abs(firstChunk.min.y - secondChunk.max.y) <= $epsilon OR
+                                    abs(firstChunk.max.x - secondChunk.min.x) <= $epsilon OR
+                                    abs(firstChunk.max.y - secondChunk.min.y) <= $epsilon
+            RETURN first, secondChunk',
+            'MATCH (secondChunk)-[:IN_CHUNK]->(second:Point)
+               WHERE first <> second AND
                point.distance(first.location3d, second.location3d) <= $accuracyMeters AND
-               NOT ((first)-[:CONNECTION]-(second)) AND
-               first <> second
+               NOT ((first)-[:CONNECTION]-(second))
              WITH first, second, point.distance(first.location3d, second.location3d) AS distanceMeters
              WITH first, second, distanceMeters,
                  ((second.passabilityCoefficient + first.passabilityCoefficient) / 2) * distanceMeters AS weight
-             MERGE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)', {batchSize:   1,
+             CREATE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)', {batchSize:   1,
                                                                                                        parallel:    true,
                                                                                                        concurrency: 3,
                                                                                                        retries:     10,
                                                                                                        params:      {
                                                                                                                       chunkId:        $chunkId,
-                                                                                                                      accuracyMeters: $accuracyMeters}})
-            YIELD batches, total, committedOperations, failedOperations, retries, batch, operations
-            RETURN batches, total, committedOperations, failedOperations, retries, batch, operations
+                                                                                                                      accuracyMeters: $accuracyMeters,
+                                                                                                                      epsilon: $epsilon
+                                                                                                                      }
+                                                                                                                    })
+            YIELD batches, total, committedOperations, failedOperations, retries, batch, operations, timeTaken
+            RETURN batches, total, committedOperations, failedOperations, retries, batch, operations, timeTaken
             """;
 
     private final Neo4jClient client;
@@ -85,7 +84,8 @@ public class PointConnectionRepository implements IPointConnectionRepository {
     public Optional<IterateStatistics> connectChunkBoarders(Integer chunkId, Double accuracyMeters) {
         return iterate(CONNECT_CHUNK_BOARDERS_QUERY, Map.of(
                 "chunkId", chunkId,
-                "accuracyMeters", accuracyMeters
+                "accuracyMeters", accuracyMeters,
+                "epsilon", 0.003
         ));
     }
 

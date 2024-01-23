@@ -47,155 +47,155 @@
             <column name="MIN_LATITUDE">45.104546</column>
             <column name="MIN_LONGITUDE">19.59343</column>
             <column name="MAX_LATITUDE">45.314495</column>
-            <column name="MAX_LONGITUDE">19.618943594448968</column>
+            <column name="MAX_LONGITUDE">19.61775241328652</column>
         </insert>
 
         <insert tableName="index_box">
             <column name="id">2</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.104543150205956</column>
-            <column name="MIN_LONGITUDE">19.618943594448968</column>
+            <column name="MIN_LATITUDE">45.10454341009695</column>
+            <column name="MIN_LONGITUDE">19.61775241328652</column>
             <column name="MAX_LATITUDE">45.314495</column>
-            <column name="MAX_LONGITUDE">19.641916002347287</column>
+            <column name="MAX_LONGITUDE">19.640804234232007</column>
         </insert>
 
         <insert tableName="index_box">
             <column name="id">3</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.10453570792426</column>
-            <column name="MIN_LONGITUDE">19.641916002347287</column>
+            <column name="MIN_LATITUDE">45.104536174500886</column>
+            <column name="MIN_LONGITUDE">19.640804234232007</column>
             <column name="MAX_LATITUDE">45.314495</column>
-            <column name="MAX_LONGITUDE">19.666159010747528</column>
+            <column name="MAX_LONGITUDE">19.664491358268716</column>
         </insert>
 
         <insert tableName="index_box">
             <column name="id">4</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.10453313490402</column>
-            <column name="MIN_LONGITUDE">19.666159010747528</column>
+            <column name="MIN_LATITUDE">45.104533718124884</column>
+            <column name="MIN_LONGITUDE">19.664491358268716</column>
             <column name="MAX_LATITUDE">45.314495</column>
-            <column name="MAX_LONGITUDE">19.68786083270498</column>
+            <column name="MAX_LONGITUDE">19.68690789001738</column>
         </insert>
 
         <insert tableName="index_box">
             <column name="id">5</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.10450696106132</column>
-            <column name="MIN_LONGITUDE">19.68786083270498</column>
+            <column name="MIN_LATITUDE">45.10450774500395</column>
+            <column name="MIN_LONGITUDE">19.68690789001738</column>
             <column name="MAX_LATITUDE">45.314495</column>
-            <column name="MAX_LONGITUDE">19.71273916078285</column>
+            <column name="MAX_LONGITUDE">19.710912685252975</column>
         </insert>
 
         <insert tableName="index_box">
             <column name="id">6</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.10450425141527</column>
-            <column name="MIN_LONGITUDE">19.71273916078285</column>
+            <column name="MIN_LATITUDE">45.104505222300546</column>
+            <column name="MIN_LONGITUDE">19.710912685252975</column>
             <column name="MAX_LATITUDE">45.314495</column>
-            <column name="MAX_LONGITUDE">19.735076303863146</column>
+            <column name="MAX_LONGITUDE">19.733646888912556</column>
         </insert>
 
         <insert tableName="index_box">
             <column name="id">7</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.104497201307254</column>
-            <column name="MIN_LONGITUDE">19.735076303863146</column>
+            <column name="MIN_LATITUDE">45.10449818123602</column>
+            <column name="MIN_LONGITUDE">19.733646888912556</column>
             <column name="MAX_LATITUDE">45.314495</column>
-            <column name="MAX_LONGITUDE">19.758684046105696</column>
+            <column name="MAX_LONGITUDE">19.75701639500369</column>
         </insert>
 
         <insert tableName="index_box">
             <column name="id">8</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.10449476136756</column>
-            <column name="MIN_LONGITUDE">19.758684046105696</column>
+            <column name="MIN_LATITUDE">45.10449579029287</column>
+            <column name="MIN_LONGITUDE">19.75701639500369</column>
             <column name="MAX_LATITUDE">45.314495</column>
-            <column name="MAX_LONGITUDE">19.779750603452786</column>
+            <column name="MAX_LONGITUDE">19.779115309570365</column>
         </insert>
 
         <insert tableName="index_box">
             <column name="id">9</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.104394017808154</column>
-            <column name="MIN_LONGITUDE">19.779750603452786</column>
+            <column name="MIN_LATITUDE">45.10439505246473</column>
+            <column name="MIN_LONGITUDE">19.779115309570365</column>
             <column name="MAX_LATITUDE">45.314495</column>
-            <column name="MAX_LONGITUDE">19.804946666984875</column>
+            <column name="MAX_LONGITUDE">19.80327901795036</column>
         </insert>
 
         <insert tableName="index_box">
             <column name="id">10</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.104391238507155</column>
-            <column name="MIN_LONGITUDE">19.804946666984875</column>
+            <column name="MIN_LATITUDE">45.10439249624981</column>
+            <column name="MIN_LONGITUDE">19.80327901795036</column>
             <column name="MAX_LATITUDE">45.314495</column>
-            <column name="MAX_LONGITUDE">19.827601550618454</column>
+            <column name="MAX_LONGITUDE">19.82617213729568</column>
         </insert>
 
         <insert tableName="index_box">
             <column name="id">11</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.10438399357154</column>
-            <column name="MIN_LONGITUDE">19.827601550618454</column>
+            <column name="MIN_LATITUDE">45.104385358185546</column>
+            <column name="MIN_LONGITUDE">19.82617213729568</column>
             <column name="MAX_LATITUDE">45.314495</column>
-            <column name="MAX_LONGITUDE">19.851527031142577</column>
+            <column name="MAX_LONGITUDE">19.84970055793958</column>
         </insert>
 
         <insert tableName="index_box">
             <column name="id">12</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.10438148751114</column>
-            <column name="MIN_LONGITUDE">19.851527031142577</column>
+            <column name="MIN_LATITUDE">45.10438293461455</column>
+            <column name="MIN_LONGITUDE">19.84970055793958</column>
             <column name="MAX_LATITUDE">45.314495</column>
-            <column name="MAX_LONGITUDE">19.87291133187315</column>
+            <column name="MAX_LONGITUDE">19.871958389601076</column>
         </insert>
 
         <insert tableName="index_box">
             <column name="id">13</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.10435602196156</column>
-            <column name="MIN_LONGITUDE">19.87291133187315</column>
+            <column name="MIN_LATITUDE">45.104357315283984</column>
+            <column name="MIN_LONGITUDE">19.871958389601076</column>
             <column name="MAX_LATITUDE">45.314495</column>
-            <column name="MAX_LONGITUDE">19.89747212947378</column>
+            <column name="MAX_LONGITUDE">19.895804480144207</column>
         </insert>
 
         <insert tableName="index_box">
             <column name="id">14</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.104353381042266</column>
-            <column name="MIN_LONGITUDE">19.89747212947378</column>
+            <column name="MIN_LATITUDE">45.1043548258273</column>
+            <column name="MIN_LONGITUDE">19.895804480144207</column>
             <column name="MAX_LATITUDE">45.314495</column>
-            <column name="MAX_LONGITUDE">19.919491748687232</column>
+            <column name="MAX_LONGITUDE">19.91837998240729</column>
         </insert>
 
         <insert tableName="index_box">
             <column name="id">15</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.10434652298155</column>
-            <column name="MIN_LONGITUDE">19.919491748687232</column>
+            <column name="MIN_LATITUDE">45.104347880970394</column>
+            <column name="MIN_LONGITUDE">19.91837998240729</column>
             <column name="MAX_LATITUDE">45.314495</column>
-            <column name="MAX_LONGITUDE">19.942781963487555</column>
+            <column name="MAX_LONGITUDE">19.941590785318244</column>
         </insert>
 
         <insert tableName="index_box">
             <column name="id">16</column>
             <column name="CONNECTED">false</column>
             <column name="SAVED">false</column>
-            <column name="MIN_LATITUDE">45.104344148235434</column>
-            <column name="MIN_LONGITUDE">19.942781963487555</column>
+            <column name="MIN_LATITUDE">45.104345522390865</column>
+            <column name="MIN_LONGITUDE">19.941590785318244</column>
             <column name="MAX_LATITUDE">45.314495</column>
             <column name="MAX_LONGITUDE">19.963531</column>
         </insert>
