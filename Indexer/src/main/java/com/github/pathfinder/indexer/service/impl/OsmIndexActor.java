@@ -32,9 +32,13 @@ public class OsmIndexActor {
     }
 
     private void connect(IndexBoxEntity box) {
-        searcherApi.createConnections(new ConnectChunkMessage(box.getId()));
+        try {
+            searcherApi.createConnections(new ConnectChunkMessage(box.getId()));
 
-        box.setConnectionRequestTimestamp(dateTimeSupplier.now());
+            box.setConnectionRequestTimestamp(dateTimeSupplier.now());
+        } catch (Exception e) {
+            log.error("Failed to send {} for connection: {}", box, e.getMessage());
+        }
     }
 
 }
