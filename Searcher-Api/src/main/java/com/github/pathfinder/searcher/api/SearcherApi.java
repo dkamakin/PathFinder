@@ -31,7 +31,7 @@ public class SearcherApi {
     @Logged("request")
     public void createConnections(ConnectChunkMessage request) {
         amqpRouter.route(messageBuilder.direct()
-                                 .routingKey(messagingConfiguration.getDefaultQueueName())
+                                 .routingKey(messagingConfiguration.getConnectionsQueueName())
                                  .with(request)).send();
     }
 

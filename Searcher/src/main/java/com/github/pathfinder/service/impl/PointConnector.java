@@ -26,7 +26,7 @@ public class PointConnector implements IPointConnector {
     public void createConnections(Integer chunkId) {
         chunkService.markConnected(chunkId, true);
         var pointsInChunkConnectedStatistics = pointConnectionRepository
-                .connectPointsInChunk(chunkId, coordinateConfiguration.getDistanceAccuracyMeters())
+                .connectChunkPoints(chunkId, coordinateConfiguration.getDistanceAccuracyMeters())
                 .orElseThrow(() -> new InternalServerException("Failed to connect points inside the chunk"));
 
         log.info("Points inside the chunk {} has been connected: {}", chunkId, pointsInChunkConnectedStatistics);
@@ -35,7 +35,7 @@ public class PointConnector implements IPointConnector {
                 .connectChunkBoarders(chunkId, coordinateConfiguration.getDistanceAccuracyMeters())
                 .orElseThrow(() -> new InternalServerException("Failed to connect the chunk boarders"));
 
-        log.info("The chunk {} boarders has been connected: {}", chunkId, connectedBoardersStatistics);
+        log.info("Boarders of the chunk {} has been connected: {}", chunkId, connectedBoardersStatistics);
     }
 
 }

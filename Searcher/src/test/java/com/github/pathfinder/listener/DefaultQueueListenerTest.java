@@ -12,56 +12,39 @@ import com.github.pathfinder.database.node.projection.SimpleChunk;
 import com.github.pathfinder.messaging.MessagingTestConstant;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.Chunk;
-import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
 import com.github.pathfinder.searcher.api.data.GetChunksMessage;
 import com.github.pathfinder.searcher.api.data.IndexBox;
 import com.github.pathfinder.searcher.api.data.point.Point;
 import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
+import com.github.pathfinder.service.IChunkGetterService;
 import com.github.pathfinder.service.IChunkUpdaterService;
-import com.github.pathfinder.service.IPointConnector;
-import com.github.pathfinder.service.impl.ChunkGetterService;
 import java.util.List;
 import java.util.UUID;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SearcherAmqpTest
-class SearcherListenerTest {
+class DefaultQueueListenerTest {
 
     @Autowired
     SearcherApi searcherApi;
 
-    @MockBean
-    IPointConnector pointConnector;
-
-    @MockBean
+    @Autowired
     IChunkUpdaterService chunkUpdaterService;
 
-    @SpyBean
-    DeadLetterListener deadLetterListener;
-
-    @MockBean
-    ChunkGetterService chunkGetterService;
+    @Autowired
+    IChunkGetterService chunkGetterService;
 
     @Captor
     ArgumentCaptor<ChunkNode> chunkNodeCaptor;
-
-    void whenNeedToThrowOnCreateConnections(RuntimeException exception) {
-        doThrow(exception).when(pointConnector).createConnections(any());
-    }
 
     void whenNeedToGetChunks(List<Integer> ids, List<SimpleChunk> expected) {
         when(chunkGetterService.simple(ids)).thenReturn(expected);
@@ -95,29 +78,6 @@ class SearcherListenerTest {
                 .satisfies(exception ->
                                    assertThat(((ServiceException) exception).errorCode())
                                            .isEqualTo(ErrorCode.BAD_REQUEST));
-    }
-
-    @Test
-    @SneakyThrows
-    void connect_ExceptionOccurred_Retry() {
-        var chunk = 1;
-
-        whenNeedToThrowOnCreateConnections(new RuntimeException());
-
-        searcherApi.createConnections(new ConnectChunkMessage(chunk));
-
-        verify(pointConnector, timeout(MessagingTestConstant.DEFAULT_TIMEOUT.toMillis()).times(2))
-                .createConnections(chunk);
-        verify(deadLetterListener).createConnections(any());
-    }
-
-    @Test
-    void connect_Request_CallService() {
-        var chunk = 1;
-
-        searcherApi.createConnections(new ConnectChunkMessage(chunk));
-
-        verify(pointConnector, timeout(MessagingTestConstant.DEFAULT_TIMEOUT.toMillis())).createConnections(chunk);
     }
 
     @Test
