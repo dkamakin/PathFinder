@@ -16,19 +16,22 @@ public class PointConnectionRepository implements IPointConnectionRepository {
 
     private static final String POINTS_IN_CHUNK_CONNECTION_QUERY = """
             CALL apoc.periodic.iterate(
-            'MATCH (firstChunk:Chunk)-[:IN_CHUNK]->(first:Point)
-               WHERE firstChunk.id = $chunkId
-             MATCH (secondChunk:Chunk)-[:IN_CHUNK]->(second:Point)
-               WHERE secondChunk.id = $chunkId
-             RETURN first, second',
-            'WITH first, second, point.distance(first.location3d, second.location3d) AS distanceMeters
-                WHERE first <> second AND distanceMeters <= $accuracyMeters AND NOT ((first)-[:CONNECTION]-(second))
-             WITH first, second, distanceMeters,
-                 ((second.passabilityCoefficient + first.passabilityCoefficient) / 2) * distanceMeters AS weight
-             CREATE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)',
-             {batchSize:  1,
+            '
+            MATCH (chunk:Chunk)-[:IN_CHUNK]->(point:Point)
+                WHERE chunk.id = $chunkId
+            RETURN chunk, point AS first',
+            '
+            MATCH (chunk)-[:IN_CHUNK]->(second:Point)
+                WHERE first <> second AND NOT (first)-[:CONNECTION]-(second)
+            WITH first, second, point.distance(first.location3d, second.location3d) AS distanceMeters
+                WHERE first <> second AND distanceMeters <= $accuracyMeters
+            WITH first, second, distanceMeters,
+                ((second.passabilityCoefficient + first.passabilityCoefficient) / 2) * distanceMeters AS weight
+            CREATE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)',
+            {
+            batchSize:  1,
             parallel:    true,
-            concurrency: 3,
+            concurrency: 2,
             retries:     10,
             params: {
             chunkId: $chunkId,
@@ -40,22 +43,26 @@ public class PointConnectionRepository implements IPointConnectionRepository {
 
     private static final String CONNECT_CHUNK_BOARDERS_QUERY = """
             CALL apoc.periodic.iterate(
-            'MATCH (chunk:Chunk)-[:IN_CHUNK]->(first:Point)
-              WHERE chunk.id = $chunkId
-             MATCH (second:Point)
-                WHERE (abs(chunk.min.x - second.location2d.x) <= $epsilon OR
-                                    abs(chunk.min.y - second.location2d.y) <= $epsilon OR
-                                    abs(chunk.max.x - second.location2d.x) <= $epsilon OR
-                                    abs(chunk.max.y - second.location2d.y) <= $epsilon)
-            RETURN first, second',
-            'WITH first, second, point.distance(first.location3d, second.location3d) AS distanceMeters
-                WHERE first <> second AND distanceMeters <= $accuracyMeters AND NOT ((first)-[:CONNECTION]-(second))
-             WITH first, second, distanceMeters,
-                 ((second.passabilityCoefficient + first.passabilityCoefficient) / 2) * distanceMeters AS weight
-             CREATE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)',
+            '
+            MATCH (chunk)-[:IN_CHUNK]-(chunkPoint:Point)
+                WHERE chunk.id = $chunkId
+            WITH collect(chunkPoint) AS chunkPoints, chunk
+            MATCH (boarderPoint:Point)
+                WHERE (abs(chunk.min.x - boarderPoint.location2d.x) <= $epsilon OR
+                abs(chunk.min.y - boarderPoint.location2d.y) <= $epsilon OR
+                abs(chunk.max.x - boarderPoint.location2d.x) <= $epsilon OR
+                abs(chunk.max.y - boarderPoint.location2d.y) <= $epsilon)
+            RETURN chunkPoints, boarderPoint AS second',
+            '
+            UNWIND chunkPoints AS first
+            WITH first, second, point.distance(first.location3d, second.location3d) AS distanceMeters
+                WHERE first <> second AND distanceMeters <= $accuracyMeters AND NOT (first)-[:CONNECTION]-(second)
+            WITH first, second, distanceMeters,
+                ((second.passabilityCoefficient + first.passabilityCoefficient) / 2) * distanceMeters AS weight
+            CREATE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)',
              {batchSize:   1,
              parallel:    true,
-             concurrency: 3,
+             concurrency: 2,
              retries:     10,
              params:      {
                             chunkId:        $chunkId,
