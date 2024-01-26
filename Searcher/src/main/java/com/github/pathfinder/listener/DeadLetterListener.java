@@ -15,12 +15,12 @@ import static com.github.pathfinder.searcher.api.configuration.SearcherMessaging
 @AmqpListener(queues = DEAD_LETTER_QUEUE_NAME)
 public class DeadLetterListener {
 
-    private final SearcherListener searcherListener;
+    private final ConnectionsQueueListener connectionsQueueListener;
 
     @Logged
     @AmqpHandler
     public void createConnections(ConnectChunkMessage message) {
-        searcherListener.connect(message);
+        connectionsQueueListener.connect(message);
     }
 
 }

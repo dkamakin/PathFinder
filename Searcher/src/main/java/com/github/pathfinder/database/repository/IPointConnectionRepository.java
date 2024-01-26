@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface IPointConnectionRepository {
 
-    Optional<IterateStatistics> connectPointsInChunk(Integer chunkId, Double accuracyMeters);
+    Optional<IterateStatistics> connectChunkPoints(Integer chunkId, Double accuracyMeters);
 
     Optional<IterateStatistics> connectChunkBoarders(Integer chunkId, Double accuracyMeters);
 

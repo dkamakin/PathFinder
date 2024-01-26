@@ -13,7 +13,6 @@ import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.ExchangeBuilder;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
-import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -82,17 +81,9 @@ public class MessagingConfiguration implements RabbitListenerConfigurer {
     @Bean
     public RabbitListenerContainerFactory<SimpleMessageListenerContainer> rabbitListenerContainerFactory(
             ConnectionFactory connectionFactory, CoreMessageConverter messageConverter) {
-        var factory = new SimpleRabbitListenerContainerFactory();
-
         log.info("Building a listener factory with configuration: {}", this);
 
-        factory.setConnectionFactory(connectionFactory);
-        factory.setMessageConverter(messageConverter);
-        factory.setConcurrentConsumers(concurrentConsumers);
-        factory.setMaxConcurrentConsumers(concurrentConsumers);
-        factory.setDefaultRequeueRejected(false);
-
-        return factory;
+        return RabbitFactories.listenerFactory(connectionFactory, messageConverter, concurrentConsumers);
     }
 
     @Bean

@@ -12,6 +12,9 @@ import org.springframework.core.annotation.AliasFor;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AmqpListener {
 
+    @AliasFor(annotation = RabbitListener.class, attribute = "containerFactory")
+    String containerFactory() default "";
+
     @AliasFor(annotation = RabbitListener.class, attribute = "queues")
     String[] queues() default {};
 

@@ -17,9 +17,10 @@ import org.geotools.referencing.GeodeticCalculator;
 @Slf4j
 public class BoxSplitter {
 
-    static final int                METERS_IN_KM    = 1000;
-    static final double             SQUARE_KM_LIMIT = 50D;
-    static final GeodeticCalculator CALCULATOR      = new GeodeticCalculator();
+    static final double             ADDITIONAL_SPACE_FOR_BOX = 50D;
+    static final int                METERS_IN_KM             = 1000;
+    static final double             SQUARE_KM_LIMIT          = 50D;
+    static final GeodeticCalculator CALCULATOR               = new GeodeticCalculator();
 
     public static void main(String[] args) {
         var result = splitBox(new IndexBox(1,
@@ -63,7 +64,7 @@ public class BoxSplitter {
         log.info("Box size exceeds the limit, splitting...");
 
         CALCULATOR.setStartingGeographicPoint(box.min().longitude(), box.min().latitude());
-        CALCULATOR.setDirection(90, widthMeters / 2 + 100);
+        CALCULATOR.setDirection(90, widthMeters / 2 + ADDITIONAL_SPACE_FOR_BOX);
 
         var halfPoint           = CALCULATOR.getDestinationGeographicPoint();
         var halfPointCoordinate = new Coordinate(halfPoint.getY(), halfPoint.getX());

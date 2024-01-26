@@ -1,6 +1,5 @@
 package com.github.pathfinder.indexer.service.impl;
 
-import com.github.pathfinder.core.executor.PlatformExecutor;
 import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.indexer.configuration.IndexerRetryConfiguration;
 import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
@@ -14,8 +13,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.function.Predicate;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -45,16 +42,10 @@ class OsmIndexActorTest {
     IndexerRetryConfiguration retryConfiguration;
 
     @MockBean
-    PlatformExecutor executor;
-
-    @MockBean
     OsmIndexTask indexTask;
 
     @MockBean
     IDateTimeSupplier dateTimeSupplier;
-
-    @Captor
-    ArgumentCaptor<Runnable> runnableCaptor;
 
     void whenNeedToGetNow(Instant now) {
         when(dateTimeSupplier.now()).thenReturn(now);
@@ -65,7 +56,7 @@ class OsmIndexActorTest {
         target.perform();
 
         verifyNoInteractions(searcherApi);
-        verifyNoInteractions(executor);
+        verifyNoInteractions(indexTask);
     }
 
     @Test
@@ -77,12 +68,7 @@ class OsmIndexActorTest {
 
         target.perform();
 
-        verify(executor).submit(runnableCaptor.capture());
-
-        runnableCaptor.getAllValues().forEach(Runnable::run);
-
         verify(indexTask).accept(entity);
-
         verifyNoInteractions(searcherApi);
     }
 
@@ -104,7 +90,7 @@ class OsmIndexActorTest {
 
         target.perform();
 
-        verifyNoInteractions(executor);
+        verifyNoInteractions(indexTask);
         verify(searcherApi).createConnections(new ConnectChunkMessage(expected.getId()));
 
         assertThat(boxSearcherService.all())
@@ -135,12 +121,7 @@ class OsmIndexActorTest {
 
         target.perform();
 
-        verify(executor).submit(runnableCaptor.capture());
-
-        runnableCaptor.getAllValues().forEach(Runnable::run);
-
         verify(indexTask).accept(forSave);
-
         verify(searcherApi).createConnections(new ConnectChunkMessage(forConnection.getId()));
 
         assertThat(boxSearcherService.all())

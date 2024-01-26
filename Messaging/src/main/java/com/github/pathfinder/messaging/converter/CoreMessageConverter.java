@@ -20,8 +20,8 @@ public class CoreMessageConverter implements SmartMessageConverter {
 
     private final Jackson2JsonMessageConverter messageConverter;
 
-    @Override
     @NotNull
+    @Override
     public Object fromMessage(@NotNull Message message, @NotNull Object conversionHint) {
         tryHandleException(message);
         return messageConverter.fromMessage(message);

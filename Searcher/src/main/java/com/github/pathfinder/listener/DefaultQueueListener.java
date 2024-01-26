@@ -5,13 +5,11 @@ import com.github.pathfinder.mapper.NodeMapper;
 import com.github.pathfinder.messaging.error.RethrowingToSenderErrorHandler;
 import com.github.pathfinder.messaging.listener.AmqpHandler;
 import com.github.pathfinder.messaging.listener.AmqpListener;
-import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
 import com.github.pathfinder.searcher.api.data.GetChunksMessage;
 import com.github.pathfinder.searcher.api.data.GetChunksResponse;
 import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
 import com.github.pathfinder.service.IChunkGetterService;
 import com.github.pathfinder.service.IChunkUpdaterService;
-import com.github.pathfinder.service.IPointConnector;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,17 +19,10 @@ import static com.github.pathfinder.searcher.api.configuration.SearcherMessaging
 @Component
 @RequiredArgsConstructor
 @AmqpListener(queues = DEFAULT_QUEUE_NAME, errorHandler = RethrowingToSenderErrorHandler.NAME)
-public class SearcherListener {
+public class DefaultQueueListener {
 
     private final IChunkGetterService  chunkGetterService;
-    private final IPointConnector      pointConnector;
     private final IChunkUpdaterService chunkUpdaterService;
-
-    @AmqpHandler
-    @Logged("request")
-    public void connect(ConnectChunkMessage request) {
-        pointConnector.createConnections(request.id());
-    }
 
     @AmqpHandler
     @Logged("request")
