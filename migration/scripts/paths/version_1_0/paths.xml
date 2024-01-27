@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:neo4j="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="point-indexes" author="Daniil Kamakin">
+        <neo4j:cypher>
+            CREATE POINT INDEX pointIndex2d IF NOT EXISTS FOR (point:Point) ON (point.location2d);
+        </neo4j:cypher>
+
+        <neo4j:cypher>
+            CREATE POINT INDEX pointIndex3d IF NOT EXISTS FOR (point:Point) ON (point.location3d);
+        </neo4j:cypher>
+    </changeSet>
+
+    <changeSet id="chunk-indexes" author="Daniil Kamakin">
+        <neo4j:cypher>
+            CREATE INDEX chunkIndexId IF NOT EXISTS FOR (chunk:Chunk) ON (chunk.id);
+        </neo4j:cypher>
+    </changeSet>
+
+</databaseChangeLog>

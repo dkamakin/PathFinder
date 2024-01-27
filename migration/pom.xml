@@ -10,11 +10,16 @@
     <packaging>pom</packaging>
 
     <properties>
-        <liquibase.version>4.23.0</liquibase.version>
+        <liquibase.version>4.25.1</liquibase.version>
         <postgresql.version>42.6.0</postgresql.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.liquibase.ext</groupId>
+            <artifactId>liquibase-neo4j</artifactId>
+            <version>${liquibase.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
@@ -40,6 +45,7 @@
                 <version>${liquibase.version}</version>
                 <configuration>
                     <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+                    <verbose>true</verbose>
                 </configuration>
             </plugin>
         </plugins>

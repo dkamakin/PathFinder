@@ -22,9 +22,10 @@ public class PointConnectionRepository implements IPointConnectionRepository {
             RETURN chunk, point AS first',
             '
             MATCH (chunk)-[:IN_CHUNK]->(second:Point)
-                WHERE first <> second AND NOT (first)-[:CONNECTION]-(second)
+                WHERE first <> second AND
+                NOT (first)-[:CONNECTION]-(second) AND
+                point.distance(first.location3d, second.location3d) <= $accuracyMeters
             WITH first, second, point.distance(first.location3d, second.location3d) AS distanceMeters
-                WHERE first <> second AND distanceMeters <= $accuracyMeters
             WITH first, second, distanceMeters,
                 ((second.passabilityCoefficient + first.passabilityCoefficient) / 2) * distanceMeters AS weight
             CREATE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)',
@@ -44,19 +45,22 @@ public class PointConnectionRepository implements IPointConnectionRepository {
     private static final String CONNECT_CHUNK_BOARDERS_QUERY = """
             CALL apoc.periodic.iterate(
             '
-            MATCH (chunk)-[:IN_CHUNK]-(chunkPoint:Point)
+            MATCH (chunk:Chunk)
                 WHERE chunk.id = $chunkId
-            WITH collect(chunkPoint) AS chunkPoints, chunk
-            MATCH (boarderPoint:Point)
-                WHERE (abs(chunk.min.x - boarderPoint.location2d.x) <= $epsilon OR
-                abs(chunk.min.y - boarderPoint.location2d.y) <= $epsilon OR
-                abs(chunk.max.x - boarderPoint.location2d.x) <= $epsilon OR
-                abs(chunk.max.y - boarderPoint.location2d.y) <= $epsilon)
-            RETURN chunkPoints, boarderPoint AS second',
+            WITH chunk
+            MATCH (first:Point)
+                WHERE NOT (chunk)-[:IN_CHUNK]-(first) AND
+                (abs(chunk.min.x - first.location2d.x) <= $epsilon OR
+                abs(chunk.min.y - first.location2d.y) <= $epsilon OR
+                abs(chunk.max.x - first.location2d.x) <= $epsilon OR
+                abs(chunk.max.y - first.location2d.y) <= $epsilon)
+            RETURN chunk, first',
             '
-            UNWIND chunkPoints AS first
+            MATCH (chunk)-[:IN_CHUNK]->(second:Point)
+                WHERE first <> second AND
+                NOT (first)-[:CONNECTION]-(second) AND
+                point.distance(first.location3d, second.location3d) <= $accuracyMeters
             WITH first, second, point.distance(first.location3d, second.location3d) AS distanceMeters
-                WHERE first <> second AND distanceMeters <= $accuracyMeters AND NOT (first)-[:CONNECTION]-(second)
             WITH first, second, distanceMeters,
                 ((second.passabilityCoefficient + first.passabilityCoefficient) / 2) * distanceMeters AS weight
             CREATE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)',

@@ -274,4 +274,28 @@ class IndexBoxSearcherServiceTest {
         assertThat(actual).isEmpty();
     }
 
+    @Test
+    void connectable_OneOfTheBoxesIsNotSaved_EmptyResult() {
+        var now = Instant.now();
+
+        stateBuilder.save(IndexBoxEntity.builder()
+                                  .saved(false)
+                                  .connected(false)
+                                  .max(12, 23)
+                                  .min(32, 43)
+                                  .build());
+        stateBuilder.save(IndexBoxEntity.builder()
+                                  .saved(true)
+                                  .connected(false)
+                                  .max(12, 23)
+                                  .min(32, 43)
+                                  .build());
+
+        whenNeedToGetNow(now);
+
+        var actual = target.connectable(Duration.ofMinutes(30));
+
+        assertThat(actual).isEmpty();
+    }
+
 }

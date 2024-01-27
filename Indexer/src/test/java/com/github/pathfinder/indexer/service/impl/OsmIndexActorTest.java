@@ -18,6 +18,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -104,7 +106,7 @@ class OsmIndexActorTest {
     }
 
     @Test
-    void perform_FoundOneForConnectionSecondForSave_PerformOperations() {
+    void perform_FoundOneForConnectionSecondForSave_DoNotConnectIfSomeOfTheBoxesAreNotSaved() {
         var forSave = stateBuilder.save(IndexBoxEntity.builder()
                                                 .min(1, 2)
                                                 .max(3, 4)
@@ -122,7 +124,7 @@ class OsmIndexActorTest {
         target.perform();
 
         verify(indexTask).accept(forSave);
-        verify(searcherApi).createConnections(new ConnectChunkMessage(forConnection.getId()));
+        verify(searcherApi, never()).createConnections(any());
 
         assertThat(boxSearcherService.all())
                 .filteredOn(entity -> forConnection.getId().equals(entity.getId()))
@@ -130,8 +132,7 @@ class OsmIndexActorTest {
                 .first()
                 .matches(Predicate.not(IndexBoxEntity::isConnected))
                 .matches(IndexBoxEntity::isSaved)
-                .satisfies(entity -> assertThat(entity.getConnectionRequestTimestamp())
-                        .isCloseTo(now, within(1, ChronoUnit.SECONDS)));
+                .matches(entity -> entity.getConnectionRequestTimestamp() == null);
     }
 
 }
