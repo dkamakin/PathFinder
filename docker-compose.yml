@@ -89,10 +89,10 @@ services:
       - neo4j:/data
       - neo4j:/logs
     healthcheck:
-      test: [ "CMD", "/var/lib/neo4j/bin/cypher-shell", "-u", "${NEO4J_USERNAME}", "-p", "${NEO4J_PASSWORD}", "-a", "neo4j", "MATCH () RETURN count(*) as count" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: [ "CMD", "cypher-shell", "-u", "${NEO4J_USERNAME}", "-p", "${NEO4J_PASSWORD}", "-a", "neo4j", "SHOW INDEXES" ]
+      interval: 30s
+      timeout: 20s
+      retries: 20
   liquibase:
     build: ./migration
     container_name: liquibase
