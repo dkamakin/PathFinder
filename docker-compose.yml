@@ -35,6 +35,8 @@ services:
       - "${INDEXER_PORT}:${INDEXER_PORT}"
     restart: on-failure
     depends_on:
+      searcher:
+        condition: service_started
       postgresql:
         condition: service_healthy
   searcher:
@@ -46,6 +48,9 @@ services:
       PORT: ${SEARCHER_PORT}
     ports:
       - "${SEARCHER_PORT}:${SEARCHER_PORT}"
+    depends_on:
+      neo4j:
+        condition: service_healthy
   rabbitmq:
     image: rabbitmq:3.12.12-management-alpine
     container_name: rabbitmq
@@ -83,15 +88,24 @@ services:
     volumes:
       - neo4j:/data
       - neo4j:/logs
+    healthcheck:
+      test: [ "CMD", "/var/lib/neo4j/bin/cypher-shell", "-u", "${NEO4J_USERNAME}", "-p", "${NEO4J_PASSWORD}", "-a", "neo4j", "MATCH () RETURN count(*) as count" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   liquibase:
     build: ./migration
     container_name: liquibase
     environment:
-      LIQUIBASE_PROJECT_DIR: ${HOME}/migration
-      LIQUIBASE_DATABASE_URL: jdbc:postgresql://postgresql:${POSTGRES_PORT}/${POSTGRES_DB_NAME}
-      LIQUIBASE_DATABASE_USERNAME: ${POSTGRES_USERNAME}
-      LIQUIBASE_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      LIQUIBASE_RELATIONAL_DATABASE_URL: jdbc:postgresql://postgresql:${POSTGRES_PORT}/${POSTGRES_DB_NAME}
+      LIQUIBASE_RELATIONAL_DATABASE_USERNAME: ${POSTGRES_USERNAME}
+      LIQUIBASE_RELATIONAL_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      LIQUIBASE_NEO4J_DATABASE_URL: jdbc:neo4j:bolt://neo4j:${NEO4J_PORT}
+      LIQUIBASE_NEO4J_DATABASE_USERNAME: ${NEO4J_USERNAME}
+      LIQUIBASE_NEO4J_DATABASE_PASSWORD: ${NEO4J_PASSWORD}
     depends_on:
+      neo4j:
+        condition: service_healthy
       postgresql:
         condition: service_healthy
 volumes:

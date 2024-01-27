@@ -22,9 +22,10 @@ public class PointConnectionRepository implements IPointConnectionRepository {
             RETURN chunk, point AS first',
             '
             MATCH (chunk)-[:IN_CHUNK]->(second:Point)
-                WHERE first <> second AND NOT (first)-[:CONNECTION]-(second)
+                WHERE first <> second AND
+                NOT (first)-[:CONNECTION]-(second) AND
+                point.distance(first.location3d, second.location3d) <= $accuracyMeters
             WITH first, second, point.distance(first.location3d, second.location3d) AS distanceMeters
-                WHERE first <> second AND distanceMeters <= $accuracyMeters
             WITH first, second, distanceMeters,
                 ((second.passabilityCoefficient + first.passabilityCoefficient) / 2) * distanceMeters AS weight
             CREATE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)',
