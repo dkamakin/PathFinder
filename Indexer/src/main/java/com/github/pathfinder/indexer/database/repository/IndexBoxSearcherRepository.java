@@ -22,8 +22,15 @@ public interface IndexBoxSearcherRepository extends CrudRepository<IndexBoxEntit
     @Query("""
             SELECT box
             FROM IndexBoxEntity box
-            WHERE box.saved AND NOT box.connected AND (box.connectionRequestTimestamp IS NULL OR :now - box.connectionRequestTimestamp > :connectDelay)
+            WHERE NOT box.connected AND (box.connectionRequestTimestamp IS NULL OR :now - box.connectionRequestTimestamp > :connectDelay)
             """)
     List<IndexBoxEntity> connectable(@Param("connectDelay") Duration connectDelay, @Param("now") Instant now);
+
+    @Query("""
+            SELECT count(box)
+            FROM IndexBoxEntity box
+            WHERE NOT box.saved
+            """)
+    int countNotSaved();
 
 }

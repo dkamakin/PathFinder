@@ -42,6 +42,13 @@ public class IndexBoxSearcherService implements BoxSearcherService {
     @ReadTransactional
     @Logged(ignoreReturnValue = false, value = {"connectDelay"})
     public List<IndexBoxEntity> connectable(Duration connectDelay) {
+        var notSaved = boxRepository.countNotSaved();
+
+        if (notSaved > 0) {
+            log.info("{} boxes are not saved yet, connection is not possible", notSaved);
+            return List.of();
+        }
+
         return boxRepository.connectable(connectDelay, dateTimeSupplier.now());
     }
 
