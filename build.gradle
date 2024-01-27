@@ -30,7 +30,7 @@ subprojects {
     apply plugin: 'java-library'
 
     def lombokVersion = "1.18.30"
-    def assertJVersion = "3.25.0"
+    def assertJVersion = "3.25.2"
     def h2Version = "2.2.224"
     def postgresqlVersion = "42.7.1"
     def guavaVersion = "33.0.0-jre"
