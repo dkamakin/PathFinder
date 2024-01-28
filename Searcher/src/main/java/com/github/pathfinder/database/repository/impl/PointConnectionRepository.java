@@ -17,8 +17,15 @@ public class PointConnectionRepository implements IPointConnectionRepository {
     private static final String POINTS_IN_CHUNK_CONNECTION_QUERY = """
             CALL apoc.periodic.iterate(
             '
-            MATCH (chunk:Chunk)-[:IN_CHUNK]->(point:Point)
+            MATCH (chunk:Chunk)
                 WHERE chunk.id = $chunkId
+            WITH chunk
+            MATCH (point:Point)
+                WHERE point.withinBBox(
+                point.location2d,
+                point({latitude: chunk.min.y - $epsilon, longitude: chunk.min.x - $epsilon}),
+                point({latitude: chunk.max.y + $epsilon, longitude: chunk.max.x + $epsilon})
+            )
             RETURN chunk, point AS first',
             '
             MATCH (chunk)-[:IN_CHUNK]->(second:Point)
@@ -36,47 +43,9 @@ public class PointConnectionRepository implements IPointConnectionRepository {
             retries:     10,
             params: {
             chunkId: $chunkId,
-            accuracyMeters: $accuracyMeters
+            accuracyMeters: $accuracyMeters,
+            epsilon: $epsilon
             }})
-            YIELD batches, total, committedOperations, failedOperations, retries, batch, operations, timeTaken
-            RETURN batches, total, committedOperations, failedOperations, retries, batch, operations, timeTaken
-            """;
-
-    private static final String CONNECT_CHUNK_BOARDERS_QUERY = """
-            CALL apoc.periodic.iterate(
-            '
-            MATCH (chunk:Chunk)
-                WHERE chunk.id = $chunkId
-            WITH chunk
-            MATCH (first:Point)
-                WHERE NOT (chunk)-[:IN_CHUNK]-(first) AND
-                (abs(chunk.min.x - first.location2d.x) <= $epsilon OR
-                abs(chunk.min.y - first.location2d.y) <= $epsilon OR
-                abs(chunk.max.x - first.location2d.x) <= $epsilon OR
-                abs(chunk.max.y - first.location2d.y) <= $epsilon)
-            RETURN chunk, first',
-            '
-            MATCH (chunk)-[:IN_CHUNK]->(second:Point)
-                WHERE first <> second AND
-                NOT (first)-[:CONNECTION]-(second) AND
-                (abs(chunk.min.x - first.location2d.x) <= $epsilon OR
-                abs(chunk.min.y - first.location2d.y) <= $epsilon OR
-                abs(chunk.max.x - first.location2d.x) <= $epsilon OR
-                abs(chunk.max.y - first.location2d.y) <= $epsilon) AND
-                point.distance(first.location3d, second.location3d) <= $accuracyMeters
-            WITH first, second, point.distance(first.location3d, second.location3d) AS distanceMeters
-            WITH first, second, distanceMeters,
-                ((second.passabilityCoefficient + first.passabilityCoefficient) / 2) * distanceMeters AS weight
-            CREATE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)',
-             {batchSize:   1,
-             parallel:    true,
-             concurrency: 2,
-             retries:     10,
-             params:      {
-                            chunkId:        $chunkId,
-                            accuracyMeters: $accuracyMeters,
-                            epsilon: $epsilon
-                            }})
             YIELD batches, total, committedOperations, failedOperations, retries, batch, operations, timeTaken
             RETURN batches, total, committedOperations, failedOperations, retries, batch, operations, timeTaken
             """;
@@ -89,17 +58,8 @@ public class PointConnectionRepository implements IPointConnectionRepository {
     public Optional<IterateStatistics> connectChunkPoints(Integer chunkId, Double accuracyMeters) {
         return iterate(POINTS_IN_CHUNK_CONNECTION_QUERY, Map.of(
                 "chunkId", chunkId,
-                "accuracyMeters", accuracyMeters
-        ));
-    }
-
-    @Override
-    @Logged(value = {"chunkId", "accuracyMeters"})
-    public Optional<IterateStatistics> connectChunkBoarders(Integer chunkId, Double accuracyMeters) {
-        return iterate(CONNECT_CHUNK_BOARDERS_QUERY, Map.of(
-                "chunkId", chunkId,
                 "accuracyMeters", accuracyMeters,
-                "epsilon", 0.0015
+                "epsilon", 0.002
         ));
     }
 

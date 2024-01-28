@@ -17,10 +17,13 @@ public class PathRepository implements IPathRepository {
 
     private static final String A_STAR_QUERY = """
             MATCH (source:Point)
+            WHERE point.distance(source.location2d, point({latitude: $sourceLat, longitude: $sourceLon})) <= $accuracyMeters
             WITH source, point.distance(source.location2d, point({latitude: $sourceLat, longitude: $sourceLon})) AS distanceSource
               ORDER BY distanceSource
               LIMIT 1
+            WITH source
             MATCH (target:Point)
+            WHERE point.distance(target.location2d, point({latitude: $targetLat, longitude: $targetLon})) <= $accuracyMeters
             WITH source, target, point.distance(target.location2d, point({latitude: $targetLat, longitude: $targetLon})) AS distanceTarget
               ORDER BY distanceTarget
               LIMIT 1
@@ -33,15 +36,16 @@ public class PathRepository implements IPathRepository {
     private final ValueMapper mapper;
 
     @Override
-    @Logged(value = {"source", "target"}, ignoreReturnValue = false)
-    public Optional<AStarResult> aStar(Coordinate source, Coordinate target) {
+    @Logged(value = {"source", "target", "accuracyMeters"}, ignoreReturnValue = false)
+    public Optional<AStarResult> aStar(Coordinate source, Coordinate target, double accuracyMeters) {
         return client
                 .query(A_STAR_QUERY)
                 .bindAll(Map.of(
                         "sourceLat", source.latitude(),
                         "sourceLon", source.longitude(),
                         "targetLat", target.latitude(),
-                        "targetLon", target.longitude()
+                        "targetLon", target.longitude(),
+                        "accuracyMeters", accuracyMeters
                 ))
                 .fetchAs(AStarResult.class)
                 .mappedBy((typeSystem, fetched) -> mapper.map(typeSystem, AStarResult.class, fetched))

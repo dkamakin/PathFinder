@@ -1,5 +1,6 @@
 package com.github.pathfinder.service.impl;
 
+import com.github.pathfinder.configuration.CoordinateConfiguration;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.core.interfaces.ReadTransactional;
 import com.github.pathfinder.data.path.AStarResult;
@@ -14,14 +15,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PathSearcher implements IPathSearcher {
 
-    private final IPathRepository searcherRepository;
+    private final IPathRepository         searcherRepository;
+    private final CoordinateConfiguration coordinateConfiguration;
 
     @Override
     @Logged("request")
     @ReadTransactional
     public AStarResult aStar(FindPathRequest request) {
         return searcherRepository
-                .aStar(request.source(), request.target())
+                .aStar(request.source(), request.target(), coordinateConfiguration.getPathAccuracyMeters())
                 .orElseThrow(PathNotFoundException::new);
     }
 

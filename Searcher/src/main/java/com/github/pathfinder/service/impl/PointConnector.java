@@ -29,13 +29,7 @@ public class PointConnector implements IPointConnector {
                 .connectChunkPoints(chunkId, coordinateConfiguration.getDistanceAccuracyMeters())
                 .orElseThrow(() -> new InternalServerException("Failed to connect points inside the chunk"));
 
-        log.info("Points inside the chunk {} has been connected: {}", chunkId, pointsInChunkConnectedStatistics);
-
-        var connectedBoardersStatistics = pointConnectionRepository
-                .connectChunkBoarders(chunkId, coordinateConfiguration.getDistanceAccuracyMeters())
-                .orElseThrow(() -> new InternalServerException("Failed to connect the chunk boarders"));
-
-        log.info("Boarders of the chunk {} has been connected: {}", chunkId, connectedBoardersStatistics);
+        log.info("Points for the chunk {} has been connected: {}", chunkId, pointsInChunkConnectedStatistics);
     }
 
 }

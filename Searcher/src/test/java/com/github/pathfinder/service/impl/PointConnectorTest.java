@@ -147,7 +147,12 @@ class PointConnectorTest {
     }
 
     ChunkNode chunk(int id, List<PointNode> pointNodes) {
-        return PointFixtures.randomChunkNodeBuilder().points(pointNodes).id(id).build();
+        return ChunkNode.builder()
+                .min(44.824221, 20.412083)
+                .max(44.834448, 20.428648)
+                .points(pointNodes)
+                .id(id)
+                .build();
     }
 
     @Test

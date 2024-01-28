@@ -1,6 +1,7 @@
 coordinate:
   distance:
     accuracyMeters: 45.0
+    pathAccuracyMeters: 2000
 exchange:
   direct:
     name: pathfinder.exchange.direct
@@ -9,6 +10,12 @@ exchange:
       name: pathfinder.exchange.searcher.deadLetter
 queue:
   searcher:
+    save-chunks:
+      name: pathfinder.queue.searcher.save-chunks
+      consumers: 10
+    connections:
+      name: pathfinder.queue.searcher.connections
+      consumers: 5
     default:
       name: pathfinder.queue.searcher.api
     deadLetter:
