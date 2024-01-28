@@ -1,6 +1,6 @@
 package com.github.pathfinder.indexer.data;
 
-import com.github.pathfinder.core.tools.impl.BoundingBox;
+import com.github.pathfinder.core.data.BoundingBox;
 import com.github.pathfinder.indexer.data.osm.OsmBox;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

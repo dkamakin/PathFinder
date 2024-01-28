@@ -1,6 +1,6 @@
 package com.github.pathfinder.indexer.service.impl;
 
-import com.github.pathfinder.core.tools.impl.MetersDistance;
+import com.github.pathfinder.core.data.MetersDistance;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
 import com.github.pathfinder.indexer.configuration.SplitterConfiguration;
 import com.github.pathfinder.indexer.service.BoundingBoxSplitter;

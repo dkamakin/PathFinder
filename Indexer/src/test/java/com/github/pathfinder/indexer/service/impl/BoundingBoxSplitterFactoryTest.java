@@ -1,6 +1,5 @@
 package com.github.pathfinder.indexer.service.impl;
 
-import com.github.pathfinder.indexer.client.osm.OsmClient;
 import com.github.pathfinder.indexer.configuration.SplitterConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,9 +14,6 @@ class BoundingBoxSplitterFactoryTest {
 
     @InjectMocks
     BoundingBoxSplitterFactory target;
-
-    @Mock
-    OsmClient osmClient;
 
     @Mock
     SplitterConfiguration configuration;

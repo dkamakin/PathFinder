@@ -1,4 +1,4 @@
-package com.github.pathfinder.core.tools;
+package com.github.pathfinder.core.data;
 
 public interface Distance extends Comparable<Distance> {
 

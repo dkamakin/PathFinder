@@ -1,7 +1,7 @@
 package com.github.pathfinder.indexer.service.impl;
 
+import com.github.pathfinder.core.data.BoundingBox;
 import com.github.pathfinder.core.data.Coordinate;
-import com.github.pathfinder.core.tools.impl.BoundingBox;
 import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
 import com.github.pathfinder.indexer.configuration.RegionTestTemplate;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;

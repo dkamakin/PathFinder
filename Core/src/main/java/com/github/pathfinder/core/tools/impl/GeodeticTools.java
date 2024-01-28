@@ -1,7 +1,9 @@
 package com.github.pathfinder.core.tools.impl;
 
+import com.github.pathfinder.core.data.BoundingBox;
 import com.github.pathfinder.core.data.Coordinate;
-import com.github.pathfinder.core.tools.Distance;
+import com.github.pathfinder.core.data.Distance;
+import com.github.pathfinder.core.data.MetersDistance;
 import org.geotools.referencing.GeodeticCalculator;
 
 public class GeodeticTools {

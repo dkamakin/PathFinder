@@ -1,6 +1,8 @@
 package com.github.pathfinder.core.tools.impl;
 
+import com.github.pathfinder.core.data.BoundingBox;
 import com.github.pathfinder.core.data.Coordinate;
+import com.github.pathfinder.core.data.MetersDistance;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;

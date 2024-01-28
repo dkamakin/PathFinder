@@ -1,8 +1,8 @@
 package com.github.pathfinder.indexer.service.impl;
 
+import com.github.pathfinder.core.data.BoundingBox;
 import com.github.pathfinder.core.data.Coordinate;
-import com.github.pathfinder.core.tools.impl.BoundingBox;
-import com.github.pathfinder.core.tools.impl.MetersDistance;
+import com.github.pathfinder.core.data.MetersDistance;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
 import com.github.pathfinder.indexer.configuration.osm.OsmClientConfiguration;
 import java.util.List;

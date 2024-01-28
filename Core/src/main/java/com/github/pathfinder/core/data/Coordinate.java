@@ -1,6 +1,8 @@
 package com.github.pathfinder.core.data;
 
+import com.github.pathfinder.core.tools.impl.DoubleTools;
 import com.google.common.base.Objects;
+import com.google.common.math.DoubleMath;
 import lombok.experimental.UtilityClass;
 
 public record Coordinate(double latitude, double longitude) {
@@ -26,8 +28,8 @@ public record Coordinate(double latitude, double longitude) {
         }
 
         Coordinate that = (Coordinate) o;
-        return Double.compare(latitude, that.latitude) == 0 &&
-                Double.compare(longitude, that.longitude) == 0;
+        return DoubleMath.fuzzyEquals(latitude, that.latitude, DoubleTools.EPSILON) &&
+                DoubleMath.fuzzyEquals(longitude, that.longitude, DoubleTools.EPSILON);
     }
 
     @Override

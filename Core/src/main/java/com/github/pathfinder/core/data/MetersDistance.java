@@ -1,6 +1,5 @@
-package com.github.pathfinder.core.tools.impl;
+package com.github.pathfinder.core.data;
 
-import com.github.pathfinder.core.tools.Distance;
 import org.jetbrains.annotations.NotNull;
 
 public record MetersDistance(double meters) implements Distance {

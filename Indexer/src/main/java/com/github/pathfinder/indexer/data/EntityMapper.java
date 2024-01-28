@@ -1,7 +1,7 @@
 package com.github.pathfinder.indexer.data;
 
+import com.github.pathfinder.core.data.BoundingBox;
 import com.github.pathfinder.core.data.Coordinate;
-import com.github.pathfinder.core.tools.impl.BoundingBox;
 import com.github.pathfinder.indexer.data.osm.OsmBox;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import com.github.pathfinder.indexer.database.entity.MaxBoxCoordinate;

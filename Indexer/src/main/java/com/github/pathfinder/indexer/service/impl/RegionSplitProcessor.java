@@ -1,7 +1,7 @@
 package com.github.pathfinder.indexer.service.impl;
 
 import com.github.pathfinder.core.aspect.Logged;
-import com.github.pathfinder.core.tools.impl.BoundingBox;
+import com.github.pathfinder.core.data.BoundingBox;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import com.github.pathfinder.indexer.database.entity.RegionEntity;
 import com.github.pathfinder.indexer.database.repository.RegionUpdaterRepository;
