@@ -12,6 +12,7 @@ public class OverpassQueryPartsBuilder {
     public static final  char   DELIMITER       = ';';
     private static final char   COMMA           = ',';
     private static final String OUT_BODY        = "out body";
+    private static final String OUT_COUNT       = "out count";
 
     private final StringBuilder query;
 
@@ -42,6 +43,10 @@ public class OverpassQueryPartsBuilder {
 
     public String asBody() {
         return append(CLOSING_BRACKET).append(DELIMITER).append(OUT_BODY).append(DELIMITER).toString();
+    }
+
+    public String asCount() {
+        return append(CLOSING_BRACKET).append(DELIMITER).append(OUT_COUNT).append(DELIMITER).toString();
     }
 
     private OverpassQueryPartsBuilder geometry(String geometry, OsmBox box) {

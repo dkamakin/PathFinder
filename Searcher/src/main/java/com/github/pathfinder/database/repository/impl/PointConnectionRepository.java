@@ -59,6 +59,10 @@ public class PointConnectionRepository implements IPointConnectionRepository {
             MATCH (chunk)-[:IN_CHUNK]->(second:Point)
                 WHERE first <> second AND
                 NOT (first)-[:CONNECTION]-(second) AND
+                (abs(chunk.min.x - first.location2d.x) <= $epsilon OR
+                abs(chunk.min.y - first.location2d.y) <= $epsilon OR
+                abs(chunk.max.x - first.location2d.x) <= $epsilon OR
+                abs(chunk.max.y - first.location2d.y) <= $epsilon) AND
                 point.distance(first.location3d, second.location3d) <= $accuracyMeters
             WITH first, second, point.distance(first.location3d, second.location3d) AS distanceMeters
             WITH first, second, distanceMeters,
@@ -95,7 +99,7 @@ public class PointConnectionRepository implements IPointConnectionRepository {
         return iterate(CONNECT_CHUNK_BOARDERS_QUERY, Map.of(
                 "chunkId", chunkId,
                 "accuracyMeters", accuracyMeters,
-                "epsilon", 0.003
+                "epsilon", 0.0015
         ));
     }
 

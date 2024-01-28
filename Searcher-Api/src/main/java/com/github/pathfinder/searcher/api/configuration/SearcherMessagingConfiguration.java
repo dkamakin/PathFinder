@@ -45,7 +45,10 @@ public class SearcherMessagingConfiguration {
         public static final String DEAD_LETTER_QUEUE_NAME                  = "${queue.searcher.deadLetter.name}";
         public static final String CONNECTIONS_QUEUE_NAME                  = "${queue.searcher.connections.name}";
         public static final String CONNECTIONS_CONSUMERS                   = "${queue.searcher.connections.consumers:2}";
+        public static final String SAVE_CHUNKS_QUEUE_NAME                  = "${queue.searcher.save-chunks.name}";
+        public static final String SAVE_CHUNKS_CONSUMERS                   = "${queue.searcher.save-chunks.consumers:15}";
         public static final String CONNECTIONS_LISTENER_QUEUE_FACTORY_NAME = "connectionsListenerFactory";
+        public static final String SAVE_CHUNKS_LISTENER_QUEUE_FACTORY_NAME = "saveChunksListenerFactory";
 
     }
 
@@ -62,6 +65,10 @@ public class SearcherMessagingConfiguration {
     private String connectionsQueueName;
 
     @NotBlank
+    @Value(Token.SAVE_CHUNKS_QUEUE_NAME)
+    private String saveChunksQueueName;
+
+    @NotBlank
     @Value("${exchange.searcher.deadLetter.name}")
     private String deadLetterExchangeName;
 
@@ -69,6 +76,11 @@ public class SearcherMessagingConfiguration {
     @Positive
     @Value(Token.CONNECTIONS_CONSUMERS)
     private Integer connectionsConsumers;
+
+    @NotNull
+    @Positive
+    @Value(Token.SAVE_CHUNKS_CONSUMERS)
+    private Integer saveChunksConsumers;
 
     @Bean
     public Queue searcherDeadLetterQueue() {
@@ -83,6 +95,19 @@ public class SearcherMessagingConfiguration {
     @Bean
     public Binding searcherDeadLetterBinding() {
         return BindingBuilder.bind(searcherDeadLetterQueue()).to(searcherDeadLetterExchange()).withQueueName();
+    }
+
+    @Bean
+    public Binding searcherSaveChunksBinding(@Qualifier("directExchange") DirectExchange directExchange) {
+        return BindingBuilder.bind(searcherSaveChunksQueue()).to(directExchange).withQueueName();
+    }
+
+    @Bean
+    public Queue searcherSaveChunksQueue() {
+        return QueueBuilder.durable(saveChunksQueueName)
+                .deadLetterExchange(searcherDeadLetterExchange().getName())
+                .deadLetterRoutingKey(searcherDeadLetterBinding().getRoutingKey())
+                .build();
     }
 
     @Bean
@@ -115,6 +140,12 @@ public class SearcherMessagingConfiguration {
         log.info("Building a connections listener factory with configuration: {}", this);
 
         return RabbitFactories.listenerFactory(connectionFactory, messageConverter, connectionsConsumers);
+    }
+
+    @Bean(Token.SAVE_CHUNKS_LISTENER_QUEUE_FACTORY_NAME)
+    public RabbitListenerContainerFactory<SimpleMessageListenerContainer> saveChunksQueueListenerFactory(
+            ConnectionFactory connectionFactory, CoreMessageConverter messageConverter) {
+        return RabbitFactories.listenerFactory(connectionFactory, messageConverter, saveChunksConsumers);
     }
 
 }

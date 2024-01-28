@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.function.Consumer;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,8 +24,8 @@ import lombok.experimental.UtilityClass;
 @Getter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = IndexBoxEntity.Token.TABLE)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class IndexBoxEntity {
 
     @UtilityClass
@@ -68,16 +69,6 @@ public class IndexBoxEntity {
     @NotNull
     @Embedded
     private MaxBoxCoordinate max;
-
-    public IndexBoxEntity(boolean saved, boolean connected, Instant saveRequestTimestamp,
-                          Instant connectionRequestTimestamp, MinBoxCoordinate min, MaxBoxCoordinate max) {
-        this.saved                      = saved;
-        this.connected                  = connected;
-        this.saveRequestTimestamp       = saveRequestTimestamp;
-        this.connectionRequestTimestamp = connectionRequestTimestamp;
-        this.min                        = min;
-        this.max                        = max;
-    }
 
     public static IndexBoxEntityBuilder builder() {
         return new IndexBoxEntityBuilder();

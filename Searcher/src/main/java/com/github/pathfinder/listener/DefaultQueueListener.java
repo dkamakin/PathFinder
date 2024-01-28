@@ -7,9 +7,7 @@ import com.github.pathfinder.messaging.listener.AmqpHandler;
 import com.github.pathfinder.messaging.listener.AmqpListener;
 import com.github.pathfinder.searcher.api.data.GetChunksMessage;
 import com.github.pathfinder.searcher.api.data.GetChunksResponse;
-import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
 import com.github.pathfinder.service.IChunkGetterService;
-import com.github.pathfinder.service.IChunkUpdaterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,14 +19,7 @@ import static com.github.pathfinder.searcher.api.configuration.SearcherMessaging
 @AmqpListener(queues = DEFAULT_QUEUE_NAME, errorHandler = RethrowingToSenderErrorHandler.NAME)
 public class DefaultQueueListener {
 
-    private final IChunkGetterService  chunkGetterService;
-    private final IChunkUpdaterService chunkUpdaterService;
-
-    @AmqpHandler
-    @Logged("request")
-    public void save(SavePointsMessage request) {
-        chunkUpdaterService.save(NodeMapper.MAPPER.chunkNode(request.box(), request.points()));
-    }
+    private final IChunkGetterService chunkGetterService;
 
     @AmqpHandler
     @Logged("request")

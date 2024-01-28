@@ -33,14 +33,14 @@ public class IndexBoxSearcherService implements BoxSearcherService {
 
     @Override
     @ReadTransactional
-    @Logged(ignoreReturnValue = false, value = {"saveDelay"})
+    @Logged(value = {"saveDelay"})
     public List<IndexBoxEntity> savable(Duration saveDelay) {
         return boxRepository.savable(saveDelay, dateTimeSupplier.now());
     }
 
     @Override
     @ReadTransactional
-    @Logged(ignoreReturnValue = false, value = {"connectDelay"})
+    @Logged(value = {"connectDelay"})
     public List<IndexBoxEntity> connectable(Duration connectDelay) {
         var notSaved = boxRepository.countNotSaved();
 
@@ -54,7 +54,7 @@ public class IndexBoxSearcherService implements BoxSearcherService {
 
     @Override
     @ReadTransactional
-    @Logged(ignoreReturnValue = false, value = "id")
+    @Logged(value = "id")
     public Optional<IndexBoxEntity> box(Integer id) {
         return boxRepository.findById(id);
     }

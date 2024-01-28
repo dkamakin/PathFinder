@@ -32,6 +32,11 @@ public class OverpassQueryBuilder implements OsmClient.IOverpassQueryBuilder {
         return builder.asBody();
     }
 
+    @Override
+    public String asCount() {
+        return builder.asCount();
+    }
+
     private OsmClient.IOverpassQueryBuilder performAndReturnThis(Runnable action) {
         action.run();
         return this;

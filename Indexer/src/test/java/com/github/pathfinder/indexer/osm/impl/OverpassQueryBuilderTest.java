@@ -38,6 +38,15 @@ class OverpassQueryBuilderTest {
     }
 
     @Test
+    void node_OutCount_BuildValidQuery() {
+        var nodeBox = new OsmBox(new OsmBox.OsmBoxCoordinate(1, 2), new OsmBox.OsmBoxCoordinate(3, 4));
+        var wayBox  = new OsmBox(new OsmBox.OsmBoxCoordinate(5, 6), new OsmBox.OsmBoxCoordinate(7, 8));
+
+        assertThat(new OverpassQueryBuilder().node(nodeBox).way(wayBox).asCount())
+                .isEqualTo("(node(1.0,2.0,3.0,4.0);way(5.0,6.0,7.0,8.0););out count;");
+    }
+
+    @Test
     void nodes_ListOfIdsProvided_buildValidQuery() {
         var ids = List.of(1L, 2L);
 

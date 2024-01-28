@@ -49,7 +49,7 @@ public class ActualizeService implements IActualizeService {
     }
 
     private void handleNotFound(IndexBoxEntity box) {
-        log.info("Box is not found: {}", box);
+        log.info("Box {} is not present in the Searcher", box.getId());
 
         if (box.isSaved()) {
             log.warn("Box was set as saved, but not found in the last try");
@@ -63,16 +63,14 @@ public class ActualizeService implements IActualizeService {
     }
 
     private void handle(IndexBoxEntity box, Chunk chunk) {
-        log.info("Actualize {}, chunk: {}", box, chunk);
-
         if (!box.isSaved()) {
-            log.info("Detected a change: the box was saved");
+            log.info("Detected a change: the box {} was saved", box.getId());
             box.setSaved(true);
         }
 
         if (box.isConnected() != chunk.connected()) {
-            log.info("Detected a change: the box connection status has changed, current: {}, actual: {}",
-                     box.isConnected(), chunk.connected());
+            log.info("Detected a change: the box {} connection status has changed, current: {}, actual: {}",
+                     box.getId(), box.isConnected(), chunk.connected());
             box.setConnected(chunk.connected());
         }
     }

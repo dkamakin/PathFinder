@@ -2,6 +2,7 @@ package com.github.pathfinder.indexer.service.impl;
 
 import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
+import com.github.pathfinder.indexer.configuration.IndexerStateBuilderConfiguration;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import com.github.pathfinder.indexer.service.BoxSearcherService;
 import com.github.pathfinder.searcher.api.SearcherApi;
@@ -20,6 +21,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @IndexerServiceDatabaseTest
+@IndexerStateBuilderConfiguration
 @Import({ActualizeService.class, IndexBoxSearcherService.class})
 class ActualizeServiceTest {
 

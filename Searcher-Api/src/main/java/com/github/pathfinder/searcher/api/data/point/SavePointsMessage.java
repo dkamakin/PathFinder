@@ -9,7 +9,7 @@ public record SavePointsMessage(IndexBox box, List<Point> points) {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("box", box)
+                .add("box", box.id())
                 .add("points", points.size())
                 .toString();
     }

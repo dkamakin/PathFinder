@@ -1,0 +1,51 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <!-- Sequences -->
+    <changeSet id="region-1"
+               author="Daniil Kamakin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="region_id_sequence"/>
+            </not>
+        </preConditions>
+
+        <createSequence incrementBy="1" sequenceName="region_id_sequence" startValue="1"/>
+    </changeSet>
+
+    <!-- Tables -->
+    <changeSet id="region-2"
+               author="Daniil Kamakin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="region"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="region">
+            <column name="ID" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="PK_REGION" nullable="false"/>
+            </column>
+
+            <column name="PROCESSED" type="BOOLEAN"/>
+            <column name="MIN_LATITUDE" type="DOUBLE"/>
+            <column name="MIN_LONGITUDE" type="DOUBLE"/>
+            <column name="MAX_LATITUDE" type="DOUBLE"/>
+            <column name="MAX_LONGITUDE" type="DOUBLE"/>
+        </createTable>
+
+        <insert tableName="region">
+            <column name="id">1</column>
+            <column name="PROCESSED">false</column>
+            <column name="MIN_LATITUDE">45.104546</column>
+            <column name="MIN_LONGITUDE">19.593430</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.963531</column>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

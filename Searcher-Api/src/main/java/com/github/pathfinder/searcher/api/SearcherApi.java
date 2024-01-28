@@ -24,7 +24,7 @@ public class SearcherApi {
     @Logged("request")
     public void save(SavePointsMessage request) {
         amqpRouter.route(messageBuilder.direct()
-                                 .routingKey(messagingConfiguration.getDefaultQueueName())
+                                 .routingKey(messagingConfiguration.getSaveChunksQueueName())
                                  .with(request)).send();
     }
 
@@ -35,7 +35,7 @@ public class SearcherApi {
                                  .with(request)).send();
     }
 
-    @Logged(ignoreReturnValue = false, value = "request")
+    @Logged(value = "request")
     public GetChunksResponse chunks(GetChunksMessage request) {
         return amqpRouter.route(messageBuilder.direct()
                                         .routingKey(messagingConfiguration.getDefaultQueueName())
