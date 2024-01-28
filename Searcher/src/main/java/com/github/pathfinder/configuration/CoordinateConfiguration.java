@@ -1,6 +1,6 @@
 package com.github.pathfinder.configuration;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -13,8 +13,12 @@ import org.springframework.validation.annotation.Validated;
 @Configuration
 public class CoordinateConfiguration {
 
-    @NotNull
-    @Value("${coordinate.distance.accuracyMeters:45.0}")
-    private Double distanceAccuracyMeters;
+    @Positive
+    @Value("${coordinate.distance.accuracyMeters:45}")
+    private double distanceAccuracyMeters;
+
+    @Positive
+    @Value("${coordinate.distance.pathAccuracyMeters:2000}")
+    private double pathAccuracyMeters;
 
 }

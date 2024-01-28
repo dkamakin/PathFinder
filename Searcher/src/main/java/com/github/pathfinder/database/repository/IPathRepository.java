@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface IPathRepository {
 
-    Optional<AStarResult> aStar(Coordinate source, Coordinate target);
+    Optional<AStarResult> aStar(Coordinate source, Coordinate target, double accuracyMeters);
 
 }

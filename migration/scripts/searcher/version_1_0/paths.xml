@@ -13,6 +13,14 @@
         <neo4j:cypher>
             CREATE POINT INDEX pointIndex3d IF NOT EXISTS FOR (point:Point) ON (point.location3d);
         </neo4j:cypher>
+
+        <neo4j:cypher>
+            CREATE INDEX connection_weight_index FOR ()-[connection:CONNECTION]-() ON (connection.weight)
+        </neo4j:cypher>
+
+        <neo4j:cypher>
+            CREATE INDEX connection_distance_meters_index FOR ()-[connection:CONNECTION]-() ON (connection.distanceMeters)
+        </neo4j:cypher>
     </changeSet>
 
     <changeSet id="chunk-indexes" author="Daniil Kamakin">
