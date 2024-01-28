@@ -7,6 +7,4 @@ public interface IPointConnectionRepository {
 
     Optional<IterateStatistics> connectChunkPoints(Integer chunkId, Double accuracyMeters);
 
-    Optional<IterateStatistics> connectChunkBoarders(Integer chunkId, Double accuracyMeters);
-
 }
