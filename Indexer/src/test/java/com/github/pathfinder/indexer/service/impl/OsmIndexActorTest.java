@@ -4,6 +4,7 @@ import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.indexer.configuration.IndexerRetryConfiguration;
 import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
+import com.github.pathfinder.indexer.configuration.IndexerStateBuilderConfiguration;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import com.github.pathfinder.indexer.service.BoxSearcherService;
 import com.github.pathfinder.indexer.service.osm.impl.OsmIndexTask;
@@ -25,6 +26,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @IndexerServiceDatabaseTest
+@IndexerStateBuilderConfiguration
 @Import({OsmIndexActor.class, IndexBoxSearcherService.class, IndexerRetryConfiguration.class})
 class OsmIndexActorTest {
 

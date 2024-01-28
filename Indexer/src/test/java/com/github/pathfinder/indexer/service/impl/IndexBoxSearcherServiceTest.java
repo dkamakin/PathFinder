@@ -3,6 +3,7 @@ package com.github.pathfinder.indexer.service.impl;
 import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
+import com.github.pathfinder.indexer.configuration.IndexerStateBuilderConfiguration;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import com.github.pathfinder.indexer.service.BoxSearcherService;
 import java.time.Duration;
@@ -15,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @IndexerServiceDatabaseTest
+@IndexerStateBuilderConfiguration
 @Import({IndexBoxSearcherService.class})
 class IndexBoxSearcherServiceTest {
 

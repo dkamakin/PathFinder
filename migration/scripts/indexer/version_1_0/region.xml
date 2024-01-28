@@ -6,40 +6,46 @@
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
 
     <!-- Sequences -->
-    <changeSet id="index-box-1"
+    <changeSet id="region-1"
                author="Daniil Kamakin">
         <preConditions onFail="MARK_RAN">
             <not>
-                <sequenceExists sequenceName="index_box_id_sequence"/>
+                <sequenceExists sequenceName="region_id_sequence"/>
             </not>
         </preConditions>
 
-        <createSequence incrementBy="1" sequenceName="index_box_id_sequence" startValue="1"/>
+        <createSequence incrementBy="1" sequenceName="region_id_sequence" startValue="1"/>
     </changeSet>
 
     <!-- Tables -->
-    <changeSet id="index-box-2"
+    <changeSet id="region-2"
                author="Daniil Kamakin">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="index_box"/>
+                <tableExists tableName="region"/>
             </not>
         </preConditions>
 
-        <createTable tableName="index_box">
+        <createTable tableName="region">
             <column name="ID" type="INTEGER">
-                <constraints primaryKey="true" primaryKeyName="PK_INDEX_BOX" nullable="false"/>
+                <constraints primaryKey="true" primaryKeyName="PK_REGION" nullable="false"/>
             </column>
-            <column name="SAVED" type="BOOLEAN"/>
-            <column name="CONNECTED" type="BOOLEAN"/>
-            <column name="SAVE_REQUEST_TIMESTAMP" type="TIMESTAMP"/>
-            <column name="CONNECTION_REQUEST_TIMESTAMP" type="TIMESTAMP"/>
+
+            <column name="PROCESSED" type="BOOLEAN"/>
             <column name="MIN_LATITUDE" type="DOUBLE"/>
             <column name="MIN_LONGITUDE" type="DOUBLE"/>
             <column name="MAX_LATITUDE" type="DOUBLE"/>
             <column name="MAX_LONGITUDE" type="DOUBLE"/>
         </createTable>
 
+        <insert tableName="region">
+            <column name="id">1</column>
+            <column name="PROCESSED">false</column>
+            <column name="MIN_LATITUDE">45.104546</column>
+            <column name="MIN_LONGITUDE">19.593430</column>
+            <column name="MAX_LATITUDE">45.314495</column>
+            <column name="MAX_LONGITUDE">19.963531</column>
+        </insert>
     </changeSet>
 
 </databaseChangeLog>

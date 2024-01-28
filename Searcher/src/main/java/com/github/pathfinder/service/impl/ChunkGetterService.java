@@ -15,9 +15,9 @@ public class ChunkGetterService implements IChunkGetterService {
 
     private final ChunkGetterRepository getterRepository;
 
+    @Logged
     @Override
     @ReadTransactional
-    @Logged(value = "ids", ignoreReturnValue = false)
     public List<SimpleChunk> simple(List<Integer> ids) {
         return getterRepository.findAllByIdIn(ids);
     }

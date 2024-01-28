@@ -3,6 +3,7 @@ package com.github.pathfinder.configuration;
 import com.github.pathfinder.listener.ConnectionsQueueListener;
 import com.github.pathfinder.listener.DeadLetterListener;
 import com.github.pathfinder.listener.DefaultQueueListener;
+import com.github.pathfinder.listener.SaveChunksQueueListener;
 import com.github.pathfinder.messaging.RabbitIntegrationTest;
 import com.github.pathfinder.messaging.error.RethrowingToSenderErrorHandler;
 import com.github.pathfinder.searcher.api.configuration.SearcherApiConfiguration;
@@ -22,6 +23,7 @@ import org.springframework.context.annotation.Import;
         SearcherAmqpTestConfiguration.class,
         DefaultQueueListener.class,
         ConnectionsQueueListener.class,
+        SaveChunksQueueListener.class,
         RethrowingToSenderErrorHandler.class,
         DeadLetterListener.class})
 public @interface SearcherAmqpTest {

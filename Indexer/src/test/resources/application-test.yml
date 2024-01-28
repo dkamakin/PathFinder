@@ -34,6 +34,10 @@ elevation:
   client:
     uri: "https://api.open-elevation.com/api/v1/lookup"
     batchSize: 20000
+splitter:
+  delay: PT5M
+  elementsLimit: 5000
+  additionalSpaceMeters: 50
 osm:
   client:
     overpass:

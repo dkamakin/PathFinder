@@ -11,6 +11,8 @@ public interface OsmClient {
 
     List<OsmElement> elements(OsmBox box);
 
+    long countElements(OsmBox box);
+
     interface IOverpassQueryBuilder {
 
         IOverpassQueryBuilder nodes(List<Long> ids);
@@ -20,6 +22,8 @@ public interface OsmClient {
         IOverpassQueryBuilder way(OsmBox box);
 
         String asBody();
+
+        String asCount();
 
     }
 

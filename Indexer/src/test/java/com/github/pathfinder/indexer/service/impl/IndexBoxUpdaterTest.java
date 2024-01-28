@@ -1,6 +1,7 @@
 package com.github.pathfinder.indexer.service.impl;
 
 import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
+import com.github.pathfinder.indexer.configuration.IndexerStateBuilderConfiguration;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import java.util.function.Predicate;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Import;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @IndexerServiceDatabaseTest
+@IndexerStateBuilderConfiguration
 @Import({IndexBoxSearcherService.class})
 class IndexBoxUpdaterTest {
 
