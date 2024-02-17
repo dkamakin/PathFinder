@@ -1,11 +1,11 @@
 package com.github.pathfinder.database.repository.impl;
 
+import java.util.Map;
+import java.util.Optional;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.data.connection.IterateStatistics;
 import com.github.pathfinder.database.mapper.ValueMapper;
 import com.github.pathfinder.database.repository.IPointConnectionRepository;
-import java.util.Map;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.neo4j.core.Neo4jClient;
 import org.springframework.stereotype.Component;
@@ -37,16 +37,16 @@ public class PointConnectionRepository implements IPointConnectionRepository {
                 ((second.passabilityCoefficient + first.passabilityCoefficient) / 2) * distanceMeters AS weight
             CREATE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)',
             {
-            batchSize:  1,
+            batchSize:   1,
             parallel:    true,
             concurrency: 2,
             retries:     10,
             params: {
-            chunkId: $chunkId,
+            chunkId:        $chunkId,
             accuracyMeters: $accuracyMeters,
-            epsilon: $epsilon
+            epsilon:        $epsilon
             }})
-            YIELD batches, total, committedOperations, failedOperations, retries, batch, operations, timeTaken
+            YIELD  batches, total, committedOperations, failedOperations, retries, batch, operations, timeTaken
             RETURN batches, total, committedOperations, failedOperations, retries, batch, operations, timeTaken
             """;
 

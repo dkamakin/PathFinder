@@ -1,5 +1,10 @@
 package com.github.pathfinder.indexer.service.impl;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import com.github.pathfinder.indexer.service.BoxSearcherService;
@@ -7,11 +12,6 @@ import com.github.pathfinder.indexer.service.IActualizeService;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.Chunk;
 import com.github.pathfinder.searcher.api.data.GetChunksMessage;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -49,7 +49,7 @@ public class ActualizeService implements IActualizeService {
     }
 
     private void handleNotFound(IndexBoxEntity box) {
-        log.info("Box {} is not present in the Searcher", box.getId());
+        log.info("Box {} is not present in the response", box.getId());
 
         if (box.isSaved()) {
             log.warn("Box was set as saved, but not found in the last try");

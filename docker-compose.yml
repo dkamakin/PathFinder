@@ -80,6 +80,7 @@ services:
       NEO4J_AUTH: ${NEO4J_USERNAME}/${NEO4J_PASSWORD}
       NEO4J_server_default__listen__address: neo4j
       NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_db_memory_pagecache_warmup_enable: true
       NEO4J_dbms_security_procedures_unrestricted: apoc.*
       NEO4J_server_default__advertised__address: neo4j
       NEO4J_server_bolt_advertised__address: :${NEO4J_PORT}
