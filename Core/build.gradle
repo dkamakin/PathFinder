@@ -1,5 +1,5 @@
 dependencies {
-    def geoToolsVersion = "29.2"
+    def geoToolsVersion = "30.2"
 
     implementation("org.springframework.data:spring-data-jpa:$springBootVersion")
     implementation("org.geotools:gt-main:$geoToolsVersion")
