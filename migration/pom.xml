@@ -11,7 +11,7 @@
 
     <properties>
         <liquibase.version>4.25.1</liquibase.version>
-        <postgresql.version>42.6.0</postgresql.version>
+        <postgresql.version>42.7.2</postgresql.version>
     </properties>
 
     <dependencies>
