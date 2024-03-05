@@ -32,7 +32,7 @@ subprojects {
     def lombokVersion = "1.18.30"
     def assertJVersion = "3.25.3"
     def h2Version = "2.2.224"
-    def postgresqlVersion = "42.7.1"
+    def postgresqlVersion = "42.7.2"
     def guavaVersion = "33.0.0-jre"
     def springRetryVersion = "2.0.5"
     def springActuatorVersion = "3.2.3"
