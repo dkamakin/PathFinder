@@ -5,7 +5,7 @@ on:
     inputs:
       tagName:
         description: Images tag name
-        required: true
+        required: false
         type: string
   push:
     branches:
