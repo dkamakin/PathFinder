@@ -1,12 +1,18 @@
 name: Build
 
 on:
+  workflow_dispatch:
+    inputs:
+      tagName:
+        description: Images tag name
+        required: true
+        type: string
   push:
     branches:
       - main
 
 env:
-  TAG_NAME: ${{ $TAG_NAME || github.head_ref || github.ref_name }}
+  TAG_NAME: ${{ inputs.tagName || github.head_ref || github.ref_name }}
 
 jobs:
   build-push:
