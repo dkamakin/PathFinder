@@ -20,10 +20,25 @@ jobs:
     steps:
       - name: Info step
         run: echo A current tag name is $TAG_NAME
+
       - name: Checkout
         uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 0
+
+      - uses: actions/setup-java@v4.1.0
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@699bb18358f12c5b78b37bb0111d3a0e2276e0e2
+
+      - name: Execute build
+        run: ./gradlew build -x test
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
