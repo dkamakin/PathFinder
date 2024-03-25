@@ -42,4 +42,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: dkamakin/path-finder-configuration:$TAG_NAME
+          tags: dkamakin/path-finder-configuration:${{ env.TAG_NAME }}
