@@ -40,6 +40,6 @@ jobs:
       - name: Configuration build and push
         uses: docker/build-push-action@v5
         with:
-          context: /Configuration
+          context: ./Configuration
           push: true
           tags: dkamakin/path-finder-configuration:${{ env.TAG_NAME }}
