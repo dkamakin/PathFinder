@@ -55,7 +55,7 @@ jobs:
         with:
           context: ./Configuration
           push: true
-          platforms: $SUPPORTED_PLATFORMS
+          platforms: ${{ SUPPORTED_PLATFORMS }}
           tags: dkamakin/path-finder-configuration:${{ env.TAG_NAME }}
 
       - name: Indexer build and push
@@ -63,7 +63,7 @@ jobs:
         with:
           context: ./Indexer
           push: true
-          platforms: $SUPPORTED_PLATFORMS
+          platforms: ${{ SUPPORTED_PLATFORMS }}
           tags: dkamakin/path-finder-indexer:${{ env.TAG_NAME }}
 
       - name: Searcher build and push
@@ -71,7 +71,7 @@ jobs:
         with:
           context: ./Searcher
           push: true
-          platforms: $SUPPORTED_PLATFORMS
+          platforms: ${{ SUPPORTED_PLATFORMS }}
           tags: dkamakin/path-finder-searcher:${{ env.TAG_NAME }}
 
       - name: Security build and push
@@ -79,13 +79,13 @@ jobs:
         with:
           context: ./Security
           push: true
-          platforms: $SUPPORTED_PLATFORMS
+          platforms: ${{ SUPPORTED_PLATFORMS }}
           tags: dkamakin/path-finder-security:${{ env.TAG_NAME }}
 
       - name: Migration build and push
         uses: docker/build-push-action@v5
         with:
           context: ./migration
-          platforms: $SUPPORTED_PLATFORMS
+          platforms: ${{ SUPPORTED_PLATFORMS }}
           push: true
           tags: dkamakin/path-finder-migration:${{ env.TAG_NAME }}
