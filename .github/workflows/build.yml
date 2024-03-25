@@ -1,0 +1,45 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      tagName:
+        description: A tag name to use when publishing images
+        required: false
+        type: string
+  push:
+    branches:
+      - main
+
+env:
+  TAG_NAME: ${{ inputs.tagName || github.head_ref || github.ref_name }}
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Info step
+        run: echo A current tag name is $TAG_NAME
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 0
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Configuration build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: dkamakin/path-finder-configuration:$TAG_NAME
