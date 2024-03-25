@@ -8,6 +8,8 @@ on:
         required: true
         type: string
   push:
+    branches:
+      - main
 
 env:
   TAG_NAME: ${{ inputs.tagName || github.head_ref || github.ref_name }}
