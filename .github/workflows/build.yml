@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       tagName:
-        description: Images tag name
+        description: A tag name to use when publishing images
         required: false
         type: string
   push:
@@ -18,6 +18,8 @@ jobs:
   build-push:
     runs-on: ubuntu-latest
     steps:
+      - name: Info step
+        run: echo A current tag name is $TAG_NAME
       - name: Checkout
         uses: actions/checkout@v4.1.1
         with:
