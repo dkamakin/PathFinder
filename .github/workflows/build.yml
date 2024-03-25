@@ -83,6 +83,6 @@ jobs:
       - name: Migration build and push
         uses: docker/build-push-action@v5
         with:
-          context: ./Migration
+          context: ./migration
           push: true
           tags: dkamakin/path-finder-migration:${{ env.TAG_NAME }}
