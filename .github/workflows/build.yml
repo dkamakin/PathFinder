@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       tagName:
-        description: A tag name to use when publishing images
+        description: A tag name to use when publishing images. By default a branch name is taken.
         required: false
         type: string
   push:
@@ -13,17 +13,30 @@ on:
 
 env:
   TAG_NAME: ${{ inputs.tagName || github.head_ref || github.ref_name }}
+  SUPPORTED_PLATFORMS: linux/amd64,linux/arm64/v8
 
 jobs:
   build-push:
     runs-on: ubuntu-latest
     steps:
-      - name: Info step
-        run: echo A current tag name is $TAG_NAME
       - name: Checkout
         uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 0
+
+      - uses: actions/setup-java@v4.1.0
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@699bb18358f12c5b78b37bb0111d3a0e2276e0e2
+
+      - name: Execute gradle build
+        run: ./gradlew build -x test
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -40,6 +53,39 @@ jobs:
       - name: Configuration build and push
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./Configuration
           push: true
-          tags: dkamakin/path-finder-configuration:$TAG_NAME
+          platforms: ${{ env.SUPPORTED_PLATFORMS }}
+          tags: dkamakin/path-finder-configuration:${{ env.TAG_NAME }}
+
+      - name: Indexer build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Indexer
+          push: true
+          platforms: ${{ env.SUPPORTED_PLATFORMS }}
+          tags: dkamakin/path-finder-indexer:${{ env.TAG_NAME }}
+
+      - name: Searcher build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Searcher
+          push: true
+          platforms: ${{ env.SUPPORTED_PLATFORMS }}
+          tags: dkamakin/path-finder-searcher:${{ env.TAG_NAME }}
+
+      - name: Security build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Security
+          push: true
+          platforms: ${{ env.SUPPORTED_PLATFORMS }}
+          tags: dkamakin/path-finder-security:${{ env.TAG_NAME }}
+
+      - name: Migration build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./migration
+          platforms: ${{ env.SUPPORTED_PLATFORMS }}
+          push: true
+          tags: dkamakin/path-finder-migration:${{ env.TAG_NAME }}
