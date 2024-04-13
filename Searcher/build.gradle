@@ -29,7 +29,6 @@ jib {
     }
 
     to {
-        image = "$dockerImageRegistry/path-finder-searcher"
-        tags = [dockerImageTag]
+        image = "$dockerImageRegistry/path-finder-searcher:$dockerImageTag"
     }
 }
