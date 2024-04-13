@@ -1,5 +1,3 @@
-ext.set("mainClassName", 'com.github.pathfinder.indexer.IndexerApplication')
-
 dependencies {
     def westnordostVersion = "3.0"
 
@@ -14,4 +12,14 @@ dependencies {
 
     testImplementation(project(':Core').sourceSets.test.output)
     testImplementation(project(':Messaging-Test').sourceSets.test.output)
+}
+
+jib {
+    from {
+        image "$jibBaseImage"
+    }
+
+    to {
+        image = 'path-finder-indexer'
+    }
 }

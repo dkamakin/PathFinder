@@ -1,5 +1,3 @@
-ext.set("mainClassName", 'com.github.pathfinder.security.SecurityApplication')
-
 dependencies {
     def jwtVersion = "4.4.0"
 
@@ -17,4 +15,14 @@ dependencies {
 
     testImplementation(project(':Core').sourceSets.test.output)
     testImplementation(project(':Messaging-Test').sourceSets.test.output)
+}
+
+jib {
+    from {
+        image "$jibBaseImage"
+    }
+
+    to {
+        image = 'path-finder-security'
+    }
 }
