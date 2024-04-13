@@ -1,3 +1,7 @@
+plugins {
+    id "com.google.cloud.tools.jib" version "$jibVersion"
+}
+
 dependencies {
     def testcontainersSpringVersion = "3.1.5"
 

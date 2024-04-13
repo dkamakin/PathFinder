@@ -1,3 +1,7 @@
+plugins {
+    id "com.google.cloud.tools.jib" version "$jibVersion"
+}
+
 dependencies {
     def springMonitorVersion = "4.1.0"
 
