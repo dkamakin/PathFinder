@@ -21,6 +21,7 @@ dependencies {
 jib {
     from {
         image "$jibBaseImage"
+        platforms(jibPlatforms)
     }
 
     to {
