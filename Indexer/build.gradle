@@ -20,7 +20,7 @@ jib {
     }
 
     to {
-        image = 'path-finder-indexer'
+        image = "$dockerImageRegistry/path-finder-indexer"
         tags = [dockerImageTag]
     }
 }
