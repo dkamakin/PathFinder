@@ -1,3 +1,17 @@
 spring:
   profiles:
     active: messaging
+  cloud:
+    config:
+      server:
+        git:
+          private-key: ${CONFIG_KEY}
+          clone-on-start: true
+          ignore-local-ssh-settings: true
+          passphrase: ${PASSPHRASE}
+          refresh-rate: 60
+          uri: ${GIT_URI}
+  application:
+    name: configuration
+server:
+  port: ${PORT}
