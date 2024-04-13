@@ -4,15 +4,14 @@ on:
   workflow_dispatch:
     inputs:
       tagName:
-        description: A tag name to use when publishing images. By default a branch name is taken.
-        required: false
+        description: A tag name to use when publishing images.
+        required: true
         type: string
-  push:
-    branches:
-      - main
+  release:
+    types: published
 
 env:
-  TAG_NAME: ${{ inputs.tagName || github.head_ref || github.ref_name }}
+  TAG_NAME: ${{ inputs.tagName || github.ref_name }}
 
 jobs:
   build-push:
