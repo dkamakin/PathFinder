@@ -37,5 +37,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push images
+      - name: Build and push Java images
         run: ./gradlew jib
+
+      - name: Migration build and push
+        uses: dkamakin/pathfinder-docker-publish-action@v1
+        with:
+          context: ./migration
+          tags: dkamakin/path-finder-migration:${{ env.TAG_NAME }}
