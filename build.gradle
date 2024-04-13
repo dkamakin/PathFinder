@@ -1,6 +1,7 @@
 plugins {
     id "io.spring.dependency-management" version "1.1.4" apply false
     id "org.springframework.boot" version "3.2.2" apply false
+    id 'com.google.cloud.tools.jib' version '3.4.2' apply false
     id "java"
     id "java-test-fixtures"
     id "java-library"
@@ -32,11 +33,9 @@ subprojects {
     def apacheCommonsVersion = "3.14.0"
     def mapStructVersion = "1.5.5.Final"
     def springSecurityTestVersion = "6.2.2"
-    def apacheCompressVersion = "1.21"
 
     ext {
         jibBaseImage = "eclipse-temurin:21.0.1_12-jre-jammy"
-        jibVersion = "3.4.2"
 
         testcontainersVersion = "1.19.4"
         springCloudConfigVersion = "4.1.0"
@@ -56,7 +55,6 @@ subprojects {
         implementation("org.springframework.retry:spring-retry:$springRetryVersion")
         implementation("org.apache.commons:commons-lang3:$apacheCommonsVersion")
         implementation("org.springframework.boot:spring-boot-starter-actuator:$springActuatorVersion")
-        implementation("org.apache.commons:commons-compress:$apacheCompressVersion")
         api("org.springframework.cloud:spring-cloud-starter-bus-amqp:$springCloudBusVersion")
 
         implementation("org.postgresql:postgresql:$postgresqlVersion")
