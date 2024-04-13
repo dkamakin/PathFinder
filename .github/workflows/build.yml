@@ -38,4 +38,4 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push images
-        run: ./gradlew jib -Djib.to.tags=${{ inputs.TAG_NAME }}
+        run: ./gradlew jib

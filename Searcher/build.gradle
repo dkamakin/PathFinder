@@ -25,5 +25,6 @@ jib {
 
     to {
         image = 'path-finder-searcher'
+        tags = [dockerImageTag]
     }
 }

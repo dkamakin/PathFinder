@@ -24,5 +24,6 @@ jib {
 
     to {
         image = 'path-finder-security'
+        tags = [dockerImageTag]
     }
 }
