@@ -55,7 +55,7 @@ subprojects {
         springAmqpVersion = "3.1.1"
 
         dockerImageTag = System.getenv("TAG_NAME")
-        dockerImageRegistry = "registry.hub.docker.com/dkamakin"
+        dockerImageRegistry = System.getenv("REGISTRY_URL")
     }
 
     dependencies {

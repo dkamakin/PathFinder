@@ -12,6 +12,7 @@ on:
 
 env:
   TAG_NAME: ${{ inputs.tagName || github.ref_name || github.head_ref }}
+  REGISTRY_URL: registry.hub.docker.com/dkamakin
 
 jobs:
   build-push:
