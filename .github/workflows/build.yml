@@ -5,7 +5,7 @@ on:
     inputs:
       tagName:
         description: A tag name to use when publishing images. By default a branch name is taken.
-        required: true
+        required: false
         type: string
   release:
     types: published
