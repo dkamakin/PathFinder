@@ -12,4 +12,4 @@ RUN mkdir -p /root/.ssh \
     && apt-get -yqq install ssh \
     && ssh-keyscan github.com > /root/.ssh/known_hosts \
     && apt-get clean
-ENTRYPOINT java -jar "$JAR_FILE_ENV"
+ENTRYPOINT java -jar -Dspring.profiles.active=messaging "$JAR_FILE_ENV"
