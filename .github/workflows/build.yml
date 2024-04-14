@@ -44,7 +44,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push Java images
+      - name: Wrap the services into Docker
         run: ./gradlew jib
 
       - name: Migration build and push

@@ -1,4 +1,4 @@
-package com.github.pathfinder.messaging;
+package com.github.pathfinder.messaging.test;
 
 import lombok.experimental.UtilityClass;
 
