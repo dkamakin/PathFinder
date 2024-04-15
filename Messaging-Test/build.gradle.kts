@@ -2,10 +2,9 @@ dependencies {
     implementation(project(":Messaging"))
     implementation(project(":Core"))
 
-    implementation("org.testcontainers:testcontainers")
-    implementation("org.testcontainers:rabbitmq")
-    implementation("org.testcontainers:junit-jupiter")
-    implementation("org.springframework.boot:spring-boot-starter-test")
+    implementation(libs.testcontainers.rabbitmq)
+    implementation(libs.testcontainers.junit)
+    implementation(libs.spring.test)
 }
 
 tasks.bootJar {

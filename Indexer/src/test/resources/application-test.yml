@@ -1,4 +1,7 @@
 spring:
+  test:
+    database:
+      replace: none
   cloud:
     config:
       enabled: false

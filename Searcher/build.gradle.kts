@@ -1,21 +1,25 @@
 plugins {
-    id("com.google.cloud.tools.jib")
+    alias(libs.plugins.jib)
 }
 
 dependencies {
-    api(project(":Security-Api"))
-    api(project(":Searcher-Api"))
+    implementation(project(":Security-Api"))
+    implementation(project(":Searcher-Api"))
     implementation(project(":Messaging"))
+    implementation(project(":Core"))
+    implementation(project(":Core-Database"))
+    implementation(project(":Core-Web"))
 
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui")
-    implementation("org.springframework.boot:spring-boot-starter-data-neo4j")
-    implementation("org.springframework.cloud:spring-cloud-starter-config")
+    implementation(libs.spring.security)
+    implementation(libs.spring.doc)
+    implementation(libs.spring.neo4j)
+    implementation(libs.spring.web)
 
-    testImplementation("com.playtika.testcontainers:testcontainers-spring-boot")
-    testImplementation("com.playtika.testcontainers:embedded-neo4j")
-
-    testImplementation("org.testcontainers:rabbitmq")
+    testImplementation(libs.spring.test)
+    testImplementation(libs.testcontainers.spring)
+    testImplementation(libs.testcontainers.neo4j)
+    testImplementation(libs.testcontainers.rabbitmq)
+    testImplementation(libs.spring.security.test)
 
     testImplementation(testFixtures(project(":Messaging-Test")))
 }

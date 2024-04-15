@@ -7,11 +7,9 @@ import com.github.pathfinder.security.api.configuration.SecurityMessagingConfigu
 import com.github.pathfinder.security.api.data.SecurityApiMapper;
 import com.github.pathfinder.security.api.data.UserInfo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 @Component
-@RefreshScope
 @RequiredArgsConstructor
 public class SecurityApi {
 

@@ -23,7 +23,6 @@ import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.SmartMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +33,6 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 @Data
 @Validated
 @EnableRabbit
-@RefreshScope
 @Configuration
 @ComponentScan("com.github.pathfinder.messaging")
 public class MessagingConfiguration implements RabbitListenerConfigurer {

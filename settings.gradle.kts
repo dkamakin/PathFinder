@@ -12,6 +12,8 @@ rootProject.name = "PathFinder"
 include(
     ":Core",
     ":Core-Test",
+    ":Core-Database",
+    ":Database-Test",
     ":Searcher",
     ":Indexer",
     ":Security",

@@ -1,19 +1,26 @@
 plugins {
-    id("com.google.cloud.tools.jib")
+    alias(libs.plugins.jib)
 }
 
 dependencies {
-    api(project(":Core"))
-    api(project(":Searcher-Api"))
+    implementation(project(":Core"))
+    implementation(project(":Core-Database"))
+    implementation(project(":Searcher-Api"))
 
-    implementation("de.westnordost:osmapi-core")
-    implementation("de.westnordost:osmapi-map")
-    implementation("de.westnordost:osmapi-overpass")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.cloud:spring-cloud-starter-config")
+    implementation(libs.osmapi.core)
+    implementation(libs.osmapi.map)
+    implementation(libs.osmapi.overpass)
+    implementation(libs.spring.jpa)
+    implementation(libs.spring.cloud.config.client)
+    implementation(libs.spring.validation)
+    implementation(libs.postgresql)
+
+    testImplementation(libs.spring.test)
+    testImplementation(libs.spring.security.test)
 
     testImplementation(testFixtures(project(":Messaging-Test")))
     testImplementation(testFixtures(project(":Core-Test")))
+    testImplementation(testFixtures(project(":Database-Test")))
 }
 
 jib {

@@ -1,9 +1,12 @@
 dependencies {
-    api(project(":Messaging"))
-    api(project(":Core-Web"))
+    implementation(project(":Messaging"))
+    implementation(project(":Core-Web"))
+    implementation(project(":Core"))
 
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui")
+    implementation(libs.spring.security)
+    implementation(libs.spring.doc)
+    implementation(libs.spring.amqp)
+    implementation(libs.spring.web)
 
     testImplementation(testFixtures(project(":Core-Test")))
 }

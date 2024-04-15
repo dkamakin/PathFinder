@@ -1,7 +1,8 @@
 dependencies {
-    api(project(":Core"))
+    implementation(project(":Core"))
 
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui")
+    implementation(libs.spring.doc)
+    implementation(libs.spring.web)
 }
 
 tasks.bootJar {

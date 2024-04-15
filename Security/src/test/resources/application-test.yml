@@ -5,6 +5,9 @@ exchange:
   direct:
     name: pathfinder.exchange.direct
 spring:
+  test:
+    database:
+      replace: none
   cloud:
     config:
       enabled: false
