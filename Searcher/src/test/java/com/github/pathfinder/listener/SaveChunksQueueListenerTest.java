@@ -1,25 +1,25 @@
 package com.github.pathfinder.listener;
 
+import java.util.List;
+import java.util.UUID;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
 import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.SearcherAmqpTest;
 import com.github.pathfinder.core.data.Coordinate;
 import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.node.PointNode;
-import com.github.pathfinder.messaging.MessagingTestConstant;
+import com.github.pathfinder.messaging.test.MessagingTestConstant;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.IndexBox;
 import com.github.pathfinder.searcher.api.data.point.Point;
 import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
 import com.github.pathfinder.service.IChunkUpdaterService;
-import java.util.List;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.timeout;
-import static org.mockito.Mockito.verify;
 
 @SearcherAmqpTest
 class SaveChunksQueueListenerTest {

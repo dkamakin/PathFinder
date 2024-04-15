@@ -4,26 +4,33 @@ on:
   workflow_dispatch:
     inputs:
       tagName:
-        description: A tag name to use when publishing images
+        description: A tag name to use when publishing images. By default a branch name is taken.
         required: false
         type: string
-  push:
-    branches:
-      - main
+  release:
+    types: published
 
 env:
-  TAG_NAME: ${{ inputs.tagName || github.head_ref || github.ref_name }}
+  TAG_NAME: ${{ inputs.tagName || github.ref_name || github.head_ref }}
+  REGISTRY_URL: registry.hub.docker.com/dkamakin
 
 jobs:
   build-push:
     runs-on: ubuntu-latest
     steps:
-      - name: Info step
-        run: echo A current tag name is $TAG_NAME
       - name: Checkout
         uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 0
+
+      - name: Set up Java
+        uses: actions/setup-java@v4.1.0
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@699bb18358f12c5b78b37bb0111d3a0e2276e0e2
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -37,9 +44,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Configuration build and push
-        uses: docker/build-push-action@v5
+      - name: Wrap the services into Docker
+        run: ./gradlew jib
+
+      - name: Migration build and push
+        uses: dkamakin/pathfinder-docker-publish-action@v1
         with:
-          context: .
-          push: true
-          tags: dkamakin/path-finder-configuration:$TAG_NAME
+          context: ./migration
+          tags: dkamakin/path-finder-migration:${{ env.TAG_NAME }}

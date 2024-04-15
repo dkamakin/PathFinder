@@ -1,8 +1,4 @@
 spring:
-  rabbitmq:
-    password: ${RABBITMQ_PASSWORD}
-    username: ${RABBITMQ_USERNAME}
-    addresses: ${RABBITMQ_ADDRESS}
   cloud:
     config:
       server:

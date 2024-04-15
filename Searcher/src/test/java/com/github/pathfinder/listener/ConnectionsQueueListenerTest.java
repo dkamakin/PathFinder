@@ -1,7 +1,11 @@
 package com.github.pathfinder.listener;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
 import com.github.pathfinder.configuration.SearcherAmqpTest;
-import com.github.pathfinder.messaging.MessagingTestConstant;
+import com.github.pathfinder.messaging.test.MessagingTestConstant;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
 import com.github.pathfinder.service.IPointConnector;
@@ -10,10 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.timeout;
-import static org.mockito.Mockito.verify;
 
 @SearcherAmqpTest
 class ConnectionsQueueListenerTest {

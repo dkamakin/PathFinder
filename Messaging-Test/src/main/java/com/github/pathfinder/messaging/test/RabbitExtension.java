@@ -1,4 +1,4 @@
-package com.github.pathfinder.messaging;
+package com.github.pathfinder.messaging.test;
 
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
