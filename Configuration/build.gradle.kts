@@ -1,5 +1,5 @@
 plugins {
-    id("com.google.cloud.tools.jib")
+    alias(libs.plugins.jib)
 }
 
 dependencies {
