@@ -8,6 +8,8 @@ dependencies {
     implementation(libs.spring.amqp)
     implementation(libs.spring.web)
 
+    testImplementation(libs.spring.test)
+
     testImplementation(testFixtures(project(":Core-Test")))
 }
 
