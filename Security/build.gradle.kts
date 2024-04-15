@@ -1,21 +1,28 @@
 plugins {
-    id("com.google.cloud.tools.jib")
+    alias(libs.plugins.jib)
 }
 dependencies {
     implementation(project(":Security-Api"))
     implementation(project(":Messaging"))
+    implementation(project(":Core"))
+    implementation(project(":Core-Database"))
+    implementation(project(":Core-Web"))
 
-    implementation("com.auth0:java-jwt")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui")
-    implementation("org.springframework.amqp:spring-amqp")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.cloud:spring-cloud-starter-config")
+    implementation(libs.jwt)
+    implementation(libs.spring.doc)
+    implementation(libs.spring.amqp)
+    implementation(libs.spring.jpa)
+    implementation(libs.spring.security)
+    implementation(libs.spring.cloud.config.client)
+    implementation(libs.postgresql)
 
-    testImplementation("org.testcontainers:rabbitmq")
+    testImplementation(libs.testcontainers.rabbitmq)
+    testImplementation(libs.spring.test)
+    testImplementation(libs.spring.security.test)
 
     testImplementation(testFixtures(project(":Messaging-Test")))
     testImplementation(testFixtures(project(":Core-Test")))
+    testImplementation(testFixtures(project(":Database-Test")))
 }
 
 jib {

@@ -1,5 +1,13 @@
 package com.github.pathfinder.security.api.filter;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Stream;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 import com.github.pathfinder.core.configuration.CoreConfiguration;
 import com.github.pathfinder.core.tools.impl.JsonTools;
 import com.github.pathfinder.core.web.tools.FilterResponseWriter;
@@ -12,9 +20,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Stream;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,11 +32,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(classes = {
@@ -59,6 +60,11 @@ class SecurityTokenFilterTest {
 
     @Mock
     FilterChain filterChain;
+
+    @BeforeEach
+    void setUp() {
+        SecurityContextHolder.clearContext();
+    }
 
     void whenNeedToGetToken(String expected) {
         when(request.getHeader(SecurityHeaders.AUTHORIZATION_TOKEN_HEADER)).thenReturn(expected);

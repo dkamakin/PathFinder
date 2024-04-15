@@ -11,14 +11,11 @@ import com.github.pathfinder.listener.SaveChunksQueueListener;
 import com.github.pathfinder.messaging.error.RethrowingToSenderErrorHandler;
 import com.github.pathfinder.messaging.test.RabbitIntegrationTest;
 import com.github.pathfinder.searcher.api.configuration.SearcherApiConfiguration;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
-import org.springframework.cloud.autoconfigure.RefreshAutoConfiguration;
 import org.springframework.context.annotation.Import;
 
 @RabbitIntegrationTest
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@ImportAutoConfiguration(RefreshAutoConfiguration.class)
 @Import({SearcherApiConfiguration.class,
         SearcherAmqpTestConfiguration.class,
         DefaultQueueListener.class,

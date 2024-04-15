@@ -1,9 +1,10 @@
 dependencies {
     implementation(project(":Core"))
 
-    implementation("org.springframework.boot:spring-boot-starter-json")
-    implementation("org.springframework.amqp:spring-rabbit")
-    implementation("org.springframework.amqp:spring-amqp")
+    implementation(libs.spring.json)
+    implementation(libs.spring.amqp)
+    implementation(libs.spring.rabbit)
+    implementation(libs.spring.validation)
 }
 
 tasks.bootJar {

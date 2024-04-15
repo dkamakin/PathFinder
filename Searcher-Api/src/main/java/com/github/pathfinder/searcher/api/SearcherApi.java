@@ -9,11 +9,9 @@ import com.github.pathfinder.searcher.api.data.GetChunksMessage;
 import com.github.pathfinder.searcher.api.data.GetChunksResponse;
 import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 @Component
-@RefreshScope
 @RequiredArgsConstructor
 public class SearcherApi {
 

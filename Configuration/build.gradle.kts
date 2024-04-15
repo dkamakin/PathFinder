@@ -1,11 +1,11 @@
 plugins {
-    id("com.google.cloud.tools.jib")
+    alias(libs.plugins.jib)
 }
 
 dependencies {
-    implementation("org.springframework.cloud:spring-cloud-config-monitor")
-    implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit")
-    implementation("org.springframework.cloud:spring-cloud-config-server")
+    implementation(libs.spring.cloud.monitor)
+    implementation(libs.spring.cloud.stream)
+    implementation(libs.spring.cloud.config.server)
 }
 
 jib {
