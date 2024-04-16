@@ -20,6 +20,7 @@ springAmqp = "3.1.1"
 jwt = "4.4.0"
 testcontainersSpring = "3.1.5"
 springDependencyManagement = "1.1.4"
+springTransaction = "6.1.6"
 jib = "3.4.2"
 junit = "5.10.2"
 
@@ -42,6 +43,7 @@ spring-security = { group = "org.springframework.boot", name = "spring-boot-star
 spring-neo4j = { group = "org.springframework.boot", name = "spring-boot-starter-data-neo4j", version.ref = "springBoot" }
 spring-test = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "springBoot" }
 spring-security-test = { group = "org.springframework.security", name = "spring-security-test", version.ref = "springSecurityTest" }
+spring-transaction = { group = "org.springframework", name = "spring-tx", version.ref = "springTransaction" }
 
 # Spring Retry
 
