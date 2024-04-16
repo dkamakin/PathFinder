@@ -14,6 +14,7 @@ dependencies {
     implementation(libs.spring.doc)
     implementation(libs.spring.neo4j)
     implementation(libs.spring.web)
+    implementation(libs.spring.cloud.config.client)
 
     testImplementation(libs.spring.test)
     testImplementation(libs.testcontainers.spring)

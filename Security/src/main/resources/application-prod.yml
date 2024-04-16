@@ -11,5 +11,3 @@ spring:
         max-interval: 30000
   config:
     import: configserver:${CONFIG_URI}
-server:
-  port: ${PORT}

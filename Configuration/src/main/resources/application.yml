@@ -11,5 +11,3 @@ spring:
           uri: ${GIT_URI}
   application:
     name: configuration
-server:
-  port: ${PORT}
