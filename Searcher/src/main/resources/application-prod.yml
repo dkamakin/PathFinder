@@ -1,4 +1,9 @@
 spring:
+  neo4j:
+    uri: ${NEO4J_URI}
+    authentication:
+      password: ${NEO4J_PASSWORD}
+      username: ${NEO4J_USERNAME}
   rabbitmq:
     password: ${RABBITMQ_PASSWORD}
     username: ${RABBITMQ_USERNAME}
