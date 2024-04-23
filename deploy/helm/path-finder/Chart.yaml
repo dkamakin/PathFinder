@@ -1,0 +1,33 @@
+apiVersion: v2
+name: path-finder
+description: The PathFinder project.
+type: application
+
+version: 0.1.0
+appVersion: "1.16.0"
+
+dependencies:
+  - name: path-finder-configuration
+    version: 0.1.0
+    repository: file://../path-finder-configuration
+  - name: path-finder-searcher
+    version: 0.1.0
+    repository: file://../path-finder-searcher
+  - name: path-finder-rabbitmq
+    version: 0.1.0
+    repository: file://../path-finder-rabbitmq
+  - name: path-finder-neo4j
+    version: 0.1.0
+    repository: file://../path-finder-neo4j
+  - name: path-finder-postgresql
+    version: 0.1.0
+    repository: file://../path-finder-postgresql
+  - name: path-finder-security
+    version: 0.1.0
+    repository: file://../path-finder-security
+  - name: path-finder-indexer
+    version: 0.1.0
+    repository: file://../path-finder-indexer
+  - name: path-finder-migration
+    version: 0.1.0
+    repository: file://../path-finder-migration

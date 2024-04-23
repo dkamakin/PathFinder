@@ -1,0 +1,11 @@
+{{- include "path-finder-service-common.configmap" (list . "path-finder-configuration.configmapPublic") -}}
+{{- define "path-finder-configuration.configmapPublic" -}}
+
+{{ $fullName := include "path-finder-service-common.fullname" . }}
+{{ $port := .Values.service.port | toString }}
+
+metadata:
+  name: "{{ include "path-finder-service-common.fullname" . }}-public"
+data:
+  CONFIG_URI: "http://{{ $fullName }}:{{ $port }}"
+{{- end -}}

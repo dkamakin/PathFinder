@@ -1,0 +1,17 @@
+image:
+  pullPolicy: Always
+  repository: dkamakin/path-finder-security
+
+service:
+  port: 8081
+
+includeChartSecret: false
+includeChartConfig: true
+
+envFrom:
+  extraClusterSecret:
+    - chartName: path-finder-rabbitmq
+    - chartName: path-finder-postgresql
+  extraClusterConfigmap:
+    - chartName: path-finder-configuration-public
+    - chartName: path-finder-postgresql-public

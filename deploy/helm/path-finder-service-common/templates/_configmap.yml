@@ -1,0 +1,12 @@
+{{- define "path-finder-service-common.configmap.tpl" -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "path-finder-service-common.fullname" . }}
+  labels:
+    {{- include "path-finder-service-common.labels" . | nindent 4 }}
+data: { }
+{{- end -}}
+{{- define "path-finder-service-common.configmap" -}}
+{{- include "path-finder-service-common.util.merge" (append . "path-finder-service-common.configmap.tpl") -}}
+{{- end -}}

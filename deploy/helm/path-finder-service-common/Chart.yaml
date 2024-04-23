@@ -1,0 +1,7 @@
+apiVersion: v2
+name: path-finder-service-common
+description: A common template for a PathFinder microservice.
+type: library
+
+version: 0.1.0
+appVersion: "1.16.0"

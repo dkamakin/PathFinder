@@ -1,0 +1,41 @@
+{{- define "path-finder-service-common.job.tpl" -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "path-finder-service-common.fullname" . }}
+  labels:
+    {{- include "path-finder-service-common.labels" . | nindent 4 }}
+spec:
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "path-finder-service-common.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      restartPolicy: {{ .Values.job.restartPolicy }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            {{- toYaml .Values.env | nindent 12 }}
+          envFrom:
+            {{- include "path-finder-service-common.envFrom" . | nindent 12 }}
+{{- end -}}
+{{- define "path-finder-service-common.job" -}}
+{{- include "path-finder-service-common.util.merge" (append . "path-finder-service-common.job.tpl") -}}
+{{- end -}}

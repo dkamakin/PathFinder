@@ -1,0 +1,17 @@
+image:
+  pullPolicy: Always
+  repository: dkamakin/path-finder-migration
+
+job:
+  restartPolicy: Never
+
+includeChartConfig: false
+includeChartSecret: false
+
+envFrom:
+  extraClusterSecret:
+    - chartName: path-finder-postgresql
+    - chartName: path-finder-neo4j
+  extraClusterConfigmap:
+    - chartName: path-finder-postgresql-public
+    - chartName: path-finder-neo4j-public

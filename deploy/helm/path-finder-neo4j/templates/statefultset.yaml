@@ -1,0 +1,3 @@
+{{- include "path-finder-service-common.statefulset" (list . "path-finder-neo4j.statefulset") -}}
+{{- define "path-finder-neo4j.statefulset" -}}
+{{- end -}}

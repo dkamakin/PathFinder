@@ -1,0 +1,3 @@
+{{- include "path-finder-service-common.job" (list . "path-finder-migration.job") -}}
+{{- define "path-finder-migration.job" -}}
+{{- end -}}

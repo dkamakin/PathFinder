@@ -1,0 +1,25 @@
+path-finder-configuration:
+  git:
+    uri: ""
+    key: ""
+    passphrase: ""
+
+path-finder-postgresql:
+  postgresql:
+    auth:
+      username: ""
+      password: ""
+      database: ""
+
+path-finder-neo4j:
+  authentication:
+    credentials: ""
+    username: ""
+    password: ""
+  databaseName: ""
+
+path-finder-rabbitmq:
+  rabbitmq:
+    auth:
+      username: ""
+      password: ""
