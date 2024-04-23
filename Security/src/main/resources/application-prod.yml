@@ -1,4 +1,12 @@
 spring:
+  datasource:
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    url: ${POSTGRES_JDBC_URI}
+  rabbitmq:
+    password: ${RABBITMQ_PASSWORD}
+    username: ${RABBITMQ_USERNAME}
+    host: ${RABBITMQ_HOST}
   application:
     name: security
   cloud:
