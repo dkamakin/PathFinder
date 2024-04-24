@@ -1,24 +1,22 @@
 [versions]
-lombok = "1.18.30"
+lombok = "1.18.32"
 assertj = "3.25.3"
-postgresql = "42.7.2"
-guava = "33.0.0-jre"
+postgresql = "42.7.3"
+guava = "33.1.0-jre"
 springRetry = "2.0.5"
-springActuator = "3.2.3"
-springCloudBus = "4.1.0"
+springActuator = "3.2.5"
 apacheCommons = "3.14.0"
 mapStruct = "1.5.5.Final"
-springSecurityTest = "6.2.2"
-springBoot = "3.2.2"
-springStream = "4.1.0"
+springSecurityTest = "6.2.4"
+springBoot = "3.2.5"
 geoTools = "30.2"
 westnordost = "3.0"
 testcontainers = "1.19.7"
-springCloudConfig = "4.1.1"
-springDoc = "2.3.0"
-springAmqp = "3.1.1"
+springCloud = "4.1.1"
+springDoc = "2.5.0"
+springAmqp = "3.1.4"
 jwt = "4.4.0"
-testcontainersSpring = "3.1.5"
+testcontainersSpring = "3.2.5"
 springDependencyManagement = "1.1.4"
 springTransaction = "6.1.6"
 jib = "3.4.2"
@@ -63,11 +61,11 @@ geoTools = { group = "org.geotools", name = "gt-main", version.ref = "geoTools" 
 
 # Spring Cloud
 
-spring-cloud-config-client = { group = "org.springframework.cloud", name = "spring-cloud-starter-config", version.ref = "springCloudConfig" }
-spring-cloud-monitor = { group = "org.springframework.cloud", name = "spring-cloud-config-monitor", version.ref = "springStream" }
-spring-cloud-stream = { group = "org.springframework.cloud", name = "spring-cloud-starter-stream-rabbit", version.ref = "springStream" }
-spring-cloud-config-server = { group = "org.springframework.cloud", name = "spring-cloud-config-server", version.ref = "springCloudConfig" }
-spring-cloud-bus = { group = "org.springframework.cloud", name = "spring-cloud-starter-bus-amqp", version.ref = "springCloudBus" }
+spring-cloud-config-client = { group = "org.springframework.cloud", name = "spring-cloud-starter-config", version.ref = "springCloud" }
+spring-cloud-monitor = { group = "org.springframework.cloud", name = "spring-cloud-config-monitor", version.ref = "springCloud" }
+spring-cloud-stream = { group = "org.springframework.cloud", name = "spring-cloud-starter-stream-rabbit", version.ref = "springCloud" }
+spring-cloud-config-server = { group = "org.springframework.cloud", name = "spring-cloud-config-server", version.ref = "springCloud" }
+spring-cloud-bus = { group = "org.springframework.cloud", name = "spring-cloud-starter-bus-amqp", version.ref = "springCloud" }
 
 # OSM
 
