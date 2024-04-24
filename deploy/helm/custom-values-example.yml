@@ -1,3 +1,4 @@
+# The configuration service fetches data from a git repository. The key and the passphrase are used to authenticate. The key should be encoded to base64.
 path-finder-configuration:
   git:
     uri: ""

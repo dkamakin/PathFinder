@@ -6,11 +6,13 @@ image:
   repository: neo4j
   tag: 5.15.0-community-ubi8
 
+# Sets the Neo4j username/password. The credentials are changed only on the first start.
 authentication:
   credentials: ""
   username: ""
   password: ""
 
+# The neo4j default database name.
 databaseName: ""
 
 includeChartSecret: true
