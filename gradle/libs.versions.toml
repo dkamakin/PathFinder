@@ -16,7 +16,7 @@ springCloud = "4.1.1"
 springDoc = "2.5.0"
 springAmqp = "3.1.4"
 jwt = "4.4.0"
-testcontainersSpring = "3.2.5"
+testcontainersCustom = "3.1.6"
 springDependencyManagement = "1.1.4"
 springTransaction = "6.1.6"
 jib = "3.4.2"
@@ -104,8 +104,8 @@ testcontainers = { group = "org.testcontainers", name = "testcontainers", versio
 testcontainers-rabbitmq = { group = "org.testcontainers", name = "rabbitmq", version.ref = "testcontainers" }
 testcontainers-junit = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
 testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers" }
-testcontainers-spring = { group = "com.playtika.testcontainers", name = "testcontainers-spring-boot", version.ref = "testcontainersSpring" }
-testcontainers-neo4j = { group = "com.playtika.testcontainers", name = "embedded-neo4j", version.ref = "testcontainersSpring" }
+testcontainers-spring = { group = "com.playtika.testcontainers", name = "testcontainers-spring-boot", version.ref = "testcontainersCustom" }
+testcontainers-neo4j = { group = "com.playtika.testcontainers", name = "embedded-neo4j", version.ref = "testcontainersCustom" }
 
 # AssertJ
 
