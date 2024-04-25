@@ -8,7 +8,7 @@ springActuator = "3.2.5"
 apacheCommons = "3.14.0"
 mapStruct = "1.5.5.Final"
 springSecurityTest = "6.2.4"
-springBoot = "3.2.5"
+springBoot = "3.2.2"
 geoTools = "30.2"
 westnordost = "3.0"
 testcontainers = "1.19.7"
@@ -104,7 +104,6 @@ testcontainers = { group = "org.testcontainers", name = "testcontainers", versio
 testcontainers-rabbitmq = { group = "org.testcontainers", name = "rabbitmq", version.ref = "testcontainers" }
 testcontainers-junit = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
 testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers" }
-testcontainers-spring = { group = "com.playtika.testcontainers", name = "testcontainers-spring-boot", version.ref = "testcontainersCustom" }
 testcontainers-neo4j = { group = "com.playtika.testcontainers", name = "embedded-neo4j", version.ref = "testcontainersCustom" }
 
 # AssertJ

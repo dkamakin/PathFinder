@@ -17,7 +17,6 @@ dependencies {
     implementation(libs.spring.cloud.config.client)
 
     testImplementation(libs.spring.test)
-    testImplementation(libs.testcontainers.spring)
     testImplementation(libs.testcontainers.neo4j)
     testImplementation(libs.testcontainers.rabbitmq)
     testImplementation(libs.spring.security.test)
