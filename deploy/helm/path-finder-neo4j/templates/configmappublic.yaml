@@ -8,4 +8,5 @@ metadata:
   name: "{{ include "path-finder-service-common.fullname" . }}-public"
 data:
   NEO4J_BOLT_URI: "bolt://{{ $fullName }}:{{ $port }}"
+  URI: "{{ $fullName }}:{{ $port }}"
 {{- end -}}

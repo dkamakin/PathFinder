@@ -1,3 +1,9 @@
 {{- include "path-finder-service-common.job" (list . "path-finder-migration.job") -}}
 {{- define "path-finder-migration.job" -}}
+spec:
+  template:
+    spec:
+      initContainers:
+        - {{ include "path-finder-service-common.waitForPostgresql" . | nindent 12 }}
+        - {{ include "path-finder-service-common.waitForNeo4j" . | nindent 12 }}
 {{- end -}}

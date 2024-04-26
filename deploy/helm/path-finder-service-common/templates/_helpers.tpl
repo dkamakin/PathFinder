@@ -12,6 +12,32 @@ This takes an array of three values:
 {{- toYaml (merge $overrides $tpl) -}}
 {{- end -}}
 
+{{- define "path-finder-service-common.waitForPostgresql"}}
+name: wait-for-postgresql
+image: busybox:latest
+imagePullPolicy: IfNotPresent
+command: [ 'sh', '-c', 'until nc -vz ${POSTGRESQL_URI}; do echo "Waiting for postgresql..."; sleep 3; done;' ]
+env:
+  - name: POSTGRESQL_URI
+    valueFrom:
+      configMapKeyRef:
+        name: {{ include "path-finder-service-common.fullnameGenerator" (dict "chartName" "path-finder-postgresql-public" "Values" .Values "Release" .Release) }}
+        key: URI
+{{- end -}}
+
+{{- define "path-finder-service-common.waitForNeo4j"}}
+name: wait-for-neo4j
+image: busybox:latest
+imagePullPolicy: IfNotPresent
+command: [ 'sh', '-c', 'until nc -vz ${NEO4J_URI}; do echo "Waiting for neo4j..."; sleep 3; done;' ]
+env:
+  - name: NEO4J_URI
+    valueFrom:
+      configMapKeyRef:
+        name: {{ include "path-finder-service-common.fullnameGenerator" (dict "chartName" "path-finder-neo4j-public" "Values" .Values "Release" .Release) }}
+        key: URI
+{{- end -}}
+
 {{/*
 Expand the name of the chart.
 */}}

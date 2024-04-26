@@ -1,3 +1,8 @@
 {{- include "path-finder-service-common.deployment" (list . "path-finder-searcher.deployment") -}}
 {{- define "path-finder-searcher.deployment" -}}
+spec:
+  template:
+    spec:
+      initContainers:
+        - {{- include "path-finder-service-common.waitForPostgresql" . | nindent 12 -}}
 {{- end -}}

@@ -8,4 +8,5 @@ metadata:
   name: "{{ include "path-finder-service-common.fullname" . }}-public"
 data:
   POSTGRES_JDBC_URI: "jdbc:postgresql://{{ $fullName }}:{{ $port }}/{{ .Values.postgresql.auth.database }}"
+  URI: "{{ $fullName }}:{{ $port }}"
 {{- end -}}
