@@ -2,10 +2,10 @@ package com.github.pathfinder.indexer.data.osm;
 
 import java.util.Map;
 import java.util.stream.Stream;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class OsmLandTypeTest {
 
@@ -50,7 +50,7 @@ class OsmLandTypeTest {
 
     @Test
     void from_TypeIsFound_ReturnLandType() {
-        var expected = new OsmLandType("water", -1D);
+        var expected = new OsmLandType("beach", 4D);
 
         assertThat(OsmLandType.from(expected.name())).contains(expected);
     }

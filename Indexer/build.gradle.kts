@@ -10,6 +10,7 @@ dependencies {
     implementation(libs.osmapi.core)
     implementation(libs.osmapi.map)
     implementation(libs.osmapi.overpass)
+
     implementation(libs.spring.jpa)
     implementation(libs.spring.cloud.config.client)
     implementation(libs.spring.validation)

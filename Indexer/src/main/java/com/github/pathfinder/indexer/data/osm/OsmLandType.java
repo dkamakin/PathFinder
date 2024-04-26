@@ -7,13 +7,13 @@ import static java.util.Map.entry;
 
 public record OsmLandType(String name, double coefficient) {
 
+    /**
+     * The coefficients are used in the A* algorithm. The lower the coefficient, the higher the weight.
+     */
     private static final Map<String, Double> LAND_TYPES = Map.ofEntries(
             entry("beach", 4D),
             entry("sand", 4D),
             entry("coastline", 4D),
-            entry("wetland", -1D),
-            entry("water", -1D),
-            entry("bay", -1D),
             entry("wood", 6D),
             entry("fell", 3.5D),
             entry("moor", 4D),
@@ -30,22 +30,31 @@ public record OsmLandType(String name, double coefficient) {
             entry("glacier", 21D),
             entry("bare_rock", 7D),
             entry("scrub", 4D),
-            entry("volcano", -1D),
             entry("valley", 4D),
-            entry("sinkhole", -1D),
             entry("saddle", 6D),
             entry("ridge", 6D),
             entry("peak", 6D),
             entry("hill", 4D),
             entry("cliff", 8D),
             entry("unpaved", 5D),
+            entry("asphalt", 1D),
+            entry("paved", 1.25D),
+            entry("chipseal", 1.25D),
+            entry("concrete", 1D),
+            entry("concrete:lanes", 1D),
+            entry("concrete:plates", 1D),
+            entry("paving_stones", 1D),
+            entry("sett", 1D),
+            entry("cobblestone", 1D),
             entry("compacted", 4D),
-            entry("dirt", 5D),
-            entry("stream", -1D)
+            entry("dirt", 5D)
     );
 
+    /**
+     * The keys should help to get information both from points in the forest and in urban areas
+     */
     private static final List<String> LAND_TYPE_KEYS = List.of("natural", "surface", "landcover", "waterway");
-    public static final  OsmLandType  UNKNOWN        = new OsmLandType("unknown", 1F);
+    public static final  OsmLandType  UNKNOWN        = new OsmLandType("unknown", 1D);
 
     public static Optional<OsmLandType> from(String type) {
         return Optional.ofNullable(LAND_TYPES.get(type)).map(found -> new OsmLandType(type, found));
