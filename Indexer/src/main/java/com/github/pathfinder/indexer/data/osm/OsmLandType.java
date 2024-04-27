@@ -10,7 +10,7 @@ public record OsmLandType(String name, double coefficient) {
     /**
      * The coefficients are used in the A* algorithm. The lower the coefficient, the higher the weight.
      */
-    private static final Map<String, Double> LAND_TYPES = Map.ofEntries(
+    private static final Map<String, Double> LAND_TYPES = Map.<String, Double>ofEntries(
             entry("beach", 4D),
             entry("sand", 4D),
             entry("coastline", 4D),
@@ -55,13 +55,27 @@ public record OsmLandType(String name, double coefficient) {
             entry("sett", 1D),
             entry("cobblestone", 1D),
             entry("compacted", 4D),
-            entry("dirt", 5D)
+            entry("dirt", 5D),
+            entry("track", 1D),
+            entry("path", 1D),
+            entry("motorway", 1D),
+            entry("primary", 1D),
+            entry("secondary", 1D),
+            entry("tertiary", 1D),
+            entry("residential", 1D),
+            entry("unclassified", 1D)
     );
 
     /**
      * The keys should help to get information both from points in the forest and in urban areas
      */
-    private static final List<String> LAND_TYPE_KEYS = List.of("natural", "surface", "landcover", "waterway");
+    private static final List<String> LAND_TYPE_KEYS = List.of(
+            "natural",
+            "surface",
+            "landcover",
+            "waterway",
+            "highway"
+    );
 
     public static Optional<OsmLandType> from(String type) {
         return Optional.ofNullable(LAND_TYPES.get(type)).map(found -> new OsmLandType(type, found));
