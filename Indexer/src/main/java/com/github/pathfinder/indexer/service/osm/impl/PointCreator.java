@@ -1,11 +1,11 @@
 package com.github.pathfinder.indexer.service.osm.impl;
 
+import java.util.List;
+import java.util.Optional;
 import com.github.pathfinder.indexer.data.osm.OsmExtendedBoxIndex;
 import com.github.pathfinder.indexer.data.osm.OsmExtendedNode;
 import com.github.pathfinder.indexer.data.osm.OsmLandType;
 import com.github.pathfinder.searcher.api.data.point.Point;
-import java.util.List;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -31,25 +31,22 @@ public class PointCreator {
     }
 
     private Optional<Point> createPointRequest(OsmExtendedNode extendedNode) {
-        var landType = OsmLandTypeExtractor.maxLandType(extendedNode, index).orElseGet(this::unknownType);
-
         if (extendedNode.elevation().value() == 0D) {
             log.warn("An elevation for the node {} is at the sea level", extendedNode);
             statistics.addUnknownElevationNode();
             return Optional.empty();
         }
 
-        return Optional.of(
-                new Point(extendedNode.elevation().value(),
-                          extendedNode.node().coordinate(),
-                          landType.name(),
-                          landType.coefficient())
-        );
+        return OsmLandTypeExtractor
+                .maxLandType(extendedNode, index)
+                .map(landType -> createPointRequest(extendedNode, landType));
     }
 
-    private OsmLandType unknownType() {
-        statistics.addUnknownTypeNode();
-        return OsmLandType.UNKNOWN;
+    private Point createPointRequest(OsmExtendedNode extendedNode, OsmLandType landType) {
+        return new Point(extendedNode.elevation().value(),
+                         extendedNode.node().coordinate(),
+                         landType.name(),
+                         landType.coefficient());
     }
 
 }

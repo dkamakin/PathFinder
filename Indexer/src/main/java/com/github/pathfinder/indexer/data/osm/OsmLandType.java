@@ -54,7 +54,6 @@ public record OsmLandType(String name, double coefficient) {
      * The keys should help to get information both from points in the forest and in urban areas
      */
     private static final List<String> LAND_TYPE_KEYS = List.of("natural", "surface", "landcover", "waterway");
-    public static final  OsmLandType  UNKNOWN        = new OsmLandType("unknown", 1D);
 
     public static Optional<OsmLandType> from(String type) {
         return Optional.ofNullable(LAND_TYPES.get(type)).map(found -> new OsmLandType(type, found));
