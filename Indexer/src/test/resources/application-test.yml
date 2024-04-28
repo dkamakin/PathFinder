@@ -5,8 +5,6 @@ spring:
   cloud:
     config:
       enabled: false
-    bus:
-      enabled: false
   jpa:
     hibernate:
       ddl-auto: create
@@ -16,10 +14,6 @@ spring:
         show_sql: true
         use_sql_comments: true
         format_sql: true
-  datasource:
-    url: jdbc:h2:mem:foo;DB_CLOSE_ON_EXIT=FALSE
-    password: ''
-    username: sa
 logging:
   level:
     org:
@@ -42,6 +36,107 @@ splitter:
   elementsLimit: 5000
   additionalSpaceMeters: 50
 osm:
+  land-types:
+    keys: natural,surface,landcover,waterway,highway
+    values:
+      - name: beach
+        weight: 4
+      - name: sand
+        weight: 4
+      - name: coastline
+        weight: 4
+      - name: wood
+        weight: 6
+      - name: fell
+        weight: 3.5
+      - name: moor
+        weight: 4
+      - name: tundra
+        weight: 6
+      - name: trunk
+        weight: 1
+      - name: mud
+        weight: 30
+      - name: tree_row
+        weight: 4
+      - name: tree
+        weight: 4
+      - name: shrubbery
+        weight: 6
+      - name: stone
+        weight: 15
+      - name: scree
+        weight: 6
+      - name: gully
+        weight: 11
+      - name: dune
+        weight: 8
+      - name: glacier
+        weight: 21
+      - name: bare_rock
+        weight: 7
+      - name: scrub
+        weight: 4
+      - name: valley
+        weight: 4
+      - name: saddle
+        weight: 6
+      - name: ridge
+        weight: 6
+      - name: peak
+        weight: 6
+      - name: hill
+        weight: 4
+      - name: cliff
+        weight: 8
+      - name: unpaved
+        weight: 5
+      - name: ground
+        weight: 3
+      - name: grass
+        weight: 2
+      - name: gravel
+        weight: 3
+      - name: asphalt
+        weight: 1
+      - name: paved
+        weight: 1.25
+      - name: chipseal
+        weight: 1.25
+      - name: concrete
+        weight: 1
+      - name: concrete:lanes
+        weight: 1
+      - name: concrete:plates
+        weight: 1
+      - name: paving_stones
+        weight: 1
+      - name: sett
+        weight: 1
+      - name: cobblestone
+        weight: 1
+      - name: compacted
+        weight: 4
+      - name: dirt
+        weight: 5
+      - name: track
+        weight: 1
+      - name: path
+        weight: 1
+      - name: motorway
+        weight: 1
+      - name: primary
+        weight: 1
+      - name: secondary
+        weight: 1
+      - name: tertiary
+        weight: 1
+      - name: residential
+        weight: 1
+      - name: residential
+        weight: 1
+      - name: unclassified
+        weight: 1
   client:
     overpass:
       url: "https://overpass-api.de/api/"

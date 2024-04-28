@@ -18,5 +18,4 @@ import org.springframework.context.annotation.Import;
         RefreshAutoConfiguration.class,
         CoreConfiguration.class})
 public @interface IndexerServiceDatabaseTest {
-
 }

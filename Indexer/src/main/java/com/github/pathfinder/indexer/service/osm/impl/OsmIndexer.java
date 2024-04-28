@@ -1,5 +1,6 @@
 package com.github.pathfinder.indexer.service.osm.impl;
 
+import java.util.List;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
@@ -11,7 +12,6 @@ import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.IndexBox;
 import com.github.pathfinder.searcher.api.data.point.Point;
 import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -34,8 +34,6 @@ public class OsmIndexer implements IOsmIndexer {
     @Logged("box")
     public void process(IndexBoxEntity box) {
         var elements = client.elements(EntityMapper.MAPPER.osmBox(box));
-
-        log.info("Query result: {} elements", elements.size());
 
         if (CollectionUtils.isEmpty(elements)) {
             log.info("No points found for {}", box);
