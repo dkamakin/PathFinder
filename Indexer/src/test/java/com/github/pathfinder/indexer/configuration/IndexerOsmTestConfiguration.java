@@ -15,5 +15,5 @@ import org.springframework.cloud.autoconfigure.RefreshAutoConfiguration;
         OsmLandTypeConfiguration.class,
         RefreshAutoConfiguration.class
 })
-public @interface IntegrationTest {
+public @interface IndexerOsmTestConfiguration {
 }

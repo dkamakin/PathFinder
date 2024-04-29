@@ -2,7 +2,7 @@ package com.github.pathfinder.indexer.data.osm;
 
 import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.github.pathfinder.indexer.configuration.IntegrationTest;
+import com.github.pathfinder.indexer.configuration.IndexerOsmTestConfiguration;
 import com.github.pathfinder.indexer.configuration.OsmElementFixtures;
 import com.github.pathfinder.indexer.configuration.OsmTestTemplate;
 import com.github.pathfinder.indexer.service.osm.impl.OsmLandTypeExtractor;
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
-@IntegrationTest
+@IndexerOsmTestConfiguration
 @Import(OsmLandTypeExtractor.class)
 class OsmLandTypeExtractorTest {
 
