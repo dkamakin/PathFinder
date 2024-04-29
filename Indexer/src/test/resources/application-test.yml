@@ -113,8 +113,6 @@ osm:
         weight: 1
       - name: sett
         weight: 1
-      - name: cobblestone
-        weight: 1
       - name: compacted
         weight: 4
       - name: dirt
@@ -124,18 +122,28 @@ osm:
       - name: path
         weight: 1
       - name: motorway
-        weight: 1
+        weight: 4
       - name: primary
-        weight: 1
+        weight: 4
       - name: secondary
-        weight: 1
+        weight: 4
       - name: tertiary
         weight: 1
       - name: residential
-        weight: 1
-      - name: residential
-        weight: 1
+        weight: 3
       - name: unclassified
+        weight: 3
+      - name: footway
+        weight: 1
+      - name: crossing
+        weight: 1
+      - name: living_street
+        weight: 1
+      - name: pedestrian
+        weight: 1
+      - name: steps
+        weight: 1
+      - name: sidewalk
         weight: 1
   client:
     overpass:

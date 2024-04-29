@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import static com.github.pathfinder.indexer.configuration.osm.OsmLandTypeConfiguration.OsmTagConfiguration;
 import com.github.pathfinder.indexer.configuration.osm.OsmLandTypeConfiguration;
 import com.github.pathfinder.indexer.data.OsmMapper;
 import com.github.pathfinder.indexer.data.osm.OsmElement;
@@ -18,13 +19,13 @@ import org.springframework.stereotype.Component;
 @RefreshScope
 public class OsmLandTypeExtractor {
 
-    private final OsmLandTypeConfiguration                                  configuration;
-    private final Map<String, OsmLandTypeConfiguration.OsmTagConfiguration> valuesIndex;
+    private final OsmLandTypeConfiguration         configuration;
+    private final Map<String, OsmTagConfiguration> valuesIndex;
 
     public OsmLandTypeExtractor(OsmLandTypeConfiguration configuration) {
         this.configuration = configuration;
         this.valuesIndex   = configuration.getValues().stream()
-                .collect(Collectors.toMap(OsmLandTypeConfiguration.OsmTagConfiguration::name, Function.identity()));
+                .collect(Collectors.toMap(OsmTagConfiguration::name, Function.identity()));
 
         log.info("Initialized an extractor, configuration: {}", configuration);
     }
