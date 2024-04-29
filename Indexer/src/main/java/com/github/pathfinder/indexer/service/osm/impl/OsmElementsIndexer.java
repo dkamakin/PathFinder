@@ -42,7 +42,7 @@ public class OsmElementsIndexer {
                 .filter(landTypeExtractor::hasLandType)
                 .collect(Collectors.partitioningBy(element -> element.type() == OsmElementType.WAY));
 
-        log.info("Preprocessed elements, delta: {}", elements.size() - processed.size());
+        log.info("Filtered {} elements", elements.size() - processed.size());
 
         return processed;
     }

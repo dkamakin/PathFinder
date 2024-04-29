@@ -41,10 +41,10 @@
         <insert tableName="region">
             <column name="id">1</column>
             <column name="PROCESSED">false</column>
-            <column name="MIN_LATITUDE">46.925883</column>
-            <column name="MIN_LONGITUDE">19.014587</column>
-            <column name="MAX_LATITUDE">47.282956</column>
-            <column name="MAX_LONGITUDE">19.756165</column>
+            <column name="MIN_LATITUDE">39.433011</column>
+            <column name="MIN_LONGITUDE">-0.659866</column>
+            <column name="MAX_LATITUDE">39.614152</column>
+            <column name="MAX_LONGITUDE">-0.329590</column>
         </insert>
     </changeSet>
 
