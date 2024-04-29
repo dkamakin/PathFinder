@@ -30,7 +30,7 @@ public class PointConnectionRepository implements IPointConnectionRepository {
             '
             MATCH (chunk)-[:IN_CHUNK]->(second:Point)
                 WHERE first <> second AND
-                NOT EXISTS (first)-[:CONNECTION]-(second) AND
+                NOT (first)-[:CONNECTION]-(second) AND
                 point.distance(first.location3d, second.location3d) <= $accuracyMeters
             WITH first, second, point.distance(first.location3d, second.location3d) AS distanceMeters
             WITH first, second, distanceMeters,
@@ -38,8 +38,6 @@ public class PointConnectionRepository implements IPointConnectionRepository {
             CREATE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)',
             {
             batchSize:   1,
-            parallel:    true,
-            concurrency: 2,
             retries:     10,
             params: {
             chunkId:        $chunkId,
