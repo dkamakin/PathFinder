@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 @Slf4j
 @Service
@@ -34,13 +33,7 @@ public class OsmIndexer implements IOsmIndexer {
     @Logged("box")
     public void process(IndexBoxEntity box) {
         var elements = client.elements(EntityMapper.MAPPER.osmBox(box));
-
-        if (CollectionUtils.isEmpty(elements)) {
-            log.info("No points found for {}", box);
-            return;
-        }
-
-        var points = pointExtractor.points(elements);
+        var points   = pointExtractor.points(elements);
 
         searcherApi.save(request(box, points));
         boxUpdaterService.save(box.setSaveRequestTimestamp(dateTimeSupplier.now()));

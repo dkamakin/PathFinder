@@ -1,5 +1,7 @@
 package com.github.pathfinder.indexer.service.impl;
 
+import java.util.Collection;
+import java.util.List;
 import com.github.pathfinder.core.data.BoundingBox;
 import com.github.pathfinder.core.data.Coordinate;
 import com.github.pathfinder.core.data.Distance;
@@ -8,8 +10,6 @@ import com.github.pathfinder.core.tools.impl.GeodeticTools;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
 import com.github.pathfinder.indexer.data.OsmMapper;
 import com.github.pathfinder.indexer.service.BoundingBoxSplitter;
-import java.util.Collection;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -32,7 +32,13 @@ public class BoundingBoxOsmElementsSplitter implements BoundingBoxSplitter {
 
     @Override
     public List<BoundingBox> split(BoundingBox box) {
-        if (countElements(box) <= elementsLimit) {
+        var countElements = countElements(box);
+
+        if (countElements == 0) {
+            return List.of();
+        }
+
+        if (countElements <= elementsLimit) {
             return List.of(box);
         }
 

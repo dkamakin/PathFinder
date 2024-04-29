@@ -82,6 +82,11 @@ class BoundingBoxOsmElementsSplitterTest {
                                 new BoundingBox(new Coordinate(39.61091090290156, -0.321454888308976),
                                                 new Coordinate(39.73993, -0.197754))
                         )
+                ),
+                Arguments.of(
+                        new BoundingBox(new Coordinate(39.610978, -0.446320),
+                                        new Coordinate(39.610978, -0.446320)),
+                        List.of()
                 )
         );
     }
@@ -96,7 +101,7 @@ class BoundingBoxOsmElementsSplitterTest {
 
         var actual = target.split(box);
 
-        assertThat(actual).hasSameSizeAs(expected).containsAll(expected);
+        assertThat(actual).isEqualTo(expected);
     }
 
 }
