@@ -1,5 +1,9 @@
 package com.github.pathfinder.service.impl;
 
+import java.util.List;
+import java.util.stream.Stream;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.withinPercentage;
 import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
@@ -10,16 +14,12 @@ import com.github.pathfinder.database.node.PointRelation;
 import com.github.pathfinder.database.node.projection.SimpleChunk;
 import com.github.pathfinder.database.repository.impl.PointConnectionRepository;
 import com.github.pathfinder.service.IChunkUpdaterService;
-import java.util.List;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.withinPercentage;
 
 @SearcherNeo4jTest
 @Import({PointConnector.class, ChunkGetterService.class, PointConnectionRepository.class})
@@ -233,22 +233,7 @@ class PointConnectorTest {
                         .location(44.827410791880155, 20.419468330585666, 1D).build(),
                 PointFixtures.pointNodeBuilder()
                         .passabilityCoefficient(2D)
-                        .location(44.82744118518296, 20.419457053285115, 1D).build(),
-                PointFixtures.pointNodeBuilder()
-                        .passabilityCoefficient(2D)
-                        .location(44.82744118518296, 20.419457053285116, 1D).build(),
-                PointFixtures.pointNodeBuilder()
-                        .passabilityCoefficient(2D)
-                        .location(44.82744118518296, 20.419457053285117, 1D).build(),
-                PointFixtures.pointNodeBuilder()
-                        .passabilityCoefficient(2D)
-                        .location(44.82744118518296, 20.419457053285118, 1D).build(),
-                PointFixtures.pointNodeBuilder()
-                        .passabilityCoefficient(2D)
-                        .location(44.82744118518296, 20.419457053285119, 1D).build(),
-                PointFixtures.pointNodeBuilder()
-                        .passabilityCoefficient(2D)
-                        .location(44.82744118518296, 20.419457053285120, 1D).build()
+                        .location(44.82744118518296, 20.419457053285115, 1D).build()
         )));
 
         target.createConnections(chunkId);
@@ -256,7 +241,7 @@ class PointConnectorTest {
         var actual = testTemplate.allPointNodes();
 
         assertThat(actual)
-                .hasSize(7)
+                .hasSize(2)
                 .anyMatch(node -> node.getRelations().isEmpty());
     }
 

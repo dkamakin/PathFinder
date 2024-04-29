@@ -10,7 +10,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class PointFixtures {
 
-    public static final String LAND_TYPE = "DUNE";
+    public static final String LAND_TYPE = "beach";
     public static final double LATITUDE  = 20.457924760622614;
     public static final double LONGITUDE = 44.81660396625469;
 
