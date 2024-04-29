@@ -33,7 +33,7 @@ public class SearcherApi {
                                  .with(request)).send();
     }
 
-    @Logged(value = "request")
+    @Logged(value = "request", ignoreReturnValue = false)
     public GetChunksResponse chunks(GetChunksMessage request) {
         return amqpRouter.route(messageBuilder.direct()
                                         .routingKey(messagingConfiguration.getDefaultQueueName())
