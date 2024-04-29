@@ -35,10 +35,12 @@ public class BoundingBoxOsmElementsSplitter implements BoundingBoxSplitter {
         var countElements = countElements(box);
 
         if (countElements == 0) {
+            log.info("A box does not contain elements");
             return List.of();
         }
 
         if (countElements <= elementsLimit) {
+            log.info("A box {} size fits into the elements limits", box);
             return List.of(box);
         }
 
