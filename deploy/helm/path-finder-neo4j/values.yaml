@@ -6,6 +6,11 @@ image:
   repository: neo4j
   tag: 5.15.0-community-ubi8
 
+hostPath: /neo4j
+
+capacity:
+  storage: 20Gi
+
 # Sets the Neo4j username/password. The credentials are changed only on the first start.
 authentication:
   credentials: ""

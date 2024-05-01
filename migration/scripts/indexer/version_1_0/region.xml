@@ -46,6 +46,15 @@
             <column name="MAX_LATITUDE">39.739930</column>
             <column name="MAX_LONGITUDE">-0.197754</column>
         </insert>
+
+        <insert tableName="region">
+            <column name="id">2</column>
+            <column name="PROCESSED">false</column>
+            <column name="MIN_LATITUDE">41.500350</column>
+            <column name="MIN_LONGITUDE">-2.268677</column>
+            <column name="MAX_LATITUDE">42.356514</column>
+            <column name="MAX_LONGITUDE">-0.612488</column>
+        </insert>
     </changeSet>
 
 </databaseChangeLog>
