@@ -74,7 +74,7 @@ public class ActualizeService implements IActualizeService {
     }
 
     private Map<Integer, Chunk> indexChunks(List<Chunk> boxes) {
-        return boxes.stream().collect(Collectors.toMap(Chunk::id, Function.identity()));
+        return boxes.stream().collect(Collectors.toMap(Chunk::id, Function.identity(), (l, r) -> r));
     }
 
     private GetChunksMessage getChunksMessage(List<IndexBoxEntity> boxes) {
