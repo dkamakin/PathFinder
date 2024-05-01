@@ -8,6 +8,8 @@ service:
 includeChartSecret: false
 includeChartConfig: true
 
+resources: { }
+
 envFrom:
   extraClusterSecret:
     - chartName: path-finder-rabbitmq

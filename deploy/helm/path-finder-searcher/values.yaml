@@ -5,6 +5,8 @@ image:
 service:
   port: 8080
 
+resources: { }
+
 includeChartSecret: false
 includeChartConfig: true
 

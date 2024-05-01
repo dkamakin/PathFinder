@@ -5,6 +5,8 @@ image:
 service:
   port: 8888
 
+resources: { }
+
 # The configuration service fetches data from a git repository. The key and the passphrase are used to authenticate.
 git:
   uri: ""
