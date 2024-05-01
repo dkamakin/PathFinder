@@ -4,12 +4,12 @@ service:
 image:
   pullPolicy: IfNotPresent
 
-hostPath: /tmp/neo4j
-
 resources: { }
 
+volumeMode: Filesystem
+
 capacity:
-  storage: 20Gi
+  storage: 10Gi
 
 # Sets the Neo4j username/password. The credentials are changed only on the first start.
 authentication:
