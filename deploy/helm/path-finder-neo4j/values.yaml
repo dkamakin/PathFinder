@@ -3,10 +3,10 @@ service:
 
 image:
   pullPolicy: IfNotPresent
-  repository: neo4j
-  tag: 5.15.0-community-ubi8
 
-hostPath: /neo4j
+hostPath: /tmp/neo4j
+
+resources: { }
 
 capacity:
   storage: 20Gi

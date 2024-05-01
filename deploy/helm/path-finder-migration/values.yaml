@@ -8,6 +8,8 @@ job:
 includeChartConfig: false
 includeChartSecret: false
 
+resources: { }
+
 envFrom:
   extraClusterSecret:
     - chartName: path-finder-postgresql

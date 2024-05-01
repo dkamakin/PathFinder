@@ -1,3 +1,33 @@
 {{- include "path-finder-service-common.statefulset" (list . "path-finder-neo4j.statefulset") -}}
 {{- define "path-finder-neo4j.statefulset" -}}
+spec:
+  template:
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: neo4j:5.15.0-community-ubi8
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+            {{- toYaml .Values.env | nindent 12 }}
+          envFrom:
+            {{- include "path-finder-service-common.envFrom" . | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /data
+              name: neo4j
+      volumes:
+        - name: neo4j
+          persistentVolumeClaim:
+            claimName: {{ include "path-finder-service-common.fullname" . }}
 {{- end -}}
