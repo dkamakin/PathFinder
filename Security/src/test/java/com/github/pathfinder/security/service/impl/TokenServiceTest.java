@@ -1,5 +1,12 @@
 package com.github.pathfinder.security.service.impl;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.within;
+import static org.mockito.Mockito.when;
 import com.auth0.jwt.JWT;
 import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.security.SecurityFixtures;
@@ -9,18 +16,10 @@ import com.github.pathfinder.security.configuration.JwtTools;
 import com.github.pathfinder.security.configuration.SecurityIntegrationTest;
 import com.github.pathfinder.security.configuration.TokenConfiguration;
 import com.github.pathfinder.security.data.jwt.JwtPayload;
-import com.github.pathfinder.security.service.ITokenService;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.within;
-import static org.mockito.Mockito.when;
 
 @SecurityIntegrationTest
 @Import({JwtTools.class, TokenConfiguration.class, TokenService.class, JwtPayloadService.class})
@@ -36,7 +35,7 @@ class TokenServiceTest {
     IDateTimeSupplier timeSupplier;
 
     @Autowired
-    ITokenService target;
+    TokenService target;
 
     void whenNeedToGetNow(Instant expected) {
         when(timeSupplier.now()).thenReturn(expected);

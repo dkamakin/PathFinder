@@ -16,7 +16,6 @@ import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilderConfiguration;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
-import com.github.pathfinder.indexer.service.BoxSearcherService;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
 import org.junit.jupiter.api.Test;
@@ -33,7 +32,7 @@ class IndexActorTest {
     IndexActor target;
 
     @Autowired
-    BoxSearcherService boxSearcherService;
+    IndexBoxSearcherService boxSearcherService;
 
     @MockBean
     SearcherApi searcherApi;

@@ -7,7 +7,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
-import com.github.pathfinder.indexer.service.BoxSearcherService;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.Chunk;
 import com.github.pathfinder.searcher.api.data.GetChunksMessage;
@@ -22,8 +21,8 @@ import org.springframework.util.CollectionUtils;
 @RequiredArgsConstructor
 public class ActualizeService {
 
-    private final SearcherApi        searcherApi;
-    private final BoxSearcherService boxSearcherService;
+    private final SearcherApi             searcherApi;
+    private final IndexBoxSearcherService boxSearcherService;
 
     @Transactional
     @Logged(ignoreReturnValue = false)

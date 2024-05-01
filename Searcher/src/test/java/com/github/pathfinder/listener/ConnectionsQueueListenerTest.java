@@ -8,7 +8,7 @@ import com.github.pathfinder.configuration.SearcherAmqpTest;
 import com.github.pathfinder.messaging.test.MessagingTestConstant;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
-import com.github.pathfinder.service.IPointConnector;
+import com.github.pathfinder.service.impl.PointConnector;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ class ConnectionsQueueListenerTest {
     SearcherApi searcherApi;
 
     @MockBean
-    IPointConnector pointConnector;
+    PointConnector pointConnector;
 
     @SpyBean
     DeadLetterListener deadLetterListener;

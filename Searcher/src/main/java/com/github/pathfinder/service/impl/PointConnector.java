@@ -4,8 +4,6 @@ import com.github.pathfinder.configuration.CoordinateConfiguration;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.core.exception.InternalServerException;
 import com.github.pathfinder.database.repository.IPointConnectionRepository;
-import com.github.pathfinder.service.IChunkUpdaterService;
-import com.github.pathfinder.service.IPointConnector;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -14,14 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PointConnector implements IPointConnector {
+public class PointConnector {
 
     private final IPointConnectionRepository pointConnectionRepository;
     private final CoordinateConfiguration    coordinateConfiguration;
-    private final IChunkUpdaterService       chunkService;
+    private final ChunkUpdaterService        chunkService;
 
     @Logged
-    @Override
     @Transactional
     public void createConnections(Integer chunkId) {
         chunkService.markConnected(chunkId, true);

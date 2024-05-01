@@ -15,7 +15,7 @@ import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.IndexBox;
 import com.github.pathfinder.searcher.api.data.point.Point;
 import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
-import com.github.pathfinder.service.IChunkUpdaterService;
+import com.github.pathfinder.service.impl.ChunkUpdaterService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -28,7 +28,7 @@ class SaveChunksQueueListenerTest {
     SearcherApi searcherApi;
 
     @Autowired
-    IChunkUpdaterService chunkUpdaterService;
+    ChunkUpdaterService chunkUpdaterService;
 
     @Captor
     ArgumentCaptor<ChunkNode> chunkNodeCaptor;

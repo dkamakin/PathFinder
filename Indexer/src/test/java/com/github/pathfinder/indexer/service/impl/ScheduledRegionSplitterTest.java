@@ -8,8 +8,6 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import com.github.pathfinder.indexer.database.entity.RegionEntity;
 import com.github.pathfinder.indexer.scheduled.ScheduledRegionSplitter;
-import com.github.pathfinder.indexer.service.IRegionSearcher;
-import com.github.pathfinder.indexer.service.IRegionSplitProcessor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,10 +21,10 @@ class ScheduledRegionSplitterTest {
     ScheduledRegionSplitter target;
 
     @Mock
-    IRegionSearcher regionSearcher;
+    RegionSearcher regionSearcher;
 
     @Mock
-    IRegionSplitProcessor regionSplitProcessor;
+    RegionSplitProcessor regionSplitProcessor;
 
     void whenNeedToGetRegion(Optional<RegionEntity> entity, Optional<RegionEntity>... other) {
         when(regionSearcher.nextNotProcessed()).thenReturn(entity, other);

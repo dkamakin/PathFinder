@@ -10,7 +10,6 @@ import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilderConfiguration;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
-import com.github.pathfinder.indexer.service.BoxSearcherService;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.Chunk;
 import com.github.pathfinder.searcher.api.data.GetChunksMessage;
@@ -35,7 +34,7 @@ class ActualizeServiceTest {
     IndexerStateBuilder stateBuilder;
 
     @Autowired
-    BoxSearcherService boxSearcherService;
+    IndexBoxSearcherService boxSearcherService;
 
     void whenNeedToGetChunks(GetChunksMessage message, GetChunksResponse response) {
         when(searcherApi.chunks(message)).thenReturn(response);

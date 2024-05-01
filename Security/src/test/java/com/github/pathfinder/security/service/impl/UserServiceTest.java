@@ -1,19 +1,18 @@
 package com.github.pathfinder.security.service.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
 import com.github.pathfinder.security.SecurityFixtures;
 import com.github.pathfinder.security.api.data.Token;
 import com.github.pathfinder.security.api.exception.UserAlreadyRegisteredException;
 import com.github.pathfinder.security.configuration.SecurityServiceDatabaseTest;
 import com.github.pathfinder.security.data.jwt.JwtPayload;
-import com.github.pathfinder.security.service.ITokenService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
 
 @SecurityServiceDatabaseTest
 @Import({UserService.class, PasswordService.class, BCryptPasswordEncoder.class})
@@ -26,7 +25,7 @@ class UserServiceTest {
     PasswordService passwordService;
 
     @MockBean
-    ITokenService tokenService;
+    TokenService tokenService;
 
     void whenNeedToReadToken(Token token, JwtPayload expected) {
         when(tokenService.payload(token)).thenReturn(expected);

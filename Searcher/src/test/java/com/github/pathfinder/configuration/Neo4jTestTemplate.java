@@ -8,7 +8,7 @@ import com.github.pathfinder.core.interfaces.ReadTransactional;
 import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.node.PointRelation;
-import com.github.pathfinder.service.IChunkUpdaterService;
+import com.github.pathfinder.service.impl.ChunkUpdaterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.data.neo4j.core.Neo4jTemplate;
@@ -20,7 +20,7 @@ public class Neo4jTestTemplate {
 
     private final Neo4jTemplate           neo4jTemplate;
     private final TestPointNodeRepository pointRepository;
-    private final IChunkUpdaterService    chunkUpdaterService;
+    private final ChunkUpdaterService     chunkUpdaterService;
 
     @Transactional
     public void cleanDatabase() {

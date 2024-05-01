@@ -1,19 +1,18 @@
 package com.github.pathfinder.indexer.service.impl;
 
+import java.time.Duration;
+import java.time.Instant;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilderConfiguration;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
-import com.github.pathfinder.indexer.service.BoxSearcherService;
-import java.time.Duration;
-import java.time.Instant;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @IndexerServiceDatabaseTest
 @IndexerStateBuilderConfiguration
@@ -24,7 +23,7 @@ class IndexBoxSearcherServiceTest {
     IndexerStateBuilder stateBuilder;
 
     @Autowired
-    BoxSearcherService target;
+    IndexBoxSearcherService target;
 
     @MockBean
     IDateTimeSupplier dateTimeSupplier;

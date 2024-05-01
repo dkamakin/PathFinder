@@ -13,7 +13,6 @@ import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.node.PointRelation;
 import com.github.pathfinder.database.node.projection.SimpleChunk;
 import com.github.pathfinder.database.repository.impl.PointConnectionRepository;
-import com.github.pathfinder.service.IChunkUpdaterService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -53,7 +52,7 @@ class PointConnectorTest {
     PointConnector target;
 
     @Autowired
-    IChunkUpdaterService chunkUpdaterService;
+    ChunkUpdaterService chunkUpdaterService;
 
     @Autowired
     Neo4jTestTemplate testTemplate;

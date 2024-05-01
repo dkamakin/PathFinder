@@ -1,5 +1,12 @@
 package com.github.pathfinder.security.listener;
 
+import java.util.Optional;
+import java.util.stream.Stream;
+import static com.github.pathfinder.security.SecurityFixtures.TOKEN;
+import static com.github.pathfinder.security.SecurityFixtures.USER_ENTITY;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
 import com.github.pathfinder.core.exception.ErrorCode;
 import com.github.pathfinder.core.exception.ServiceException;
 import com.github.pathfinder.security.api.SecurityApi;
@@ -7,19 +14,12 @@ import com.github.pathfinder.security.api.data.Token;
 import com.github.pathfinder.security.api.data.UserInfo;
 import com.github.pathfinder.security.configuration.SecurityAmqpTest;
 import com.github.pathfinder.security.database.entity.UserEntity;
-import com.github.pathfinder.security.service.IUserService;
-import java.util.Optional;
-import java.util.stream.Stream;
+import com.github.pathfinder.security.service.impl.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import static com.github.pathfinder.security.SecurityFixtures.TOKEN;
-import static com.github.pathfinder.security.SecurityFixtures.USER_ENTITY;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
 
 @SecurityAmqpTest
 class SecurityListenerTest {
@@ -28,7 +28,7 @@ class SecurityListenerTest {
     SecurityApi securityApi;
 
     @MockBean
-    IUserService userService;
+    UserService userService;
 
     void whenNeedToGetUserInfo(Token token, UserEntity expected) {
         when(userService.read(token)).thenReturn(Optional.ofNullable(expected));

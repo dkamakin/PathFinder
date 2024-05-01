@@ -1,7 +1,7 @@
 package com.github.pathfinder.security.web.impl;
 
 import com.github.pathfinder.core.aspect.Logged;
-import com.github.pathfinder.security.service.IAuthenticationService;
+import com.github.pathfinder.security.service.impl.AuthenticationService;
 import com.github.pathfinder.security.web.ISessionEndpoint;
 import com.github.pathfinder.security.web.dto.AuthenticationRequestDto;
 import com.github.pathfinder.security.web.dto.AuthenticationResponseDto;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SessionEndpoint implements ISessionEndpoint {
 
-    private final IAuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
 
     @Logged
     @Override

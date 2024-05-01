@@ -6,8 +6,8 @@ import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
 import com.github.pathfinder.indexer.data.EntityMapper;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
-import com.github.pathfinder.indexer.service.BoxUpdaterService;
 import com.github.pathfinder.indexer.service.Indexer;
+import com.github.pathfinder.indexer.service.impl.IndexBoxUpdaterService;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.IndexBox;
 import com.github.pathfinder.searcher.api.data.point.Point;
@@ -23,11 +23,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OsmIndexer implements Indexer {
 
-    private final OsmClient         client;
-    private final OsmPointExtractor pointExtractor;
-    private final SearcherApi       searcherApi;
-    private final IDateTimeSupplier dateTimeSupplier;
-    private final BoxUpdaterService boxUpdaterService;
+    private final OsmClient              client;
+    private final OsmPointExtractor      pointExtractor;
+    private final SearcherApi            searcherApi;
+    private final IDateTimeSupplier      dateTimeSupplier;
+    private final IndexBoxUpdaterService boxUpdaterService;
 
     @Override
     @Logged("box")

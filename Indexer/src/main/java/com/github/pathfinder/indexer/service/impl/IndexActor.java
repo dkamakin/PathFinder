@@ -4,7 +4,6 @@ import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.indexer.configuration.IndexerRetryConfiguration;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
-import com.github.pathfinder.indexer.service.BoxSearcherService;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class IndexActor {
 
     private final SearcherApi               searcherApi;
-    private final BoxSearcherService        boxSearcherService;
+    private final IndexBoxSearcherService   boxSearcherService;
     private final IDateTimeSupplier         dateTimeSupplier;
     private final IndexTask                 task;
     private final IndexerRetryConfiguration retryConfiguration;
