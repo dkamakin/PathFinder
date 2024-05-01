@@ -1,8 +1,8 @@
-package com.github.pathfinder.indexer.service.osm;
+package com.github.pathfinder.indexer.service;
 
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 
-public interface IOsmIndexer {
+public interface Indexer {
 
     void process(IndexBoxEntity box);
 

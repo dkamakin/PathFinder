@@ -1,22 +1,8 @@
 package com.github.pathfinder.indexer.service.impl;
 
-import com.github.pathfinder.core.tools.IDateTimeSupplier;
-import com.github.pathfinder.indexer.configuration.IndexerRetryConfiguration;
-import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
-import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
-import com.github.pathfinder.indexer.configuration.IndexerStateBuilderConfiguration;
-import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
-import com.github.pathfinder.indexer.service.BoxSearcherService;
-import com.github.pathfinder.indexer.service.osm.impl.OsmIndexTask;
-import com.github.pathfinder.searcher.api.SearcherApi;
-import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.function.Predicate;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.mockito.ArgumentMatchers.any;
@@ -24,14 +10,27 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import com.github.pathfinder.core.tools.IDateTimeSupplier;
+import com.github.pathfinder.indexer.configuration.IndexerRetryConfiguration;
+import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
+import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
+import com.github.pathfinder.indexer.configuration.IndexerStateBuilderConfiguration;
+import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
+import com.github.pathfinder.indexer.service.BoxSearcherService;
+import com.github.pathfinder.searcher.api.SearcherApi;
+import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 
 @IndexerServiceDatabaseTest
 @IndexerStateBuilderConfiguration
-@Import({OsmIndexActor.class, IndexBoxSearcherService.class, IndexerRetryConfiguration.class})
-class OsmIndexActorTest {
+@Import({IndexActor.class, IndexBoxSearcherService.class, IndexerRetryConfiguration.class})
+class IndexActorTest {
 
     @Autowired
-    OsmIndexActor target;
+    IndexActor target;
 
     @Autowired
     BoxSearcherService boxSearcherService;
@@ -46,7 +45,7 @@ class OsmIndexActorTest {
     IndexerRetryConfiguration retryConfiguration;
 
     @MockBean
-    OsmIndexTask indexTask;
+    IndexTask indexTask;
 
     @MockBean
     IDateTimeSupplier dateTimeSupplier;

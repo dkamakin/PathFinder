@@ -1,4 +1,4 @@
-package com.github.pathfinder.indexer.service.impl;
+package com.github.pathfinder.indexer.service.osm.impl;
 
 import java.util.Collection;
 import java.util.List;

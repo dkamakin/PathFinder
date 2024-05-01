@@ -1,25 +1,26 @@
 package com.github.pathfinder.indexer.service.impl;
 
-import com.github.pathfinder.indexer.database.entity.RegionEntity;
-import com.github.pathfinder.indexer.service.IRegionSearcher;
-import com.github.pathfinder.indexer.service.IRegionSplitProcessor;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import com.github.pathfinder.indexer.database.entity.RegionEntity;
+import com.github.pathfinder.indexer.scheduled.ScheduledRegionSplitter;
+import com.github.pathfinder.indexer.service.IRegionSearcher;
+import com.github.pathfinder.indexer.service.IRegionSplitProcessor;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class SingleRegionSplitterTest {
+class ScheduledRegionSplitterTest {
 
     @InjectMocks
-    SingleRegionSplitter target;
+    ScheduledRegionSplitter target;
 
     @Mock
     IRegionSearcher regionSearcher;

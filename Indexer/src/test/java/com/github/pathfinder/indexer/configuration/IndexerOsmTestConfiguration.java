@@ -5,15 +5,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import com.github.pathfinder.indexer.configuration.osm.OsmLandTypeConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.autoconfigure.RefreshAutoConfiguration;
+import org.springframework.context.annotation.Import;
 
+@IndexerIntegrationTest
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@SpringBootTest(classes = {
+@Import({
         OsmTestTemplate.class,
         OsmLandTypeConfiguration.class,
-        RefreshAutoConfiguration.class
 })
 public @interface IndexerOsmTestConfiguration {
 }
