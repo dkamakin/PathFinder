@@ -6,7 +6,7 @@ metadata:
     {{- include "path-finder-service-common.labels" . | nindent 4 }}
 spec:
   volumeMode: {{ .Values.volumeMode | quote }}
-  storageClassName: standard-rwo
+  storageClassName: {{ .Values.storageClassName | quote }}
   accessModes:
     - ReadWriteOnce
   resources:
