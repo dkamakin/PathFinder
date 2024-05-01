@@ -25,12 +25,12 @@ import org.springframework.validation.annotation.Validated;
 public class IndexerConfiguration {
 
     public static final  String INDEX_DELAY         = "${index.delay}";
-    private static final String THREAD_NAME_PATTERN = "index-%d";
+    private static final String THREAD_NAME_PATTERN = "index-";
 
     @Bean
     public IndexThreadPool indexThreadPool() {
         return new IndexThreadPool(Executors.newThreadPerTaskExecutor(Thread.ofVirtual()
-                                                                              .name(THREAD_NAME_PATTERN)
+                                                                              .name(THREAD_NAME_PATTERN, 0)
                                                                               .factory()));
 
     }
