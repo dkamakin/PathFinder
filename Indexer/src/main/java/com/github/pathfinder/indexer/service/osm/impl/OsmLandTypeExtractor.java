@@ -2,10 +2,10 @@ package com.github.pathfinder.indexer.service.osm.impl;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import static com.github.pathfinder.indexer.configuration.osm.OsmLandTypeConfiguration.OsmTagConfiguration;
-import com.github.pathfinder.indexer.configuration.osm.OsmLandTypeConfiguration;
+import com.github.pathfinder.indexer.configuration.osm.OsmConfiguration;
+import com.github.pathfinder.indexer.configuration.osm.OsmConfiguration.OsmTagConfiguration;
+import com.github.pathfinder.indexer.configuration.osm.OsmConfiguration.OsmTagValue;
 import com.github.pathfinder.indexer.data.OsmMapper;
 import com.github.pathfinder.indexer.data.osm.OsmElement;
 import com.github.pathfinder.indexer.data.osm.OsmLandType;
@@ -19,13 +19,11 @@ import org.springframework.stereotype.Component;
 @RefreshScope
 public class OsmLandTypeExtractor {
 
-    private final OsmLandTypeConfiguration         configuration;
-    private final Map<String, OsmTagConfiguration> valuesIndex;
+    private final Map<String, Map<String, OsmTagValue>> tagsIndex;
 
-    public OsmLandTypeExtractor(OsmLandTypeConfiguration configuration) {
-        this.configuration = configuration;
-        this.valuesIndex   = configuration.getValues().stream()
-                .collect(Collectors.toMap(OsmTagConfiguration::name, Function.identity()));
+    public OsmLandTypeExtractor(OsmConfiguration configuration) {
+        this.tagsIndex = configuration.getTags().stream()
+                .collect(Collectors.toMap(OsmTagConfiguration::name, OsmMapper.MAPPER::tagsIndex));
 
         log.info("Initialized an extractor, configuration: {}", configuration);
     }
@@ -34,16 +32,15 @@ public class OsmLandTypeExtractor {
         return from(osmElement.tags()).isPresent();
     }
 
-    public Optional<OsmLandType> from(String type) {
-        return Optional.ofNullable(valuesIndex.get(type)).map(OsmMapper.MAPPER::osmLandType);
+    private Optional<OsmTagValue> osmTagValue(Map.Entry<String, String> entryTag) {
+        return Optional.ofNullable(tagsIndex.get(entryTag.getKey())).map(tag -> tag.get(entryTag.getValue()));
     }
 
     public Optional<OsmLandType> from(OsmTags tags) {
-        return configuration.getKeys().stream()
-                .map(tags::get)
+        return tags.entries().stream()
+                .map(this::osmTagValue)
                 .flatMap(Optional::stream)
-                .map(this::from)
-                .flatMap(Optional::stream)
+                .map(OsmMapper.MAPPER::osmLandType)
                 .findFirst();
     }
 

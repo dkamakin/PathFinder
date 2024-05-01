@@ -7,17 +7,14 @@ import com.github.pathfinder.core.data.BoundingBox;
 import com.github.pathfinder.core.data.Coordinate;
 import com.github.pathfinder.core.data.MetersDistance;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
-import com.github.pathfinder.indexer.configuration.IndexerIntegrationTest;
-import com.github.pathfinder.indexer.configuration.osm.OsmClientConfiguration;
+import com.github.pathfinder.indexer.configuration.IndexerOsmTestConfiguration;
 import com.github.pathfinder.indexer.service.osm.impl.BoundingBoxOsmElementsSplitter;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
 
-@IndexerIntegrationTest
-@Import(OsmClientConfiguration.class)
+@IndexerOsmTestConfiguration
 class BoundingBoxOsmElementsSplitterTest {
 
     static Stream<Arguments> boundingBoxesWithResult() {

@@ -1,7 +1,11 @@
 package com.github.pathfinder.indexer.data;
 
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import com.github.pathfinder.core.data.BoundingBox;
-import com.github.pathfinder.indexer.configuration.osm.OsmLandTypeConfiguration;
+import com.github.pathfinder.indexer.configuration.osm.OsmConfiguration.OsmTagConfiguration;
+import com.github.pathfinder.indexer.configuration.osm.OsmConfiguration.OsmTagValue;
 import com.github.pathfinder.indexer.data.osm.OsmBox;
 import com.github.pathfinder.indexer.data.osm.OsmLandType;
 import org.mapstruct.Mapper;
@@ -14,6 +18,10 @@ public interface OsmMapper {
 
     OsmBox osmBox(BoundingBox box);
 
-    OsmLandType osmLandType(OsmLandTypeConfiguration.OsmTagConfiguration configuration);
+    OsmLandType osmLandType(OsmTagValue configuration);
+
+    default Map<String, OsmTagValue> tagsIndex(OsmTagConfiguration tag) {
+        return tag.values().stream().collect(Collectors.toMap(OsmTagValue::name, Function.identity()));
+    }
 
 }

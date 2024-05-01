@@ -1,35 +1,48 @@
 package com.github.pathfinder.indexer.configuration.osm;
 
+import java.util.Set;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
 import com.github.pathfinder.indexer.client.osm.westnordost.WestNordOstOsmClient;
 import de.westnordost.osmapi.OsmConnection;
 import de.westnordost.osmapi.overpass.OverpassMapDataApi;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
 
-@Data
 @Slf4j
+@Data
 @Validated
 @RefreshScope
-@Configuration
-public class OsmClientConfiguration {
+@ConfigurationProperties(value = "osm", ignoreUnknownFields = false)
+public class OsmConfiguration {
 
-    @NotBlank
-    @Value("${osm.client.overpass.url}")
-    private String overpassUrl;
+    @NotEmpty
+    private Set<@Valid OsmTagConfiguration> tags;
+
+    @NotNull
+    private OsmClientConfiguration client;
+
+    public record OsmClientConfiguration(@NotBlank String overpassUrl) {
+    }
+
+    public record OsmTagConfiguration(@NotBlank String name, Set<OsmTagValue> values) {
+    }
+
+    public record OsmTagValue(@NotBlank String name, double weight) {
+    }
 
     @Bean
     public OsmClient osmClient() {
         log.info("Building an osm client with configuration: {}", this);
-        var overpassConnection = new OsmConnection(overpassUrl, null);
+        var overpassConnection = new OsmConnection(client.overpassUrl(), null);
 
         return new WestNordOstOsmClient(new OverpassMapDataApi(overpassConnection));
     }
-
 }

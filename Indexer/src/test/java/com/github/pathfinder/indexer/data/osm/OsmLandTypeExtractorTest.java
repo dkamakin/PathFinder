@@ -62,16 +62,4 @@ class OsmLandTypeExtractorTest {
         assertThat(actual).contains(expected);
     }
 
-    @Test
-    void from_TypeIsFound_ReturnLandType() {
-        var expected = osmTestTemplate.supportedLandType();
-
-        assertThat(target.from(expected.name())).contains(expected);
-    }
-
-    @Test
-    void from_TypeIsNotFound_EmptyResult() {
-        assertThat(target.from("test")).isEmpty();
-    }
-
 }

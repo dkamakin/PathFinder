@@ -1,7 +1,8 @@
 package com.github.pathfinder.indexer.configuration;
 
-import com.github.pathfinder.indexer.configuration.osm.OsmLandTypeConfiguration;
-import com.github.pathfinder.indexer.configuration.osm.OsmLandTypeConfiguration.OsmTagConfiguration;
+import com.github.pathfinder.indexer.configuration.osm.OsmConfiguration;
+import com.github.pathfinder.indexer.configuration.osm.OsmConfiguration.OsmTagConfiguration;
+import com.github.pathfinder.indexer.configuration.osm.OsmConfiguration.OsmTagValue;
 import com.github.pathfinder.indexer.data.osm.OsmLandType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.test.context.TestComponent;
@@ -10,13 +11,13 @@ import org.springframework.boot.test.context.TestComponent;
 @RequiredArgsConstructor
 public class OsmTestTemplate {
 
-    private final OsmLandTypeConfiguration landTypeConfiguration;
+    private final OsmConfiguration osmConfiguration;
 
     public OsmTagConfiguration tagConfiguration(int index) {
-        return landTypeConfiguration.getValues().stream().toList().get(index);
+        return osmConfiguration.getTags().stream().toList().get(index);
     }
 
-    public OsmLandType supportedLandType(OsmTagConfiguration tagConfiguration) {
+    public OsmLandType supportedLandType(OsmTagValue tagConfiguration) {
         return new OsmLandType(tagConfiguration.name(), tagConfiguration.weight());
     }
 
@@ -25,7 +26,7 @@ public class OsmTestTemplate {
     }
 
     public OsmLandType supportedLandType(int index) {
-        return supportedLandType(tagConfiguration(index));
+        return supportedLandType(tagConfiguration(0).values().stream().toList().get(index));
     }
 
     public String supportedKey() {
@@ -33,7 +34,7 @@ public class OsmTestTemplate {
     }
 
     public String supportedKey(int index) {
-        return landTypeConfiguration.getKeys().stream().toList().get(index);
+        return osmConfiguration.getTags().stream().toList().get(index).name();
     }
 
 }
