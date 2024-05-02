@@ -2,6 +2,7 @@ package com.github.pathfinder.indexer.configuration.osm;
 
 import java.util.Set;
 import de.westnordost.osmapi.OsmConnection;
+import de.westnordost.osmapi.overpass.OverpassMapDataApi;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -38,6 +39,11 @@ public class OsmConfiguration {
     @Bean
     public OsmConnection osmConnection() {
         return new OsmConnection(client.overpassUrl(), null);
+    }
+
+    @Bean
+    public OverpassMapDataApi overpassMapDataApi(OsmConnection osmConnection) {
+        return new OverpassMapDataApi(osmConnection);
     }
 
 }

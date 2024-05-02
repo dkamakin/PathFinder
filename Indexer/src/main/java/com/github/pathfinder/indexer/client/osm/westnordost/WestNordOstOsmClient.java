@@ -21,7 +21,7 @@ import org.springframework.util.CollectionUtils;
 @RequiredArgsConstructor
 public class WestNordOstOsmClient implements OsmClient {
 
-    private final OverpassMapDataApi overpassApi;
+    private final OverpassMapDataApi overpassMapDataApi;
 
     @Logged
     @Override
@@ -65,7 +65,7 @@ public class WestNordOstOsmClient implements OsmClient {
     private <T> T overpass(Function<OverpassMapDataApi, T> action) {
         try {
             log.info("Executing an overpass API call");
-            return action.apply(overpassApi);
+            return action.apply(overpassMapDataApi);
         } catch (Exception e) {
             log.error("Failed to execute an overpass action", e);
             throw new ApiExecutionException("Failed to execute an overpass action");
