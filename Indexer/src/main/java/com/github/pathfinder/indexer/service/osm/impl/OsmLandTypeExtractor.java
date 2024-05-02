@@ -3,9 +3,9 @@ package com.github.pathfinder.indexer.service.osm.impl;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import com.github.pathfinder.indexer.configuration.osm.OsmConfiguration;
-import com.github.pathfinder.indexer.configuration.osm.OsmConfiguration.OsmTagConfiguration;
-import com.github.pathfinder.indexer.configuration.osm.OsmConfiguration.OsmTagValue;
+import com.github.pathfinder.indexer.configuration.osm.OsmConfigurationProperties;
+import com.github.pathfinder.indexer.configuration.osm.OsmConfigurationProperties.OsmTagConfiguration;
+import com.github.pathfinder.indexer.configuration.osm.OsmConfigurationProperties.OsmTagValue;
 import com.github.pathfinder.indexer.data.OsmMapper;
 import com.github.pathfinder.indexer.data.osm.OsmElement;
 import com.github.pathfinder.indexer.data.osm.OsmLandType;
@@ -21,7 +21,7 @@ public class OsmLandTypeExtractor {
 
     private final Map<String, Map<String, OsmTagValue>> tagsIndex;
 
-    public OsmLandTypeExtractor(OsmConfiguration configuration) {
+    public OsmLandTypeExtractor(OsmConfigurationProperties configuration) {
         this.tagsIndex = configuration.getTags().stream()
                 .collect(Collectors.toMap(OsmTagConfiguration::name, OsmMapper.MAPPER::tagsIndex));
 
