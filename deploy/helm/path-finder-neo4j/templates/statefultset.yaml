@@ -19,18 +19,18 @@ spec:
             {{- include "path-finder-service-common.envFrom" . | nindent 12 }}
           startupProbe:
             failureThreshold: 2000
-            periodSeconds: 25
+            periodSeconds: 15
             tcpSocket:
               port: 7687
           livenessProbe:
-            initialDelaySeconds: 120
+            initialDelaySeconds: 60
             failureThreshold: 3
             timeoutSeconds: 2
             periodSeconds: 10
             tcpSocket:
               port: 7687
           readinessProbe:
-            initialDelaySeconds: 300
+            initialDelaySeconds: 120
             failureThreshold: 10
             timeoutSeconds: 3
             periodSeconds: 2
