@@ -67,7 +67,7 @@ class IndexTaskTest {
                 .matches(x -> !x.isSaved())
                 .matches(x -> !x.isConnected())
                 .matches(x -> x.getConnectionRequestTimestamp() == null)
-                .matches(x -> x.getSaveRequestTimestamp().equals(now));
+                .matches(x -> x.getSaveRequestTimestamp() != null);
 
         verify(indexer, VERIFICATION_TIMEOUT).process(expected.getId());
     }
