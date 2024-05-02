@@ -4,8 +4,11 @@ import java.util.concurrent.Executors;
 import com.github.pathfinder.core.configuration.CoreConfiguration;
 import com.github.pathfinder.indexer.service.impl.IndexThreadPool;
 import com.github.pathfinder.searcher.api.configuration.SearcherApiConfiguration;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
@@ -27,14 +30,17 @@ import org.springframework.validation.annotation.Validated;
 public class IndexerConfiguration {
 
     public static final  String INDEX_DELAY         = "${index.delay}";
-    private static final String THREAD_NAME_PATTERN = "index-";
+    private static final String THREAD_NAME_PATTERN = "index-%d";
+
+    @Positive
+    @Value("${index.threadCount}")
+    private int threadCount;
 
     @Bean
     public IndexThreadPool indexThreadPool() {
-        return new IndexThreadPool(Executors.newThreadPerTaskExecutor(Thread.ofVirtual()
-                                                                              .name(THREAD_NAME_PATTERN, 0)
-                                                                              .factory()));
-
+        return new IndexThreadPool(Executors.newFixedThreadPool(threadCount, new ThreadFactoryBuilder()
+                .setNameFormat(THREAD_NAME_PATTERN)
+                .build()));
     }
 
 }

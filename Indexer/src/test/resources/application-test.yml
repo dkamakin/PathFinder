@@ -22,6 +22,7 @@ logging:
         type: trace
     root: debug
 index:
+  threadCount: 4
   retry:
     chunk:
       save: PT5M

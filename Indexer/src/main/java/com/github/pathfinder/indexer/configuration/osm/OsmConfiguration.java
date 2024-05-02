@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
 
-@Slf4j
 @Data
+@Slf4j
 @Validated
 @RefreshScope
 @Configuration
