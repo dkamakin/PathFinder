@@ -29,6 +29,11 @@ index:
   delay: PT1M
 elevation:
   client:
+    retry:
+      delay: 1000
+      maxAttempts: 5
+      maxDelay: 5000
+      multiplier: 1.5
     uri: "https://api.open-elevation.com/api/v1/lookup"
     batchSize: 20000
 splitter:
@@ -183,8 +188,8 @@ osm:
           weight: 1
   client:
     retry:
-      delay: 500
-      maxAttempts: 3
-      maxDelay: 0
+      delay: 1000
+      maxAttempts: 5
+      maxDelay: 5000
       multiplier: 1.5
     overpassUrl: "https://overpass-api.de/api/"

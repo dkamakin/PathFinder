@@ -37,7 +37,7 @@ class WestNordOstOsmClientTest {
 
         assertThatThrownBy(() -> target.nodes(request)).isInstanceOf(ApiExecutionException.class);
 
-        verify(overpassApi, times(3)).queryElements(any(), any());
+        verify(overpassApi, times(5)).queryElements(any(), any());
     }
 
 }
