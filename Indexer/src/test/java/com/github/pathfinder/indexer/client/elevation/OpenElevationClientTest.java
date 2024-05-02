@@ -45,7 +45,7 @@ class OpenElevationClientTest {
 
     @Test
     @SneakyThrows
-    void nodes_ClientError_NoRetry() {
+    void elevations_ClientError_NoRetry() {
         whenNeedToGetResponse(response(HttpStatus.SC_CLIENT_ERROR));
 
         var request = List.of(new ElevationCoordinate(1D, 1D));
@@ -57,7 +57,7 @@ class OpenElevationClientTest {
 
     @Test
     @SneakyThrows
-    void nodes_ExceptionOccurred_RetryException() {
+    void elevations_ExceptionOccurred_RetryException() {
         whenNeedToGetResponse(response(HttpStatus.SC_INTERNAL_SERVER_ERROR));
 
         var request = List.of(new ElevationCoordinate(1D, 1D));
