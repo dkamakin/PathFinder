@@ -38,6 +38,8 @@ public class OsmConfiguration {
 
     @Bean
     public OsmConnection osmConnection() {
+        log.info("OSM Client configuration: {}", client);
+
         return new OsmConnection(client.overpassUrl(), null);
     }
 

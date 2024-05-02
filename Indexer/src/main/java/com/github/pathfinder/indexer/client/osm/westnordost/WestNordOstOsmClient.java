@@ -14,9 +14,11 @@ import com.github.pathfinder.indexer.exception.ApiExecutionException;
 import de.westnordost.osmapi.overpass.OverpassMapDataApi;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 @Slf4j
+@Component
 @OsmClientRetryable
 @RequiredArgsConstructor
 public class WestNordOstOsmClient implements OsmClient {
