@@ -1,5 +1,7 @@
 package com.github.pathfinder.indexer.configuration.osm;
 
+import com.github.pathfinder.indexer.client.osm.OsmClient;
+import com.github.pathfinder.indexer.client.osm.westnordost.WestNordOstOsmClient;
 import de.westnordost.osmapi.OsmConnection;
 import de.westnordost.osmapi.overpass.OverpassMapDataApi;
 import lombok.Data;
@@ -26,6 +28,11 @@ public class OsmConfiguration {
     @Bean
     public OverpassMapDataApi overpassMapDataApi(OsmConnection osmConnection) {
         return new OverpassMapDataApi(osmConnection);
+    }
+
+    @Bean
+    public OsmClient osmClient(OverpassMapDataApi overpassMapDataApi) {
+        return new WestNordOstOsmClient(overpassMapDataApi);
     }
 
 }
