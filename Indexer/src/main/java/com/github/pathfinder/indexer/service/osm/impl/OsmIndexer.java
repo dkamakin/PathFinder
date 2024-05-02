@@ -4,9 +4,11 @@ import java.util.List;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
+import com.github.pathfinder.indexer.configuration.IndexerRetryConfiguration;
 import com.github.pathfinder.indexer.data.EntityMapper;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import com.github.pathfinder.indexer.service.Indexer;
+import com.github.pathfinder.indexer.service.impl.IndexBoxSearcherService;
 import com.github.pathfinder.indexer.service.impl.IndexBoxUpdaterService;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.IndexBox;
@@ -23,15 +25,22 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OsmIndexer implements Indexer {
 
-    private final OsmClient              client;
-    private final OsmPointExtractor      pointExtractor;
-    private final SearcherApi            searcherApi;
-    private final IDateTimeSupplier      dateTimeSupplier;
-    private final IndexBoxUpdaterService boxUpdaterService;
+    private final OsmClient                 client;
+    private final OsmPointExtractor         pointExtractor;
+    private final SearcherApi               searcherApi;
+    private final IDateTimeSupplier         dateTimeSupplier;
+    private final IndexBoxUpdaterService    boxUpdaterService;
+    private final IndexBoxSearcherService   boxSearcherService;
+    private final IndexerRetryConfiguration retryConfiguration;
 
     @Override
     @Logged("box")
     public void process(IndexBoxEntity box) {
+        if (!boxSearcherService.isSavable(box, retryConfiguration.getSaveDelay())) {
+            log.warn("Box {} is not savable", box);
+            return;
+        }
+
         var elements = client.elements(EntityMapper.MAPPER.osmBox(box));
         var points   = pointExtractor.points(elements);
 

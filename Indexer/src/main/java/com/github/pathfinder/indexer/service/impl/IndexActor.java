@@ -9,7 +9,6 @@ import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Component
@@ -21,9 +20,9 @@ public class IndexActor {
     private final IDateTimeSupplier         dateTimeSupplier;
     private final IndexTask                 task;
     private final IndexerRetryConfiguration retryConfiguration;
+    private final IndexBoxUpdaterService    boxUpdaterService;
 
     @Logged
-    @Transactional
     public void perform() {
         boxSearcherService.savable(retryConfiguration.getSaveDelay()).forEach(task::accept);
         boxSearcherService.connectable(retryConfiguration.getConnectDelay()).forEach(this::connect);
@@ -33,7 +32,7 @@ public class IndexActor {
         try {
             searcherApi.createConnections(new ConnectChunkMessage(box.getId()));
 
-            box.setConnectionRequestTimestamp(dateTimeSupplier.now());
+            boxUpdaterService.save(box.setConnectionRequestTimestamp(dateTimeSupplier.now()));
         } catch (Exception e) {
             log.error("Failed to send {} for connection: {}", box, e.getMessage());
         }

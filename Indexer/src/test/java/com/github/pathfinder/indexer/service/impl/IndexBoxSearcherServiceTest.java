@@ -76,7 +76,8 @@ class IndexBoxSearcherServiceTest {
 
     @Test
     void savable_BoxWasNeverSentToSave_ReturnBox() {
-        var now = Instant.now();
+        var now       = Instant.now();
+        var saveDelay = Duration.ofMinutes(30);
 
         stateBuilder.save(IndexBoxEntity.builder()
                                   .saved(true)
@@ -93,14 +94,19 @@ class IndexBoxSearcherServiceTest {
 
         whenNeedToGetNow(now);
 
-        var actual = target.savable(Duration.ofMinutes(30));
+        var actual = target.savable(saveDelay);
 
-        assertThat(actual).hasSize(1).first().isEqualTo(expected);
+        assertThat(actual)
+                .hasSize(1)
+                .first()
+                .isEqualTo(expected)
+                .matches(x -> target.isSavable(x, saveDelay));
     }
 
     @Test
     void savable_BoxesAreJustSaved_NothingReturned() {
-        var now = Instant.now();
+        var now       = Instant.now();
+        var saveDelay = Duration.ofMinutes(30);
 
         stateBuilder.save(IndexBoxEntity.builder()
                                   .saved(true)
@@ -108,20 +114,21 @@ class IndexBoxSearcherServiceTest {
                                   .max(12, 23)
                                   .min(32, 43)
                                   .build());
-        stateBuilder.save(IndexBoxEntity.builder()
-                                  .saveRequestTimestamp(now)
-                                  .connectionRequestTimestamp(now)
-                                  .saved(false)
-                                  .connected(false)
-                                  .max(12, 23)
-                                  .min(32, 43)
-                                  .build());
+        var box = stateBuilder.save(IndexBoxEntity.builder()
+                                            .saveRequestTimestamp(now)
+                                            .connectionRequestTimestamp(now)
+                                            .saved(false)
+                                            .connected(false)
+                                            .max(12, 23)
+                                            .min(32, 43)
+                                            .build());
 
         whenNeedToGetNow(now);
 
-        var actual = target.savable(Duration.ofMinutes(30));
+        var actual = target.savable(saveDelay);
 
         assertThat(actual).isEmpty();
+        assertThat(target.isSavable(box.getId(), saveDelay)).isFalse();
     }
 
     @Test
@@ -147,7 +154,11 @@ class IndexBoxSearcherServiceTest {
 
         var actual = target.savable(saveDelay);
 
-        assertThat(actual).hasSize(1).first().isEqualTo(expected);
+        assertThat(actual)
+                .hasSize(1)
+                .first()
+                .isEqualTo(expected)
+                .matches(x -> target.isSavable(x, saveDelay));
     }
 
     @Test

@@ -36,6 +36,18 @@ public class IndexBoxSearcherService {
     }
 
     @ReadTransactional
+    @Logged(value = {"id", "saveDelay"}, ignoreReturnValue = false)
+    public boolean isSavable(IndexBoxEntity box, Duration saveDelay) {
+        return isSavable(box.getId(), saveDelay);
+    }
+
+    @ReadTransactional
+    @Logged(value = {"id", "saveDelay"}, ignoreReturnValue = false)
+    public boolean isSavable(int id, Duration saveDelay) {
+        return boxRepository.isSavable(saveDelay, dateTimeSupplier.now(), id);
+    }
+
+    @ReadTransactional
     @Logged(value = {"connectDelay"})
     public List<IndexBoxEntity> connectable(Duration connectDelay) {
         var notSaved = boxRepository.countNotSaved();

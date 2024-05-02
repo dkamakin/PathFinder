@@ -20,4 +20,10 @@ public class ChunkGetterService {
         return getterRepository.findAllByIdIn(ids);
     }
 
+    @Logged
+    @ReadTransactional
+    public boolean exists(int id) {
+        return getterRepository.existsById(id);
+    }
+
 }

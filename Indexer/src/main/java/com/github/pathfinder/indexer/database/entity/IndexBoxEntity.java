@@ -1,5 +1,7 @@
 package com.github.pathfinder.indexer.database.entity;
 
+import java.time.Instant;
+import java.util.function.Consumer;
 import com.google.common.base.Objects;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -11,8 +13,6 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import java.time.Instant;
-import java.util.function.Consumer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,7 +39,6 @@ public class IndexBoxEntity {
         public static final String CONNECTED                    = "CONNECTED";
         public static final String SAVE_REQUEST_TIMESTAMP       = "SAVE_REQUEST_TIMESTAMP";
         public static final String CONNECTION_REQUEST_TIMESTAMP = "CONNECTION_REQUEST_TIMESTAMP";
-
     }
 
     @Id
