@@ -11,6 +11,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @SpringBootTest(classes = {
+        IndexerConfiguration.class,
         RefreshAutoConfiguration.class,
         LocalValidatorFactoryBean.class,
 })

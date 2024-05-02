@@ -2,6 +2,7 @@ package com.github.pathfinder.indexer.service.osm.impl;
 
 import java.util.List;
 import java.util.Optional;
+import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.indexer.data.osm.OsmElement;
 import com.github.pathfinder.indexer.data.osm.OsmExtendedNode;
 import com.github.pathfinder.indexer.data.osm.OsmLandType;
@@ -20,6 +21,7 @@ public class OsmPointExtractor {
     private final ElevationExtractor elevationExtractor;
     private final OsmLandTypeService landTypeService;
 
+    @Logged
     public List<Point> points(List<OsmElement> elements) {
         var index   = osmElementsIndexer.index(elements);
         var context = new PointCreationContext(elevationExtractor.extend(index), new PointCreatorStatistics());

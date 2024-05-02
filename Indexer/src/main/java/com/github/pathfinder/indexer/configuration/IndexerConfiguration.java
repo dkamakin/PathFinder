@@ -11,12 +11,14 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.validation.annotation.Validated;
 
 @Data
 @Slf4j
 @Validated
+@EnableRetry
 @RefreshScope
 @Configuration
 @EnableScheduling

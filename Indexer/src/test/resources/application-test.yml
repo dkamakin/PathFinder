@@ -182,4 +182,9 @@ osm:
         - name: vineyard
           weight: 1
   client:
+    retry:
+      delay: 500
+      maxAttempts: 3
+      maxDelay: 0
+      multiplier: 1.5
     overpassUrl: "https://overpass-api.de/api/"

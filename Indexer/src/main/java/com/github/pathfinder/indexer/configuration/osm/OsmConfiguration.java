@@ -1,10 +1,7 @@
 package com.github.pathfinder.indexer.configuration.osm;
 
 import java.util.Set;
-import com.github.pathfinder.indexer.client.osm.OsmClient;
-import com.github.pathfinder.indexer.client.osm.westnordost.WestNordOstOsmClient;
 import de.westnordost.osmapi.OsmConnection;
-import de.westnordost.osmapi.overpass.OverpassMapDataApi;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -20,7 +17,7 @@ import org.springframework.validation.annotation.Validated;
 @Data
 @Validated
 @RefreshScope
-@ConfigurationProperties(value = "osm", ignoreUnknownFields = false)
+@ConfigurationProperties(value = "osm")
 public class OsmConfiguration {
 
     @NotEmpty
@@ -39,10 +36,8 @@ public class OsmConfiguration {
     }
 
     @Bean
-    public OsmClient osmClient() {
-        log.info("Building an osm client with configuration: {}", this);
-        var overpassConnection = new OsmConnection(client.overpassUrl(), null);
-
-        return new WestNordOstOsmClient(new OverpassMapDataApi(overpassConnection));
+    public OsmConnection osmConnection() {
+        return new OsmConnection(client.overpassUrl(), null);
     }
+
 }
