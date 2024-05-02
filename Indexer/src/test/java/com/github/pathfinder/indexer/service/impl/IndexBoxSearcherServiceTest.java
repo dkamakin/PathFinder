@@ -99,8 +99,7 @@ class IndexBoxSearcherServiceTest {
         assertThat(actual)
                 .hasSize(1)
                 .first()
-                .isEqualTo(expected)
-                .matches(x -> target.isSavable(x, saveDelay));
+                .isEqualTo(expected);
     }
 
     @Test
@@ -114,21 +113,20 @@ class IndexBoxSearcherServiceTest {
                                   .max(12, 23)
                                   .min(32, 43)
                                   .build());
-        var box = stateBuilder.save(IndexBoxEntity.builder()
-                                            .saveRequestTimestamp(now)
-                                            .connectionRequestTimestamp(now)
-                                            .saved(false)
-                                            .connected(false)
-                                            .max(12, 23)
-                                            .min(32, 43)
-                                            .build());
+        stateBuilder.save(IndexBoxEntity.builder()
+                                  .saveRequestTimestamp(now)
+                                  .connectionRequestTimestamp(now)
+                                  .saved(false)
+                                  .connected(false)
+                                  .max(12, 23)
+                                  .min(32, 43)
+                                  .build());
 
         whenNeedToGetNow(now);
 
         var actual = target.savable(saveDelay);
 
         assertThat(actual).isEmpty();
-        assertThat(target.isSavable(box.getId(), saveDelay)).isFalse();
     }
 
     @Test
@@ -157,8 +155,7 @@ class IndexBoxSearcherServiceTest {
         assertThat(actual)
                 .hasSize(1)
                 .first()
-                .isEqualTo(expected)
-                .matches(x -> target.isSavable(x, saveDelay));
+                .isEqualTo(expected);
     }
 
     @Test

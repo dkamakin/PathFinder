@@ -20,13 +20,6 @@ public interface IndexBoxSearcherRepository extends CrudRepository<IndexBoxEntit
     List<IndexBoxEntity> savable(@Param("saveDelay") Duration saveDelay, @Param("now") Instant now);
 
     @Query("""
-            SELECT count(box) != 0
-            FROM IndexBoxEntity box
-            WHERE box.id = :id AND NOT box.saved AND (box.saveRequestTimestamp IS NULL OR :now - box.saveRequestTimestamp > :saveDelay)
-            """)
-    boolean isSavable(@Param("saveDelay") Duration saveDelay, @Param("now") Instant now, @Param("id") int id);
-
-    @Query("""
             SELECT box
             FROM IndexBoxEntity box
             WHERE NOT box.connected AND (box.connectionRequestTimestamp IS NULL OR :now - box.connectionRequestTimestamp > :connectDelay)

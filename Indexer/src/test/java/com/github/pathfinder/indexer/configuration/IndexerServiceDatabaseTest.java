@@ -9,6 +9,7 @@ import com.github.pathfinder.core.test.ServiceDatabaseTest;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.cloud.autoconfigure.RefreshAutoConfiguration;
 import org.springframework.context.annotation.Import;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @ServiceDatabaseTest
 @Target(ElementType.TYPE)
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Import;
 @ExtendWith(IndexerDatabaseTestExtension.class)
 @Import({IndexerTestDatabaseTemplate.class,
         RefreshAutoConfiguration.class,
+        LocalValidatorFactoryBean.class,
         CoreConfiguration.class})
 public @interface IndexerServiceDatabaseTest {
 }
