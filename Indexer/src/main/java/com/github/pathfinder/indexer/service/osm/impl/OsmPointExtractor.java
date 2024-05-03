@@ -31,7 +31,7 @@ public class OsmPointExtractor {
 
     public List<Point> points(PointCreationContext context) {
         var result = context.index().nodes().stream()
-                .map(node -> createPointRequest(context, node))
+                .map(node -> point(context, node))
                 .flatMap(Optional::stream)
                 .toList();
 
@@ -40,18 +40,17 @@ public class OsmPointExtractor {
         return result;
     }
 
-    private Optional<Point> createPointRequest(PointCreationContext context, OsmExtendedNode extendedNode) {
+    private Optional<Point> point(PointCreationContext context, OsmExtendedNode extendedNode) {
         if (extendedNode.elevation().value() == 0D) {
-            log.warn("An elevation for the node {} is at the sea level", extendedNode);
             context.statistics().addUnknownElevationNode();
             return Optional.empty();
         }
 
         return landTypeService.landTypeWithMaxWeight(extendedNode, context.index())
-                .map(landType -> createPointRequest(extendedNode, landType));
+                .map(landType -> point(extendedNode, landType));
     }
 
-    private Point createPointRequest(OsmExtendedNode extendedNode, OsmLandType landType) {
+    private Point point(OsmExtendedNode extendedNode, OsmLandType landType) {
         return new Point(extendedNode.elevation().value(),
                          extendedNode.node().coordinate(),
                          landType.name(),
