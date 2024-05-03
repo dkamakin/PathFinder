@@ -8,10 +8,12 @@ import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
+@RefreshScope
 @RequiredArgsConstructor
 public class IndexActor {
 
