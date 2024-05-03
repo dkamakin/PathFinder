@@ -20,8 +20,8 @@ public class ChunkGetterService {
         return getterRepository.findAllByIdIn(ids);
     }
 
-    @Logged
     @ReadTransactional
+    @Logged(ignoreReturnValue = false)
     public boolean exists(int id) {
         return getterRepository.existsById(id);
     }

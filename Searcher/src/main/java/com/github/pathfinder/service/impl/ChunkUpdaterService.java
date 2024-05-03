@@ -19,7 +19,7 @@ public class ChunkUpdaterService {
     @Logged(value = "chunkNode", ignoreReturnValue = false)
     public ChunkNode save(ChunkNode node) {
         if (getterService.exists(node.getId())) {
-            throw new BadRequestException("A node with an id: {} is already saved", node.getId());
+            throw new BadRequestException("A node with an id: %s is already saved", node.getId());
         }
 
         return updaterRepository.save(node);
