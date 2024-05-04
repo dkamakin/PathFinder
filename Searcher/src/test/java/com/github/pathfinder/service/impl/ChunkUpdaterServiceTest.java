@@ -7,10 +7,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
-import com.github.pathfinder.core.exception.BadRequestException;
 import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.node.PointRelation;
 import com.github.pathfinder.database.node.projection.SimpleChunk;
+import com.github.pathfinder.searcher.api.exception.ChunkNodeAlreadySavedException;
 import io.micrometer.common.util.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +34,12 @@ class ChunkUpdaterServiceTest {
     }
 
     @Test
-    void save_ChunkNodeAlreadySaved_BadRequestException() {
+    void save_ChunkNodeAlreadySaved_ChunkNodeAlreadySavedException() {
         var node = chunkNode(1234);
 
         target.save(node);
 
-        assertThatThrownBy(() -> target.save(node)).isInstanceOf(BadRequestException.class);
+        assertThatThrownBy(() -> target.save(node)).isInstanceOf(ChunkNodeAlreadySavedException.class);
     }
 
     @Test

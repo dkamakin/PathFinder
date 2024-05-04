@@ -1,9 +1,9 @@
 package com.github.pathfinder.service.impl;
 
 import com.github.pathfinder.core.aspect.Logged;
-import com.github.pathfinder.core.exception.BadRequestException;
 import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.repository.ChunkUpdaterRepository;
+import com.github.pathfinder.searcher.api.exception.ChunkNodeAlreadySavedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,7 @@ public class ChunkUpdaterService {
     @Logged(value = "chunkNode", ignoreReturnValue = false)
     public ChunkNode save(ChunkNode node) {
         if (getterService.exists(node.getId())) {
-            throw new BadRequestException("A node with an id: %s is already saved", node.getId());
+            throw new ChunkNodeAlreadySavedException(node.getId());
         }
 
         return updaterRepository.save(node);

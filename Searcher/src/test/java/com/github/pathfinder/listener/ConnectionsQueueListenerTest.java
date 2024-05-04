@@ -9,7 +9,6 @@ import com.github.pathfinder.configuration.SearcherAmqpTest;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
 import com.github.pathfinder.service.impl.PointConnector;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -32,7 +31,6 @@ class ConnectionsQueueListenerTest {
     }
 
     @Test
-    @SneakyThrows
     void connect_ExceptionOccurred_Retry() {
         var request = new ConnectChunkMessage(1);
 
