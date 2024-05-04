@@ -6,5 +6,4 @@ public record Point(Double altitude,
                     Coordinate coordinate,
                     String landType,
                     Double passabilityCoefficient) {
-
 }

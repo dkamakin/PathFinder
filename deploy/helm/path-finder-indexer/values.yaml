@@ -1,0 +1,19 @@
+image:
+  pullPolicy: Always
+  repository: dkamakin/path-finder-indexer
+
+service:
+  port: 8083
+
+includeChartSecret: false
+includeChartConfig: true
+
+resources: { }
+
+envFrom:
+  extraClusterSecret:
+    - chartName: path-finder-rabbitmq
+    - chartName: path-finder-postgresql
+  extraClusterConfigmap:
+    - chartName: path-finder-configuration-public
+    - chartName: path-finder-postgresql-public

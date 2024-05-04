@@ -1,0 +1,12 @@
+{{- include "path-finder-service-common.configmap" (list . "path-finder-neo4j.configmapPublic") -}}
+{{- define "path-finder-neo4j.configmapPublic" -}}
+
+{{ $fullName := include "path-finder-service-common.fullname" . }}
+{{ $port := .Values.service.port | toString }}
+
+metadata:
+  name: "{{ include "path-finder-service-common.fullname" . }}-public"
+data:
+  NEO4J_BOLT_URI: "bolt://{{ $fullName }}:{{ $port }}"
+  URI: "{{ $fullName }}:{{ $port }}"
+{{- end -}}

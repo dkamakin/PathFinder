@@ -1,8 +1,8 @@
 package com.github.pathfinder.core.aspect;
 
+import java.time.Duration;
 import com.github.pathfinder.core.interfaces.IThrowingSupplier;
 import com.github.pathfinder.core.tools.impl.MethodTimer;
-import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,6 +22,11 @@ public class LoggedAspect {
     @Around("@annotation(Logged)")
     public Object logged(ProceedingJoinPoint joinPoint) throws Throwable {
         var annotation = annotation(joinPoint);
+
+        if (annotation == null) {
+            return joinPoint.proceed();
+        }
+
         var logger     = logger(annotation);
         var methodName = formatter.methodName(joinPoint.getSignature());
         var header     = formatter.header(methodName, annotation.value(), joinPoint.getArgs());
@@ -30,7 +35,7 @@ public class LoggedAspect {
 
         var result = proceed(joinPoint::proceed, annotation, logger, methodName);
 
-        if (isNeedToLogResult(annotation)) {
+        if (isNeedToLogResult(annotation, joinPoint)) {
             logger.accept("{} returned {}", methodName, result);
         }
 
@@ -60,8 +65,16 @@ public class LoggedAspect {
         logger.accept("{} execution time {}", methodName, duration);
     }
 
-    private boolean isNeedToLogResult(Logged annotation) {
-        return !annotation.ignoreReturnValue();
+    private boolean isNeedToLogResult(Logged annotation, ProceedingJoinPoint joinPoint) {
+        if (annotation.ignoreReturnValue()) {
+            return false;
+        }
+
+        if (joinPoint.getSignature() instanceof MethodSignature methodSignature) {
+            return methodSignature.getReturnType() != void.class;
+        }
+
+        return false;
     }
 
     private LogConsumer logger(Logged annotation) {

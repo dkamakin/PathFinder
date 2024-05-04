@@ -1,15 +1,14 @@
 package com.github.pathfinder.listener;
 
+import static com.github.pathfinder.messaging.test.MessagingTestConstant.DEFAULT_TIMEOUT;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import com.github.pathfinder.configuration.SearcherAmqpTest;
-import com.github.pathfinder.messaging.test.MessagingTestConstant;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
-import com.github.pathfinder.service.IPointConnector;
-import lombok.SneakyThrows;
+import com.github.pathfinder.service.impl.PointConnector;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,7 +21,7 @@ class ConnectionsQueueListenerTest {
     SearcherApi searcherApi;
 
     @MockBean
-    IPointConnector pointConnector;
+    PointConnector pointConnector;
 
     @SpyBean
     DeadLetterListener deadLetterListener;
@@ -32,17 +31,15 @@ class ConnectionsQueueListenerTest {
     }
 
     @Test
-    @SneakyThrows
     void connect_ExceptionOccurred_Retry() {
-        var chunk = 1;
+        var request = new ConnectChunkMessage(1);
 
         whenNeedToThrowOnCreateConnections(new RuntimeException());
 
-        searcherApi.createConnections(new ConnectChunkMessage(chunk));
+        searcherApi.createConnections(request);
 
-        verify(pointConnector, timeout(MessagingTestConstant.DEFAULT_TIMEOUT.toMillis()).times(2))
-                .createConnections(chunk);
-        verify(deadLetterListener).createConnections(any());
+        verify(pointConnector, timeout(DEFAULT_TIMEOUT.toMillis()).times(2)).createConnections(request.id());
+        verify(deadLetterListener).createConnections(request);
     }
 
     @Test
@@ -51,7 +48,7 @@ class ConnectionsQueueListenerTest {
 
         searcherApi.createConnections(new ConnectChunkMessage(chunk));
 
-        verify(pointConnector, timeout(MessagingTestConstant.DEFAULT_TIMEOUT.toMillis())).createConnections(chunk);
+        verify(pointConnector, timeout(DEFAULT_TIMEOUT.toMillis())).createConnections(chunk);
     }
 
 }

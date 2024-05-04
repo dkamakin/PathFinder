@@ -1,0 +1,6 @@
+dependencies:
+- name: path-finder-service-common
+  repository: file://../path-finder-service-common
+  version: 0.1.0
+digest: sha256:640eae4a248aea583f5c6473b27af0bd4cac44cfcc0cd037db3f39d58e25bb50
+generated: "2024-04-22T18:10:56.903703+02:00"

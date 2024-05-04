@@ -1,0 +1,21 @@
+image:
+  pullPolicy: Always
+  repository: dkamakin/path-finder-configuration
+
+service:
+  port: 8888
+
+resources: { }
+
+# The configuration service fetches data from a git repository. The key and the passphrase are used to authenticate.
+git:
+  uri: ""
+  key: ""
+  passphrase: ""
+
+includeChartSecret: true
+includeChartConfig: true
+
+envFrom:
+  extraClusterSecret:
+    - chartName: path-finder-rabbitmq

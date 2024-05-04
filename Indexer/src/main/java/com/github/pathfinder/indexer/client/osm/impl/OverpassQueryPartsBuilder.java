@@ -1,7 +1,8 @@
 package com.github.pathfinder.indexer.client.osm.impl;
 
-import com.github.pathfinder.indexer.data.osm.OsmBox;
 import java.util.List;
+import com.github.pathfinder.indexer.data.osm.OsmBox;
+import com.github.pathfinder.indexer.tools.OsmTools;
 
 public class OverpassQueryPartsBuilder {
 
@@ -52,9 +53,9 @@ public class OverpassQueryPartsBuilder {
     private OverpassQueryPartsBuilder geometry(String geometry, OsmBox box) {
         return append(geometry)
                 .append(OPENING_BRACKET)
-                .append(box.min().toString())
+                .append(OsmTools.latitudeLongitude(box.min()))
                 .append(COMMA)
-                .append(box.max().toString())
+                .append(OsmTools.latitudeLongitude(box.max()))
                 .append(CLOSING_BRACKET)
                 .append(DELIMITER);
     }

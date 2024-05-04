@@ -1,24 +1,20 @@
 package com.github.pathfinder.indexer.service.impl;
 
+import java.util.List;
+import java.util.stream.Stream;
+import static org.assertj.core.api.Assertions.assertThat;
 import com.github.pathfinder.core.data.BoundingBox;
 import com.github.pathfinder.core.data.Coordinate;
 import com.github.pathfinder.core.data.MetersDistance;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
-import com.github.pathfinder.indexer.configuration.osm.OsmClientConfiguration;
-import java.util.List;
-import java.util.stream.Stream;
+import com.github.pathfinder.indexer.configuration.IndexerOsmTestConfiguration;
+import com.github.pathfinder.indexer.service.osm.impl.BoundingBoxOsmElementsSplitter;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.autoconfigure.RefreshAutoConfiguration;
-import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = {
-        OsmClientConfiguration.class,
-        RefreshAutoConfiguration.class
-})
+@IndexerOsmTestConfiguration
 class BoundingBoxOsmElementsSplitterTest {
 
     static Stream<Arguments> boundingBoxesWithResult() {
@@ -72,7 +68,22 @@ class BoundingBoxOsmElementsSplitterTest {
                         List.of(
                                 new BoundingBox(new Coordinate(44.809, 20.382729),
                                                 new Coordinate(44.832378, 20.433712))
-                        ))
+                        )),
+                Arguments.of(
+                        new BoundingBox(new Coordinate(39.610978, -0.446320),
+                                        new Coordinate(39.739930, -0.197754)),
+                        List.of(
+                                new BoundingBox(new Coordinate(39.610978, -0.44632),
+                                                new Coordinate(39.73993, -0.321454888308976)),
+                                new BoundingBox(new Coordinate(39.61091090290156, -0.321454888308976),
+                                                new Coordinate(39.73993, -0.197754))
+                        )
+                ),
+                Arguments.of(
+                        new BoundingBox(new Coordinate(39.610978, -0.446320),
+                                        new Coordinate(39.610978, -0.446320)),
+                        List.of()
+                )
         );
     }
 
@@ -86,7 +97,7 @@ class BoundingBoxOsmElementsSplitterTest {
 
         var actual = target.split(box);
 
-        assertThat(actual).hasSameSizeAs(expected).containsAll(expected);
+        assertThat(actual).isEqualTo(expected);
     }
 
 }

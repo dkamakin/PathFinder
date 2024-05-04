@@ -1,7 +1,7 @@
 package com.github.pathfinder.web.impl;
 
 import com.github.pathfinder.core.aspect.Logged;
-import com.github.pathfinder.service.IPathSearcher;
+import com.github.pathfinder.service.impl.PathSearcher;
 import com.github.pathfinder.web.IPathEndpoint;
 import com.github.pathfinder.web.dto.path.FindPathDto;
 import com.github.pathfinder.web.dto.path.FoundPathDto;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PathEndpoint implements IPathEndpoint {
 
-    private final IPathSearcher pathSearcher;
+    private final PathSearcher pathSearcher;
 
     @Override
     @Logged("request")

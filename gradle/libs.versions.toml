@@ -1,25 +1,24 @@
 [versions]
-lombok = "1.18.30"
+lombok = "1.18.32"
 assertj = "3.25.3"
-postgresql = "42.7.2"
-guava = "33.0.0-jre"
+postgresql = "42.7.3"
+guava = "33.1.0-jre"
 springRetry = "2.0.5"
-springActuator = "3.2.3"
-springCloudBus = "4.1.0"
+springActuator = "3.2.5"
 apacheCommons = "3.14.0"
 mapStruct = "1.5.5.Final"
-springSecurityTest = "6.2.2"
+springSecurityTest = "6.2.4"
 springBoot = "3.2.2"
-springStream = "4.1.0"
 geoTools = "30.2"
 westnordost = "3.0"
 testcontainers = "1.19.7"
-springCloudConfig = "4.1.0"
-springDoc = "2.3.0"
-springAmqp = "3.1.1"
+springCloud = "4.1.1"
+springDoc = "2.5.0"
+springAmqp = "3.1.4"
 jwt = "4.4.0"
-testcontainersSpring = "3.1.5"
+testcontainersCustom = "3.1.6"
 springDependencyManagement = "1.1.4"
+springTransaction = "6.1.6"
 jib = "3.4.2"
 junit = "5.10.2"
 
@@ -42,6 +41,7 @@ spring-security = { group = "org.springframework.boot", name = "spring-boot-star
 spring-neo4j = { group = "org.springframework.boot", name = "spring-boot-starter-data-neo4j", version.ref = "springBoot" }
 spring-test = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "springBoot" }
 spring-security-test = { group = "org.springframework.security", name = "spring-security-test", version.ref = "springSecurityTest" }
+spring-transaction = { group = "org.springframework", name = "spring-tx", version.ref = "springTransaction" }
 
 # Spring Retry
 
@@ -61,11 +61,11 @@ geoTools = { group = "org.geotools", name = "gt-main", version.ref = "geoTools" 
 
 # Spring Cloud
 
-spring-cloud-config-client = { group = "org.springframework.cloud", name = "spring-cloud-starter-config", version.ref = "springCloudConfig" }
-spring-cloud-monitor = { group = "org.springframework.cloud", name = "spring-cloud-config-monitor", version.ref = "springStream" }
-spring-cloud-stream = { group = "org.springframework.cloud", name = "spring-cloud-starter-stream-rabbit", version.ref = "springStream" }
-spring-cloud-config-server = { group = "org.springframework.cloud", name = "spring-cloud-config-server", version.ref = "springCloudConfig" }
-spring-cloud-bus = { group = "org.springframework.cloud", name = "spring-cloud-starter-bus-amqp", version.ref = "springCloudBus" }
+spring-cloud-config-client = { group = "org.springframework.cloud", name = "spring-cloud-starter-config", version.ref = "springCloud" }
+spring-cloud-monitor = { group = "org.springframework.cloud", name = "spring-cloud-config-monitor", version.ref = "springCloud" }
+spring-cloud-stream = { group = "org.springframework.cloud", name = "spring-cloud-starter-stream-rabbit", version.ref = "springCloud" }
+spring-cloud-config-server = { group = "org.springframework.cloud", name = "spring-cloud-config-server", version.ref = "springCloud" }
+spring-cloud-bus = { group = "org.springframework.cloud", name = "spring-cloud-starter-bus-amqp", version.ref = "springCloud" }
 
 # OSM
 
@@ -104,8 +104,7 @@ testcontainers = { group = "org.testcontainers", name = "testcontainers", versio
 testcontainers-rabbitmq = { group = "org.testcontainers", name = "rabbitmq", version.ref = "testcontainers" }
 testcontainers-junit = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
 testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers" }
-testcontainers-spring = { group = "com.playtika.testcontainers", name = "testcontainers-spring-boot", version.ref = "testcontainersSpring" }
-testcontainers-neo4j = { group = "com.playtika.testcontainers", name = "embedded-neo4j", version.ref = "testcontainersSpring" }
+testcontainers-neo4j = { group = "com.playtika.testcontainers", name = "embedded-neo4j", version.ref = "testcontainersCustom" }
 
 # AssertJ
 

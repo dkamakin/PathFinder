@@ -1,0 +1,12 @@
+{{- include "path-finder-service-common.configmap" (list . "path-finder-postgresql.configmapPublic") -}}
+{{- define "path-finder-postgresql.configmapPublic" -}}
+
+{{ $fullName := include "path-finder-service-common.fullnameGenerator" (dict "chartName" "postgresql" "Values" .Values "Release" .Release) }}
+{{ $port := .Values.postgresql.primary.service.ports.postgresql | toString }}
+
+metadata:
+  name: "{{ include "path-finder-service-common.fullname" . }}-public"
+data:
+  POSTGRES_JDBC_URI: "jdbc:postgresql://{{ $fullName }}:{{ $port }}/{{ .Values.postgresql.auth.database }}"
+  URI: "{{ $fullName }}:{{ $port }}"
+{{- end -}}

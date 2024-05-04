@@ -1,5 +1,5 @@
 dependencies {
-    implementation(libs.spring.jpa)
+    implementation(libs.spring.transaction)
 }
 
 tasks.bootJar {

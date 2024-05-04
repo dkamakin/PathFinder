@@ -1,5 +1,6 @@
 package com.github.pathfinder.security.listener;
 
+import static com.github.pathfinder.security.api.configuration.SecurityMessagingConfiguration.Token.DEFAULT_QUEUE_NAME;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.messaging.error.RethrowingToSenderErrorHandler;
 import com.github.pathfinder.messaging.listener.AmqpHandler;
@@ -8,12 +9,11 @@ import com.github.pathfinder.security.api.data.GetUserInfoMessage;
 import com.github.pathfinder.security.api.data.UserInfo;
 import com.github.pathfinder.security.api.exception.InvalidTokenException;
 import com.github.pathfinder.security.data.InternalMapper;
-import com.github.pathfinder.security.service.IUserService;
+import com.github.pathfinder.security.service.impl.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import static com.github.pathfinder.security.api.configuration.SecurityMessagingConfiguration.Token.DEFAULT_QUEUE_NAME;
 
 @Slf4j
 @Component
@@ -21,7 +21,7 @@ import static com.github.pathfinder.security.api.configuration.SecurityMessaging
 @AmqpListener(errorHandler = RethrowingToSenderErrorHandler.NAME, queues = DEFAULT_QUEUE_NAME)
 public class SecurityListener {
 
-    private final IUserService userService;
+    private final UserService userService;
 
     @AmqpHandler
     @Logged("request")

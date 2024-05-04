@@ -4,6 +4,7 @@ import com.github.pathfinder.core.data.MetersDistance;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
 import com.github.pathfinder.indexer.configuration.SplitterConfiguration;
 import com.github.pathfinder.indexer.service.BoundingBoxSplitter;
+import com.github.pathfinder.indexer.service.osm.impl.BoundingBoxOsmElementsSplitter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;

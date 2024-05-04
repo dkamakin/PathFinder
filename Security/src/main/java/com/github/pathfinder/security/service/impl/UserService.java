@@ -1,5 +1,6 @@
 package com.github.pathfinder.security.service.impl;
 
+import java.util.Optional;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.core.interfaces.ReadTransactional;
 import com.github.pathfinder.security.api.data.Token;
@@ -8,10 +9,6 @@ import com.github.pathfinder.security.data.user.SaveUserRequest;
 import com.github.pathfinder.security.database.entity.UserEntity;
 import com.github.pathfinder.security.database.entity.UserRolesEntity;
 import com.github.pathfinder.security.database.repository.UserRepository;
-import com.github.pathfinder.security.service.IPasswordService;
-import com.github.pathfinder.security.service.ITokenService;
-import com.github.pathfinder.security.service.IUserService;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,13 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserService implements IUserService {
+public class UserService {
 
-    private final UserRepository   userRepository;
-    private final ITokenService    tokenService;
-    private final IPasswordService passwordService;
+    private final UserRepository  userRepository;
+    private final TokenService    tokenService;
+    private final PasswordService passwordService;
 
-    @Override
     @Transactional
     @Logged(ignoreReturnValue = false, value = "user")
     public UserEntity save(SaveUserRequest user) {
@@ -43,7 +39,6 @@ public class UserService implements IUserService {
         return userRepository.save(userEntity);
     }
 
-    @Override
     @ReadTransactional
     @Logged("username")
     public Optional<UserEntity> read(String username) {
@@ -51,7 +46,6 @@ public class UserService implements IUserService {
     }
 
     @Logged
-    @Override
     @ReadTransactional
     public Optional<UserEntity> read(Token token) {
         return userRepository.findById(tokenService.payload(token).userId());

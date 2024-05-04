@@ -7,8 +7,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
-import com.github.pathfinder.indexer.service.BoxSearcherService;
-import com.github.pathfinder.indexer.service.IActualizeService;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.Chunk;
 import com.github.pathfinder.searcher.api.data.GetChunksMessage;
@@ -21,12 +19,11 @@ import org.springframework.util.CollectionUtils;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ActualizeService implements IActualizeService {
+public class ActualizeService {
 
-    private final SearcherApi        searcherApi;
-    private final BoxSearcherService boxSearcherService;
+    private final SearcherApi             searcherApi;
+    private final IndexBoxSearcherService boxSearcherService;
 
-    @Override
     @Transactional
     @Logged(ignoreReturnValue = false)
     public void perform() {
@@ -49,8 +46,6 @@ public class ActualizeService implements IActualizeService {
     }
 
     private void handleNotFound(IndexBoxEntity box) {
-        log.info("Box {} is not present in the response", box.getId());
-
         if (box.isSaved()) {
             log.warn("Box was set as saved, but not found in the last try");
             box.setSaved(false);
@@ -69,14 +64,14 @@ public class ActualizeService implements IActualizeService {
         }
 
         if (box.isConnected() != chunk.connected()) {
-            log.info("Detected a change: the box {} connection status has changed, current: {}, actual: {}",
+            log.info("Detected a change: the box {} connection status has changed from: {} to: {}",
                      box.getId(), box.isConnected(), chunk.connected());
             box.setConnected(chunk.connected());
         }
     }
 
     private Map<Integer, Chunk> indexChunks(List<Chunk> boxes) {
-        return boxes.stream().collect(Collectors.toMap(Chunk::id, Function.identity()));
+        return boxes.stream().collect(Collectors.toMap(Chunk::id, Function.identity(), (l, r) -> r));
     }
 
     private GetChunksMessage getChunksMessage(List<IndexBoxEntity> boxes) {

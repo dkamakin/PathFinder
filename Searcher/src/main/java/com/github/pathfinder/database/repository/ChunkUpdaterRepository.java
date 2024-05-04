@@ -14,7 +14,7 @@ public interface ChunkUpdaterRepository extends Neo4jRepository<ChunkNode, Strin
             WHERE chunk.id = $id
             SET chunk.connected = $connected
             """)
-    void markConnected(@Param("id") Integer id,
+    void markConnected(@Param("id") int id,
                        @Param("connected") boolean connected);
 
 }

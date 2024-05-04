@@ -38,8 +38,6 @@ public class PointConnectionRepository implements IPointConnectionRepository {
             CREATE (first)-[:CONNECTION {distanceMeters: distanceMeters, weight: weight}]->(second)',
             {
             batchSize:   1,
-            parallel:    true,
-            concurrency: 2,
             retries:     10,
             params: {
             chunkId:        $chunkId,

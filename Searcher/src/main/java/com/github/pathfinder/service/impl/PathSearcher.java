@@ -7,18 +7,16 @@ import com.github.pathfinder.data.path.AStarResult;
 import com.github.pathfinder.data.path.FindPathRequest;
 import com.github.pathfinder.database.repository.IPathRepository;
 import com.github.pathfinder.searcher.api.exception.PathNotFoundException;
-import com.github.pathfinder.service.IPathSearcher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PathSearcher implements IPathSearcher {
+public class PathSearcher {
 
     private final IPathRepository         searcherRepository;
     private final CoordinateConfiguration coordinateConfiguration;
 
-    @Override
     @Logged("request")
     @ReadTransactional
     public AStarResult aStar(FindPathRequest request) {
