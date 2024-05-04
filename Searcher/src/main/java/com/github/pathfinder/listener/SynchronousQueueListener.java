@@ -1,6 +1,6 @@
 package com.github.pathfinder.listener;
 
-import static com.github.pathfinder.searcher.api.configuration.SearcherMessagingConfiguration.Token.DEFAULT_QUEUE_NAME;
+import static com.github.pathfinder.searcher.api.configuration.SearcherMessagingConfiguration.Token.SYNCHRONOUS_QUEUE_NAME;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.mapper.NodeMapper;
 import com.github.pathfinder.messaging.error.RethrowingToSenderErrorHandler;
@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@AmqpListener(queues = DEFAULT_QUEUE_NAME, errorHandler = RethrowingToSenderErrorHandler.NAME)
-public class DefaultQueueListener {
+@AmqpListener(queues = SYNCHRONOUS_QUEUE_NAME, errorHandler = RethrowingToSenderErrorHandler.NAME)
+public class SynchronousQueueListener {
 
     private final ChunkGetterService chunkGetterService;
 

@@ -16,8 +16,8 @@ queue:
     connections:
       name: pathfinder.queue.searcher.connections
       consumers: 5
-    default:
-      name: pathfinder.queue.searcher.api
+    synchronous:
+      name: pathfinder.queue.searcher.synchronous
     deadLetter:
       name: pathfinder.queue.searcher.deadLetter
 spring:

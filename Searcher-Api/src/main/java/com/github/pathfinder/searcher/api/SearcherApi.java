@@ -36,7 +36,7 @@ public class SearcherApi {
     @Logged(value = "request", ignoreReturnValue = false)
     public GetChunksResponse chunks(GetChunksMessage request) {
         return amqpRouter.route(messageBuilder.direct()
-                                        .routingKey(messagingConfiguration.getDefaultQueueName())
+                                        .routingKey(messagingConfiguration.getSynchronousQueueName())
                                         .with(request)).sendAndReceive(GetChunksResponse.class);
     }
 

@@ -35,7 +35,7 @@ public class LoggedAspect {
 
         var result = proceed(joinPoint::proceed, annotation, logger, methodName);
 
-        if (isNeedToLogResult(annotation)) {
+        if (isNeedToLogResult(annotation, joinPoint)) {
             logger.accept("{} returned {}", methodName, result);
         }
 
@@ -65,8 +65,16 @@ public class LoggedAspect {
         logger.accept("{} execution time {}", methodName, duration);
     }
 
-    private boolean isNeedToLogResult(Logged annotation) {
-        return !annotation.ignoreReturnValue();
+    private boolean isNeedToLogResult(Logged annotation, ProceedingJoinPoint joinPoint) {
+        if (annotation.ignoreReturnValue()) {
+            return false;
+        }
+
+        if (joinPoint.getSignature() instanceof MethodSignature methodSignature) {
+            return methodSignature.getReturnType() != void.class;
+        }
+
+        return false;
     }
 
     private LogConsumer logger(Logged annotation) {

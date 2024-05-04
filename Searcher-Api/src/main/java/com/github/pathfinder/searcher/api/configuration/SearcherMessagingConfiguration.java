@@ -39,7 +39,7 @@ public class SearcherMessagingConfiguration {
     @UtilityClass
     public static class Token {
 
-        public static final String DEFAULT_QUEUE_NAME                      = "${queue.searcher.default.name}";
+        public static final String SYNCHRONOUS_QUEUE_NAME                  = "${queue.searcher.synchronous.name}";
         public static final String DEAD_LETTER_QUEUE_NAME                  = "${queue.searcher.deadLetter.name}";
         public static final String CONNECTIONS_QUEUE_NAME                  = "${queue.searcher.connections.name}";
         public static final String CONNECTIONS_CONSUMERS                   = "${queue.searcher.connections.consumers:2}";
@@ -51,8 +51,8 @@ public class SearcherMessagingConfiguration {
     }
 
     @NotBlank
-    @Value(Token.DEFAULT_QUEUE_NAME)
-    private String defaultQueueName;
+    @Value(Token.SYNCHRONOUS_QUEUE_NAME)
+    private String synchronousQueueName;
 
     @NotBlank
     @Value(Token.DEAD_LETTER_QUEUE_NAME)
@@ -124,12 +124,12 @@ public class SearcherMessagingConfiguration {
     @Bean
     public Binding searcherDefaultBinding(@Qualifier("directExchange") DirectExchange directExchange) {
         log.info("Searcher binding with configuration: {}", this);
-        return BindingBuilder.bind(searcherDefaultQueue()).to(directExchange).withQueueName();
+        return BindingBuilder.bind(searcherSynchronousQueue()).to(directExchange).withQueueName();
     }
 
     @Bean
-    public Queue searcherDefaultQueue() {
-        return QueueBuilder.durable(defaultQueueName).build();
+    public Queue searcherSynchronousQueue() {
+        return QueueBuilder.durable(synchronousQueueName).build();
     }
 
     @Bean(Token.CONNECTIONS_LISTENER_QUEUE_FACTORY_NAME)
