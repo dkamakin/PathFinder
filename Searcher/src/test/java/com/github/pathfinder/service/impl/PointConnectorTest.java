@@ -241,7 +241,8 @@ class PointConnectorTest {
 
         assertThat(actual)
                 .hasSize(2)
-                .anyMatch(node -> node.getRelations().isEmpty());
+                .anyMatch(node -> node.getRelations().isEmpty())
+                .anyMatch(node -> !node.getRelations().isEmpty());
     }
 
     @ParameterizedTest
