@@ -1,51 +1,51 @@
 package com.github.pathfinder.indexer.service.osm.impl;
 
+import java.util.List;
 import com.github.pathfinder.core.aspect.Logged;
-import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
 import com.github.pathfinder.indexer.data.EntityMapper;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
-import com.github.pathfinder.indexer.service.BoxUpdaterService;
-import com.github.pathfinder.indexer.service.osm.IOsmIndexer;
+import com.github.pathfinder.indexer.exception.IndexBoxNotFoundException;
+import com.github.pathfinder.indexer.service.Indexer;
+import com.github.pathfinder.indexer.service.impl.IndexBoxSearcherService;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.IndexBox;
 import com.github.pathfinder.searcher.api.data.point.Point;
 import com.github.pathfinder.searcher.api.data.point.SavePointsMessage;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 @Slf4j
 @Service
 @RefreshScope
 @RequiredArgsConstructor
-public class OsmIndexer implements IOsmIndexer {
+public class OsmIndexer implements Indexer {
 
-    private final OsmClient         client;
-    private final OsmPointExtractor pointExtractor;
-    private final SearcherApi       searcherApi;
-    private final IDateTimeSupplier dateTimeSupplier;
-    private final BoxUpdaterService boxUpdaterService;
+    private final OsmClient               client;
+    private final OsmPointExtractor       pointExtractor;
+    private final SearcherApi             searcherApi;
+    private final IndexBoxSearcherService searcherService;
 
     @Override
     @Logged("box")
-    public void process(IndexBoxEntity box) {
-        var elements = client.elements(EntityMapper.MAPPER.osmBox(box));
+    public void process(int boxId) {
+        var box = box(boxId);
 
-        log.info("Query result: {} elements", elements.size());
-
-        if (CollectionUtils.isEmpty(elements)) {
-            log.info("No points found for {}", box);
+        if (box.isSaved()) {
+            log.warn("Box {} is already saved", box);
             return;
         }
 
-        var points = pointExtractor.points(elements);
+        var elements = client.elements(EntityMapper.MAPPER.osmBox(box));
+        var points   = pointExtractor.points(elements);
 
         searcherApi.save(request(box, points));
-        boxUpdaterService.save(box.setSaveRequestTimestamp(dateTimeSupplier.now()));
+    }
+
+    private IndexBoxEntity box(int boxId) {
+        return searcherService.box(boxId).orElseThrow(() -> new IndexBoxNotFoundException(boxId));
     }
 
     private SavePointsMessage request(IndexBoxEntity entity, List<Point> points) {

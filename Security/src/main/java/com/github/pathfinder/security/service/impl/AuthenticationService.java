@@ -13,10 +13,6 @@ import com.github.pathfinder.security.data.jwt.JwtPayload;
 import com.github.pathfinder.security.database.entity.UserEntity;
 import com.github.pathfinder.security.database.entity.UserRefreshTokenEntity;
 import com.github.pathfinder.security.database.repository.RefreshTokenRepository;
-import com.github.pathfinder.security.service.IAuthenticationService;
-import com.github.pathfinder.security.service.IPasswordService;
-import com.github.pathfinder.security.service.ITokenService;
-import com.github.pathfinder.security.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,14 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService implements IAuthenticationService {
+public class AuthenticationService {
 
-    private final ITokenService          tokenService;
-    private final IPasswordService       passwordService;
+    private final TokenService           tokenService;
+    private final PasswordService        passwordService;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final IUserService           userService;
+    private final UserService            userService;
 
-    @Override
     @Transactional
     @Logged("request")
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -43,7 +38,6 @@ public class AuthenticationService implements IAuthenticationService {
                 .orElseThrow(() -> new UserNotFoundException(request.username()));
     }
 
-    @Override
     @Logged("request")
     @Transactional(noRollbackFor = InvalidTokenException.class)
     public AuthenticationResponse refresh(SessionRefreshRequest request) {

@@ -7,8 +7,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
 
 @TestConfiguration
-@EnableNeo4jRepositories
+@EnableNeo4jRepositories("com.github.pathfinder.configuration.repository")
 @Import({Neo4jConfiguration.class, Neo4jTestTemplate.class, ValueMapper.class, CoreConfiguration.class})
 public class Neo4jTestConfiguration {
-
 }

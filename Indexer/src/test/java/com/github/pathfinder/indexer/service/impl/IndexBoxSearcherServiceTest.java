@@ -1,19 +1,18 @@
 package com.github.pathfinder.indexer.service.impl;
 
+import java.time.Duration;
+import java.time.Instant;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilderConfiguration;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
-import com.github.pathfinder.indexer.service.BoxSearcherService;
-import java.time.Duration;
-import java.time.Instant;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @IndexerServiceDatabaseTest
 @IndexerStateBuilderConfiguration
@@ -24,7 +23,7 @@ class IndexBoxSearcherServiceTest {
     IndexerStateBuilder stateBuilder;
 
     @Autowired
-    BoxSearcherService target;
+    IndexBoxSearcherService target;
 
     @MockBean
     IDateTimeSupplier dateTimeSupplier;
@@ -77,7 +76,8 @@ class IndexBoxSearcherServiceTest {
 
     @Test
     void savable_BoxWasNeverSentToSave_ReturnBox() {
-        var now = Instant.now();
+        var now       = Instant.now();
+        var saveDelay = Duration.ofMinutes(30);
 
         stateBuilder.save(IndexBoxEntity.builder()
                                   .saved(true)
@@ -94,14 +94,18 @@ class IndexBoxSearcherServiceTest {
 
         whenNeedToGetNow(now);
 
-        var actual = target.savable(Duration.ofMinutes(30));
+        var actual = target.savable(saveDelay);
 
-        assertThat(actual).hasSize(1).first().isEqualTo(expected);
+        assertThat(actual)
+                .hasSize(1)
+                .first()
+                .isEqualTo(expected);
     }
 
     @Test
     void savable_BoxesAreJustSaved_NothingReturned() {
-        var now = Instant.now();
+        var now       = Instant.now();
+        var saveDelay = Duration.ofMinutes(30);
 
         stateBuilder.save(IndexBoxEntity.builder()
                                   .saved(true)
@@ -120,7 +124,7 @@ class IndexBoxSearcherServiceTest {
 
         whenNeedToGetNow(now);
 
-        var actual = target.savable(Duration.ofMinutes(30));
+        var actual = target.savable(saveDelay);
 
         assertThat(actual).isEmpty();
     }
@@ -148,7 +152,10 @@ class IndexBoxSearcherServiceTest {
 
         var actual = target.savable(saveDelay);
 
-        assertThat(actual).hasSize(1).first().isEqualTo(expected);
+        assertThat(actual)
+                .hasSize(1)
+                .first()
+                .isEqualTo(expected);
     }
 
     @Test

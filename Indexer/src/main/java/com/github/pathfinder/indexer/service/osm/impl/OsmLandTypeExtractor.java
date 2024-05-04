@@ -1,37 +1,47 @@
 package com.github.pathfinder.indexer.service.osm.impl;
 
-import com.github.pathfinder.indexer.data.osm.OsmExtendedBoxIndex;
-import com.github.pathfinder.indexer.data.osm.OsmExtendedNode;
-import com.github.pathfinder.indexer.data.osm.OsmLandType;
-import com.github.pathfinder.indexer.data.osm.OsmWay;
-import java.util.Comparator;
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
-import lombok.experimental.UtilityClass;
+import java.util.stream.Collectors;
+import com.github.pathfinder.indexer.configuration.osm.OsmConfigurationProperties;
+import com.github.pathfinder.indexer.configuration.osm.OsmConfigurationProperties.OsmTagConfiguration;
+import com.github.pathfinder.indexer.configuration.osm.OsmConfigurationProperties.OsmTagValue;
+import com.github.pathfinder.indexer.data.OsmMapper;
+import com.github.pathfinder.indexer.data.osm.OsmElement;
+import com.github.pathfinder.indexer.data.osm.OsmLandType;
+import com.github.pathfinder.indexer.data.osm.OsmTags;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.stereotype.Component;
 
-@UtilityClass
+@Slf4j
+@Component
+@RefreshScope
 public class OsmLandTypeExtractor {
 
-    public Optional<OsmLandType> maxLandType(OsmExtendedNode extendedNode, OsmExtendedBoxIndex index) {
-        var wayLandType  = landTypeFromWay(extendedNode, index);
-        var nodeLandType = OsmLandType.from(extendedNode.node().tags());
+    private final Map<String, Map<String, OsmTagValue>> tagsIndex;
 
-        return Stream.of(wayLandType, nodeLandType)
-                .flatMap(Optional::stream)
-                .max(Comparator.comparing(OsmLandType::coefficient));
+    public OsmLandTypeExtractor(OsmConfigurationProperties configuration) {
+        this.tagsIndex = configuration.getTags().stream()
+                .collect(Collectors.toMap(OsmTagConfiguration::name, OsmMapper.MAPPER::tagsIndex));
+
+        log.info("Initialized an extractor, configuration: {}", configuration);
     }
 
-    private Optional<OsmLandType> landTypeFromWay(OsmExtendedNode extendedNode, OsmExtendedBoxIndex index) {
-        return findMaxLandType(index.ways(extendedNode));
+    public boolean hasLandType(OsmElement osmElement) {
+        return from(osmElement.tags()).isPresent();
     }
 
-    private Optional<OsmLandType> findMaxLandType(List<OsmWay> ways) {
-        return ways.stream()
-                .map(OsmWay::tags)
-                .map(OsmLandType::from)
+    private Optional<OsmTagValue> osmTagValue(Map.Entry<String, String> entryTag) {
+        return Optional.ofNullable(tagsIndex.get(entryTag.getKey())).map(tag -> tag.get(entryTag.getValue()));
+    }
+
+    public Optional<OsmLandType> from(OsmTags tags) {
+        return tags.entries().stream()
+                .map(this::osmTagValue)
                 .flatMap(Optional::stream)
-                .max(Comparator.comparing(OsmLandType::coefficient));
+                .map(OsmMapper.MAPPER::osmLandType)
+                .findFirst();
     }
 
 }

@@ -11,8 +11,6 @@ spring:
   cloud:
     config:
       enabled: false
-    bus:
-      enabled: false
   jpa:
     hibernate:
       ddl-auto: create
@@ -22,10 +20,6 @@ spring:
         show_sql: true
         use_sql_comments: true
         format_sql: true
-  datasource:
-    url: jdbc:h2:mem:foo;DB_CLOSE_ON_EXIT=FALSE
-    password: ''
-    username: sa
 token:
   access:
     lifetime: PT3M

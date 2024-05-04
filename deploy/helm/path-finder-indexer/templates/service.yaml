@@ -1,0 +1,3 @@
+{{- include "path-finder-service-common.service" (list . "path-finder-searcher.service") -}}
+{{- define "path-finder-searcher.service" -}}
+{{- end -}}

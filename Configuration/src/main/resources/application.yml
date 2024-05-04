@@ -1,4 +1,8 @@
 spring:
+  rabbitmq:
+    password: ${RABBITMQ_PASSWORD}
+    username: ${RABBITMQ_USERNAME}
+    host: ${RABBITMQ_HOST}
   cloud:
     config:
       server:
@@ -11,5 +15,3 @@ spring:
           uri: ${GIT_URI}
   application:
     name: configuration
-server:
-  port: ${PORT}

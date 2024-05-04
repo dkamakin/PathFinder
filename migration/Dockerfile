@@ -1,14 +1,14 @@
 FROM maven:3.9.6-eclipse-temurin-21-alpine
 
-ENV LIQUIBASE_RELATIONAL_DATABASE_URL=${LIQUIBASE_RELATIONAL_DATABASE_URL}\
-    LIQUIBASE_RELATIONAL_DATABASE_USERNAME=${LIQUIBASE_RELATIONAL_DATABASE_USERNAME}\
-    LIQUIBASE_RELATIONAL_DATABASE_PASSWORD=${LIQUIBASE_RELATIONAL_DATABASE_PASSWORD}\
-    LIQUIBASE_NEO4J_DATABASE_URL=${LIQUIBASE_NEO4J_DATABASE_URL}\
-    LIQUIBASE_NEO4J_DATABASE_USERNAME=${LIQUIBASE_NEO4J_DATABASE_USERNAME}\
-    LIQUIBASE_NEO4J_DATABASE_PASSWORD=${LIQUIBASE_NEO4J_DATABASE_PASSWORD}
+ARG POSTGRES_JDBC_URI
+ARG POSTGRES_USER
+ARG POSTGRES_PASSWORD
+ARG NEO4J_BOLT_URI
+ARG NEO4J_USERNAME
+ARG NEO4J_PASSWORD
 
 ADD . /usr/local/liquibase
 WORKDIR /usr/local/liquibase
 
-CMD mvn liquibase:update -Dliquibase.url=${LIQUIBASE_RELATIONAL_DATABASE_URL} -Dliquibase.username=${LIQUIBASE_RELATIONAL_DATABASE_USERNAME} -Dliquibase.password=${LIQUIBASE_RELATIONAL_DATABASE_PASSWORD} -Dliquibase.changeLogFile=relational_changelog.xml \
-    && mvn liquibase:update -Dliquibase.url=${LIQUIBASE_NEO4J_DATABASE_URL} -Dliquibase.username=${LIQUIBASE_NEO4J_DATABASE_USERNAME} -Dliquibase.password=${LIQUIBASE_NEO4J_DATABASE_PASSWORD} -Dliquibase.changeLogFile=neo4j_changelog.xml
+CMD mvn liquibase:update -Dliquibase.url=${POSTGRES_JDBC_URI} -Dliquibase.username=${POSTGRES_USER} -Dliquibase.password=${POSTGRES_PASSWORD} -Dliquibase.changeLogFile=relational_changelog.xml \
+    && mvn liquibase:update -Dliquibase.url=jdbc:neo4j:${NEO4J_BOLT_URI} -Dliquibase.username=${NEO4J_USERNAME} -Dliquibase.password=${NEO4J_PASSWORD} -Dliquibase.changeLogFile=neo4j_changelog.xml

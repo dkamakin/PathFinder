@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "path-finder-service-common.fullname" . }}
+  labels:
+    {{- include "path-finder-service-common.labels" . | nindent 4 }}
+spec:
+  volumeMode: {{ .Values.volumeMode | quote }}
+  storageClassName: {{ .Values.storageClassName | quote }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ required "capacity.storage is required (e.g. 10Gi)" .Values.capacity.storage }}

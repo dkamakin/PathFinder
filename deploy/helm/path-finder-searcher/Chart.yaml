@@ -1,0 +1,12 @@
+apiVersion: v2
+name: path-finder-searcher
+description: The searcher service for the PathFinder project.
+type: application
+
+version: 0.1.0
+appVersion: "latest"
+
+dependencies:
+  - name: path-finder-service-common
+    version: 0.1.0
+    repository: file://../path-finder-service-common

@@ -1,9 +1,9 @@
 package com.github.pathfinder.indexer.database.repository;
 
-import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

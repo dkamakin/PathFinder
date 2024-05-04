@@ -5,8 +5,6 @@ spring:
   cloud:
     config:
       enabled: false
-    bus:
-      enabled: false
   jpa:
     hibernate:
       ddl-auto: create
@@ -16,10 +14,6 @@ spring:
         show_sql: true
         use_sql_comments: true
         format_sql: true
-  datasource:
-    url: jdbc:h2:mem:foo;DB_CLOSE_ON_EXIT=FALSE
-    password: ''
-    username: sa
 logging:
   level:
     org:
@@ -28,6 +22,7 @@ logging:
         type: trace
     root: debug
 index:
+  threadCount: 4
   retry:
     chunk:
       save: PT5M
@@ -35,6 +30,11 @@ index:
   delay: PT1M
 elevation:
   client:
+    retry:
+      delay: 1000
+      maxAttempts: 5
+      maxDelay: 5000
+      multiplier: 1.5
     uri: "https://api.open-elevation.com/api/v1/lookup"
     batchSize: 20000
 splitter:
@@ -42,6 +42,155 @@ splitter:
   elementsLimit: 5000
   additionalSpaceMeters: 50
 osm:
+  tags:
+    - name: natural
+      values:
+        - name: beach
+          weight: 4
+        - name: sand
+          weight: 4
+        - name: coastline
+          weight: 4
+        - name: wood
+          weight: 6
+        - name: fell
+          weight: 3.5
+        - name: moor
+          weight: 4
+        - name: tundra
+          weight: 6
+        - name: mud
+          weight: 30
+        - name: tree_row
+          weight: 4
+        - name: tree
+          weight: 4
+        - name: shrubbery
+          weight: 6
+        - name: stone
+          weight: 15
+        - name: scree
+          weight: 6
+        - name: gully
+          weight: 11
+        - name: dune
+          weight: 8
+        - name: glacier
+          weight: 21
+        - name: bare_rock
+          weight: 7
+        - name: scrub
+          weight: 4
+        - name: valley
+          weight: 4
+        - name: saddle
+          weight: 6
+        - name: ridge
+          weight: 6
+        - name: peak
+          weight: 6
+        - name: hill
+          weight: 4
+        - name: cliff
+          weight: 8
+        - name: grassland
+          weight: 1.25
+    - name: surface
+      values:
+        - name: unpaved
+          weight: 2
+        - name: ground
+          weight: 3
+        - name: grass
+          weight: 2
+        - name: fine_gravel
+          weight: 2
+        - name: gravel
+          weight: 2
+        - name: asphalt
+          weight: 1.5
+        - name: paved
+          weight: 1.25
+        - name: concrete
+          weight: 1
+        - name: concrete:lanes
+          weight: 1
+        - name: concrete:plates
+          weight: 1
+        - name: paving_stones
+          weight: 1
+        - name: sett
+          weight: 1
+        - name: compacted
+          weight: 2
+        - name: dirt
+          weight: 3
+        - name: wood
+          weight: 1
+        - name: sand
+          weight: 2
+    - name: landcover
+      values:
+        - name: trees
+          weight: 2
+        - name: grass
+          weight: 2
+    - name: highway
+      values:
+        - name: trunk
+          weight: 1
+        - name: motorway
+          weight: 4
+        - name: primary
+          weight: 4
+        - name: secondary
+          weight: 4
+        - name: tertiary
+          weight: 1
+        - name: residential
+          weight: 3
+        - name: unclassified
+          weight: 3
+        - name: track
+          weight: 1
+        - name: path
+          weight: 1
+        - name: footway
+          weight: 1
+        - name: crossing
+          weight: 1
+        - name: living_street
+          weight: 1
+        - name: pedestrian
+          weight: 1
+        - name: steps
+          weight: 1
+        - name: sidewalk
+          weight: 1
+    - name: landuse
+      values:
+        - name: orchard
+          weight: 1
+        - name: commercial
+          weight: 1
+        - name: education
+          weight: 1
+        - name: fairground
+          weight: 1
+        - name: retail
+          weight: 1
+        - name: residential
+          weight: 1
+        - name: forest
+          weight: 1
+        - name: meadow
+          weight: 1
+        - name: vineyard
+          weight: 1
   client:
-    overpass:
-      url: "https://overpass-api.de/api/"
+    retry:
+      delay: 1000
+      maxAttempts: 5
+      maxDelay: 5000
+      multiplier: 1.5
+    overpassUrl: "https://overpass-api.de/api/"

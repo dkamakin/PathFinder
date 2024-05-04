@@ -1,15 +1,22 @@
 spring:
+  neo4j:
+    uri: ${NEO4J_BOLT_URI}
+    authentication:
+      password: ${NEO4J_PASSWORD}
+      username: ${NEO4J_USERNAME}
+  rabbitmq:
+    password: ${RABBITMQ_PASSWORD}
+    username: ${RABBITMQ_USERNAME}
+    host: ${RABBITMQ_HOST}
   application:
     name: searcher
   cloud:
     config:
+      fail-fast: true
       retry:
         initial-interval: 500
         max-attempts: 20
         multiplier: 1.3
         max-interval: 30000
-      fail-fast: true
   config:
     import: configserver:${CONFIG_URI}
-server:
-  port: ${PORT}

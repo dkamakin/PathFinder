@@ -5,6 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORTED;
+import com.github.pathfinder.service.impl.ChunkGetterService;
 import com.github.pathfinder.service.impl.ChunkUpdaterService;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.data.neo4j.DataNeo4jTest;
@@ -19,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Import({Neo4jTestConfiguration.class,
         CoordinateConfiguration.class,
         Neo4jTestTemplate.class,
+        ChunkGetterService.class,
         ChunkUpdaterService.class})
 public @interface SearcherNeo4jTest {
-
 }

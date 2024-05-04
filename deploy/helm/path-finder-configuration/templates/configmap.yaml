@@ -1,0 +1,5 @@
+{{- include "path-finder-service-common.configmap" (list . "path-finder-configuration.configmap") -}}
+{{- define "path-finder-configuration.configmap" -}}
+data:
+  SERVER_PORT: {{ .Values.service.port | quote }}
+{{- end -}}

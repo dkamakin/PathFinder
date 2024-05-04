@@ -1,14 +1,23 @@
 package com.github.pathfinder.security.web.impl;
 
+import java.util.stream.Stream;
+import static com.github.pathfinder.security.SecurityFixtures.string;
+import static com.github.pathfinder.security.data.user.UserConstant.DEVICE_NAME_MAX_LENGTH;
+import static com.github.pathfinder.security.data.user.UserConstant.PASSWORD_MAX_LENGTH;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.github.pathfinder.core.tools.impl.JsonTools;
 import com.github.pathfinder.security.SecurityFixtures;
 import com.github.pathfinder.security.configuration.SecurityWebMvcTest;
 import com.github.pathfinder.security.data.user.UserConstant;
-import com.github.pathfinder.security.service.IAuthenticationService;
+import com.github.pathfinder.security.service.impl.AuthenticationService;
 import com.github.pathfinder.security.web.dto.AuthenticationRequestDto;
 import com.github.pathfinder.security.web.dto.DeviceInfoDto;
 import com.github.pathfinder.security.web.dto.SessionRefreshRequestDto;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,15 +28,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
-import static com.github.pathfinder.security.SecurityFixtures.string;
-import static com.github.pathfinder.security.data.user.UserConstant.DEVICE_NAME_MAX_LENGTH;
-import static com.github.pathfinder.security.data.user.UserConstant.PASSWORD_MAX_LENGTH;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SecurityWebMvcTest
 @Import(SessionEndpoint.class)
@@ -44,7 +44,7 @@ class SessionEndpointTest {
     MockMvc mockMvc;
 
     @MockBean
-    IAuthenticationService authenticationService;
+    AuthenticationService authenticationService;
 
     static Stream<AuthenticationRequestDto> authenticationBadRequests() {
         return Stream.of(

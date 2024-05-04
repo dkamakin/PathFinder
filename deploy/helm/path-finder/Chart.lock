@@ -1,0 +1,27 @@
+dependencies:
+- name: path-finder-configuration
+  repository: file://../path-finder-configuration
+  version: 0.1.0
+- name: path-finder-searcher
+  repository: file://../path-finder-searcher
+  version: 0.1.0
+- name: path-finder-rabbitmq
+  repository: file://../path-finder-rabbitmq
+  version: 0.1.0
+- name: path-finder-neo4j
+  repository: file://../path-finder-neo4j
+  version: 0.1.0
+- name: path-finder-postgresql
+  repository: file://../path-finder-postgresql
+  version: 0.1.0
+- name: path-finder-security
+  repository: file://../path-finder-security
+  version: 0.1.0
+- name: path-finder-indexer
+  repository: file://../path-finder-indexer
+  version: 0.1.0
+- name: path-finder-migration
+  repository: file://../path-finder-migration
+  version: 0.1.0
+digest: sha256:c6fceffb8bff6385cb3090e3d7d9f3b267cb1b2f8173a18f5e154e85e5506f2c
+generated: "2024-04-23T17:47:12.920515+02:00"

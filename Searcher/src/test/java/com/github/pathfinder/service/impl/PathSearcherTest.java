@@ -1,5 +1,12 @@
 package com.github.pathfinder.service.impl;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Stream;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.Neo4jTestTemplate;
@@ -11,12 +18,6 @@ import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.database.node.PointRelation;
 import com.github.pathfinder.database.repository.impl.PathRepository;
 import com.github.pathfinder.searcher.api.exception.PathNotFoundException;
-import com.github.pathfinder.service.IPathSearcher;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Stream;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,8 +25,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.neo4j.core.Neo4jClient;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SearcherNeo4jTest
 @Import({PathSearcher.class, PathRepository.class})
@@ -35,7 +34,7 @@ class PathSearcherTest {
     static Path TEST_FILE_PATH = RESOURCES.resolve("paths.json");
 
     @Autowired
-    IPathSearcher target;
+    PathSearcher target;
 
     @Autowired
     Neo4jTestTemplate testTemplate;

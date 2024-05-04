@@ -1,18 +1,20 @@
 package com.github.pathfinder.service.impl;
 
+import java.util.List;
+import java.util.function.Predicate;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.node.PointRelation;
 import com.github.pathfinder.database.node.projection.SimpleChunk;
+import com.github.pathfinder.searcher.api.exception.ChunkNodeAlreadySavedException;
 import io.micrometer.common.util.StringUtils;
-import java.util.List;
-import java.util.function.Predicate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SearcherNeo4jTest
 @Import(ChunkGetterService.class)
@@ -29,6 +31,15 @@ class ChunkUpdaterServiceTest {
 
     ChunkNode chunkNode(int id) {
         return ChunkNode.builder().id(id).build();
+    }
+
+    @Test
+    void save_ChunkNodeAlreadySaved_ChunkNodeAlreadySavedException() {
+        var node = chunkNode(1234);
+
+        target.save(node);
+
+        assertThatThrownBy(() -> target.save(node)).isInstanceOf(ChunkNodeAlreadySavedException.class);
     }
 
     @Test

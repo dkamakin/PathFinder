@@ -1,24 +1,23 @@
 package com.github.pathfinder.service.impl;
 
+import java.util.List;
+import java.util.stream.Stream;
+import static org.assertj.core.api.Assertions.assertThat;
 import com.github.pathfinder.PointFixtures;
 import com.github.pathfinder.configuration.Neo4jTestTemplate;
 import com.github.pathfinder.configuration.SearcherNeo4jTest;
 import com.github.pathfinder.database.node.ChunkNode;
 import com.github.pathfinder.database.node.projection.SimpleChunk;
-import com.github.pathfinder.service.IChunkUpdaterService;
-import java.util.List;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SearcherNeo4jTest
 @Import(ChunkGetterService.class)
 class ChunkGetterServiceTest {
 
     @Autowired
-    IChunkUpdaterService chunkUpdaterService;
+    ChunkUpdaterService chunkUpdaterService;
 
     @Autowired
     ChunkGetterService target;

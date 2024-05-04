@@ -1,0 +1,19 @@
+{{- define "path-finder-service-common.service.tpl" -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "path-finder-service-common.fullname" . }}
+  labels:
+    {{- include "path-finder-service-common.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "path-finder-service-common.selectorLabels" . | nindent 4 }}
+{{- end -}}
+{{- define "path-finder-service-common.service" -}}
+{{- include "path-finder-service-common.util.merge" (append . "path-finder-service-common.service.tpl") -}}
+{{- end -}}

@@ -1,0 +1,9 @@
+dependencies:
+- name: path-finder-service-common
+  repository: file://../path-finder-service-common
+  version: 0.1.0
+- name: rabbitmq
+  repository: https://charts.bitnami.com/bitnami
+  version: 14.0.1
+digest: sha256:0efc129a7fef381fe410b80c47c6a755b43809b0365c554eb424b66bf3ce2090
+generated: "2024-04-21T09:53:35.929042+02:00"

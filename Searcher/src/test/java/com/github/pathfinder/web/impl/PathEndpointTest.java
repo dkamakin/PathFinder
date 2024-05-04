@@ -1,19 +1,26 @@
 package com.github.pathfinder.web.impl;
 
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.stream.Stream;
+import static com.github.pathfinder.PointFixtures.LATITUDE;
+import static com.github.pathfinder.PointFixtures.LONGITUDE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.github.pathfinder.configuration.SearcherWebMvcTest;
 import com.github.pathfinder.core.tools.impl.JsonTools;
 import com.github.pathfinder.data.path.AStarResult;
 import com.github.pathfinder.data.path.FindPathRequest;
 import com.github.pathfinder.database.node.PointNode;
 import com.github.pathfinder.security.api.role.SecurityRoles;
-import com.github.pathfinder.service.IPathSearcher;
+import com.github.pathfinder.service.impl.PathSearcher;
 import com.github.pathfinder.web.dto.CoordinateDto;
 import com.github.pathfinder.web.dto.path.FindPathDto;
 import com.github.pathfinder.web.dto.path.FoundPathDto;
 import com.github.pathfinder.web.mapper.DtoMapper;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -24,13 +31,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
-import static com.github.pathfinder.PointFixtures.LATITUDE;
-import static com.github.pathfinder.PointFixtures.LONGITUDE;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SearcherWebMvcTest
 @Import(PathEndpoint.class)
@@ -47,7 +47,7 @@ class PathEndpointTest {
     MockMvc mockMvc;
 
     @MockBean
-    IPathSearcher pathSearcher;
+    PathSearcher pathSearcher;
 
     static Stream<FindPathDto> invalidFindPaths() {
         return Stream.of(

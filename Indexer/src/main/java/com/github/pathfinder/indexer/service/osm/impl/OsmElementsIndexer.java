@@ -1,5 +1,14 @@
 package com.github.pathfinder.indexer.service.osm.impl;
 
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
 import com.github.pathfinder.indexer.data.osm.OsmBoxIndex;
@@ -7,25 +16,17 @@ import com.github.pathfinder.indexer.data.osm.OsmElement;
 import com.github.pathfinder.indexer.data.osm.OsmElementType;
 import com.github.pathfinder.indexer.data.osm.OsmNode;
 import com.github.pathfinder.indexer.data.osm.OsmWay;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.mapping;
-import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class OsmElementsIndexer {
 
-    private final OsmClient osmClient;
+    private final OsmClient            osmClient;
+    private final OsmLandTypeExtractor landTypeExtractor;
 
     @Logged(ignoreReturnValue = false)
     public OsmBoxIndex index(List<OsmElement> elements) {
@@ -37,10 +38,11 @@ public class OsmElementsIndexer {
     }
 
     private Map<Boolean, List<OsmElement>> preprocess(List<OsmElement> elements) {
-        var elementFilter = new OsmElementFilter();
-        var processed     = elements.stream().filter(elementFilter).collect(Collectors.partitioningBy(this::isWay));
+        var processed = elements.stream()
+                .filter(landTypeExtractor::hasLandType)
+                .collect(Collectors.partitioningBy(element -> element.type() == OsmElementType.WAY));
 
-        log.info("Filtered elements statistics: {}", elementFilter);
+        log.info("Filtered {} elements", elements.size() - processed.size());
 
         return processed;
     }
@@ -54,10 +56,6 @@ public class OsmElementsIndexer {
 
     private Map<Long, OsmNode> handleNodes(List<OsmElement> nodes) {
         return nodes.stream().map(OsmElement::asNode).collect(Collectors.toMap(OsmNode::id, Function.identity()));
-    }
-
-    private boolean isWay(OsmElement element) {
-        return element.type() == OsmElementType.WAY;
     }
 
     private List<OsmNode> concatNodes(Map<Long, List<OsmWay>> reverseWayIndex, Map<Long, OsmNode> nodes) {

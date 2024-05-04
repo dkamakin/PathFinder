@@ -1,5 +1,6 @@
 package com.github.pathfinder.security.service.impl;
 
+import java.util.Map;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.core.tools.IDateTimeSupplier;
@@ -9,9 +10,6 @@ import com.github.pathfinder.security.api.data.Tokens;
 import com.github.pathfinder.security.api.exception.InvalidTokenException;
 import com.github.pathfinder.security.configuration.JwtTools;
 import com.github.pathfinder.security.data.jwt.JwtPayload;
-import com.github.pathfinder.security.service.IJwtPayloadService;
-import com.github.pathfinder.security.service.ITokenService;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -21,13 +19,12 @@ import org.springframework.stereotype.Service;
 @Service
 @RefreshScope
 @RequiredArgsConstructor
-public class TokenService implements ITokenService {
+public class TokenService {
 
-    private final IJwtPayloadService payloadService;
-    private final JwtTools           jwtTools;
-    private final IDateTimeSupplier  timeSupplier;
+    private final JwtPayloadService payloadService;
+    private final JwtTools          jwtTools;
+    private final IDateTimeSupplier timeSupplier;
 
-    @Override
     @Logged(ignoreReturnValue = false)
     public Tokens issue(JwtPayload payload) {
         var now                  = timeSupplier.now();
@@ -43,7 +40,6 @@ public class TokenService implements ITokenService {
         return SecurityApiMapper.INSTANCE.tokens(accessToken, refreshToken);
     }
 
-    @Override
     @Logged(ignoreReturnValue = false)
     public JwtPayload payload(Token token) {
         return payloadService.fromDecoded(decode(token.value()));
