@@ -4,7 +4,7 @@ description: RabbitMQ Chart for the PathFinder project.
 type: application
 
 version: 0.1.0
-appVersion: "k8s"
+appVersion: "0.5"
 
 dependencies:
   - name: path-finder-service-common
