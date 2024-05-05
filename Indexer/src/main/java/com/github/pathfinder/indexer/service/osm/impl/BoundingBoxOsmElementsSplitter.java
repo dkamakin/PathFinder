@@ -9,26 +9,24 @@ import com.github.pathfinder.core.data.MetersDistance;
 import com.github.pathfinder.core.tools.impl.GeodeticTools;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
 import com.github.pathfinder.indexer.data.OsmMapper;
+import com.github.pathfinder.indexer.data.osm.OsmQueryTag;
 import com.github.pathfinder.indexer.service.BoundingBoxSplitter;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Builder
 public class BoundingBoxOsmElementsSplitter implements BoundingBoxSplitter {
 
     private static final int AZIMUTH_TO_EAST  = 90;
     private static final int AZIMUTH_TO_SOUTH = 180;
 
-    private final GeodeticTools tools;
-    private final long          elementsLimit;
-    private final Distance      additionalSpace;
-    private final OsmClient     osmClient;
-
-    public BoundingBoxOsmElementsSplitter(long elementsLimit, Distance additionalSpace, OsmClient osmClient) {
-        this.elementsLimit   = elementsLimit;
-        this.additionalSpace = additionalSpace;
-        this.osmClient       = osmClient;
-        this.tools           = new GeodeticTools();
-    }
+    @Builder.Default
+    private final GeodeticTools     tools = new GeodeticTools();
+    private final long              elementsLimit;
+    private final Distance          additionalSpace;
+    private final OsmClient         osmClient;
+    private final List<OsmQueryTag> tags;
 
     @Override
     public List<BoundingBox> split(BoundingBox box) {
@@ -89,7 +87,7 @@ public class BoundingBoxOsmElementsSplitter implements BoundingBoxSplitter {
     }
 
     private long countElements(BoundingBox box) {
-        return osmClient.countElements(OsmMapper.MAPPER.osmBox(box));
+        return osmClient.countElements(OsmMapper.MAPPER.osmBox(box), tags);
     }
 
 }

@@ -8,6 +8,7 @@ import com.github.pathfinder.indexer.client.osm.OsmClient;
 import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilderConfiguration;
+import com.github.pathfinder.indexer.configuration.osm.OsmConfigurationProperties;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import com.github.pathfinder.indexer.exception.IndexBoxNotFoundException;
 import com.github.pathfinder.indexer.service.impl.IndexBoxSearcherService;
@@ -19,7 +20,7 @@ import org.springframework.context.annotation.Import;
 
 @IndexerServiceDatabaseTest
 @IndexerStateBuilderConfiguration
-@Import({OsmIndexer.class, IndexBoxSearcherService.class})
+@Import({OsmIndexer.class, IndexBoxSearcherService.class, OsmConfigurationProperties.class})
 class OsmIndexerTest {
 
     @Autowired

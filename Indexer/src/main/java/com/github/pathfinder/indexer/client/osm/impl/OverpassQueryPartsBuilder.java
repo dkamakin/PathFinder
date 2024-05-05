@@ -2,18 +2,24 @@ package com.github.pathfinder.indexer.client.osm.impl;
 
 import java.util.List;
 import com.github.pathfinder.indexer.data.osm.OsmBox;
+import com.github.pathfinder.indexer.data.osm.OsmQueryTag;
 import com.github.pathfinder.indexer.tools.OsmTools;
 
 public class OverpassQueryPartsBuilder {
 
-    private static final String NODE            = "node";
-    private static final String WAY             = "way";
-    private static final char   OPENING_BRACKET = '(';
-    private static final char   CLOSING_BRACKET = ')';
-    public static final  char   DELIMITER       = ';';
-    private static final char   COMMA           = ',';
-    private static final String OUT_BODY        = "out body";
-    private static final String OUT_COUNT       = "out count";
+    private static final String NODE                   = "node";
+    private static final String WAY                    = "way";
+    private static final char   REGEX                  = '~';
+    private static final String REGEX_OR_DELIMITER     = "|";
+    private static final char   OPENING_BRACKET        = '(';
+    private static final char   CLOSING_BRACKET        = ')';
+    private static final char   OPENING_SQUARE_BRACKET = '[';
+    private static final char   CLOSING_SQUARE_BRACKET = ']';
+    private static final char   DELIMITER              = ';';
+    private static final char   QUOTE                  = '"';
+    private static final char   COMMA                  = ',';
+    private static final String OUT_BODY               = "out body";
+    private static final String OUT_COUNT              = "out count";
 
     private final StringBuilder query;
 
@@ -21,12 +27,26 @@ public class OverpassQueryPartsBuilder {
         this.query = new StringBuilder().append(OPENING_BRACKET);
     }
 
-    public OverpassQueryPartsBuilder way(OsmBox box) {
-        return geometry(WAY, box);
+    public OverpassQueryPartsBuilder way(OsmBox box, List<OsmQueryTag> tags) {
+        tags.forEach(tag -> geometry(WAY, box, tag));
+        return this;
     }
 
-    public OverpassQueryPartsBuilder node(OsmBox box) {
-        return geometry(NODE, box);
+    public OverpassQueryPartsBuilder node(OsmBox box, List<OsmQueryTag> tags) {
+        tags.forEach(tag -> geometry(NODE, box, tag));
+        return this;
+    }
+
+    public OverpassQueryPartsBuilder geometry(String geometry, OsmBox box, OsmQueryTag tag) {
+        return geometry(geometry, box)
+                .append(OPENING_SQUARE_BRACKET)
+                .append(tag.name())
+                .append(REGEX)
+                .append(QUOTE)
+                .append(() -> append(String.join(REGEX_OR_DELIMITER, tag.values())))
+                .append(QUOTE)
+                .append(CLOSING_SQUARE_BRACKET)
+                .append(DELIMITER);
     }
 
     public OverpassQueryPartsBuilder nodes(List<Long> ids) {
@@ -56,13 +76,17 @@ public class OverpassQueryPartsBuilder {
                 .append(OsmTools.latitudeLongitude(box.min()))
                 .append(COMMA)
                 .append(OsmTools.latitudeLongitude(box.max()))
-                .append(CLOSING_BRACKET)
-                .append(DELIMITER);
+                .append(CLOSING_BRACKET);
     }
 
     @Override
     public String toString() {
         return query.toString();
+    }
+
+    private OverpassQueryPartsBuilder append(Runnable action) {
+        action.run();
+        return this;
     }
 
     private OverpassQueryPartsBuilder append(char aChar) {
