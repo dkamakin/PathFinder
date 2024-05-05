@@ -44,10 +44,9 @@ public class WestNordOstOsmClient implements OsmClient {
     @Override
     @Logged(ignoreReturnValue = false, value = "box")
     public long countElements(OsmBox box, List<OsmQueryTag> tags) {
-        return overpass(api -> api.queryCount(new OverpassQueryBuilder()
-                                                      .node(box, tags)
-                                                      .way(box, tags)
-                                                      .asCount())).total;
+        var query = new OverpassQueryBuilder().node(box, tags).way(box, tags).asCount();
+
+        return overpass(api -> api.queryCount(query)).total;
     }
 
     private <T extends OsmElement> List<T> queryElements(String overpassQuery, WestNordOstHandler<T> handler) {
