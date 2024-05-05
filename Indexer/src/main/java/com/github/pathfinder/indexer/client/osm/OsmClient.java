@@ -12,7 +12,9 @@ public interface OsmClient {
 
     List<OsmElement> elements(OsmBox box, List<OsmQueryTag> tags);
 
-    long countElements(OsmBox box, List<OsmQueryTag> tags);
+    List<OsmElement> ways(OsmBox box, List<OsmQueryTag> tags);
+
+    long countNodes(OsmBox box, List<OsmQueryTag> tags);
 
     interface IOverpassQueryBuilder {
 

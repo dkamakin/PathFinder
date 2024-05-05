@@ -2,14 +2,17 @@ package com.github.pathfinder.indexer.service.osm.impl;
 
 import java.util.Collection;
 import java.util.List;
+import static com.github.pathfinder.indexer.data.OsmMapper.MAPPER;
 import com.github.pathfinder.core.data.BoundingBox;
 import com.github.pathfinder.core.data.Coordinate;
 import com.github.pathfinder.core.data.Distance;
 import com.github.pathfinder.core.data.MetersDistance;
 import com.github.pathfinder.core.tools.impl.GeodeticTools;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
-import com.github.pathfinder.indexer.data.OsmMapper;
+import com.github.pathfinder.indexer.data.osm.OsmElement;
+import com.github.pathfinder.indexer.data.osm.OsmElementType;
 import com.github.pathfinder.indexer.data.osm.OsmQueryTag;
+import com.github.pathfinder.indexer.data.osm.OsmWay;
 import com.github.pathfinder.indexer.service.BoundingBoxSplitter;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
@@ -30,17 +33,37 @@ public class BoundingBoxOsmElementsSplitter implements BoundingBoxSplitter {
 
     @Override
     public List<BoundingBox> split(BoundingBox box) {
-        var countElements = countElements(box);
+        log.info("Working with the box: {}", box);
 
-        if (countElements == 0) {
-            log.info("A box does not contain elements");
+        var osmBox     = MAPPER.osmBox(box);
+        var nodesCount = osmClient.countNodes(osmBox, tags);
+
+        log.info("Nodes count: {}", nodesCount);
+
+        if (nodesCount >= elementsLimit) {
+            return performSplit(box);
+        }
+
+        var ways  = osmClient.ways(osmBox, tags);
+        var total = countNodes(ways) + nodesCount;
+
+        log.info("The total elements count: {}", total);
+
+        if (total == 0) {
+            log.info("The box does not contain elements");
             return List.of();
         }
 
-        if (countElements <= elementsLimit) {
-            log.info("A box {} size fits into the elements limits", box);
+        if (total <= elementsLimit) {
+            log.info("The box fits into the limit");
             return List.of(box);
         }
+
+        return performSplit(box);
+    }
+
+    private List<BoundingBox> performSplit(BoundingBox box) {
+        log.info("Performing split of the box");
 
         var width  = tools.width(box);
         var height = tools.height(box);
@@ -86,8 +109,13 @@ public class BoundingBoxOsmElementsSplitter implements BoundingBoxSplitter {
         return new MetersDistance(distance.meters() / 2 + additionalSpace.meters());
     }
 
-    private long countElements(BoundingBox box) {
-        return osmClient.countElements(OsmMapper.MAPPER.osmBox(box), tags);
+    private int countNodes(List<OsmElement> ways) {
+        return ways.stream()
+                .filter(element -> element.type() == OsmElementType.WAY)
+                .map(OsmElement::asWay)
+                .map(OsmWay::nodeIds)
+                .map(List::size)
+                .reduce(0, Integer::sum);
     }
 
 }
