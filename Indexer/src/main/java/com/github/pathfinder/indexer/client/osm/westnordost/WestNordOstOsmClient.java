@@ -10,6 +10,7 @@ import com.github.pathfinder.indexer.client.osm.impl.OverpassQueryBuilder;
 import com.github.pathfinder.indexer.data.osm.OsmBox;
 import com.github.pathfinder.indexer.data.osm.OsmElement;
 import com.github.pathfinder.indexer.data.osm.OsmNode;
+import com.github.pathfinder.indexer.data.osm.OsmQueryTag;
 import com.github.pathfinder.indexer.exception.ApiExecutionException;
 import de.westnordost.osmapi.overpass.OverpassMapDataApi;
 import lombok.RequiredArgsConstructor;
@@ -35,14 +36,23 @@ public class WestNordOstOsmClient implements OsmClient {
 
     @Override
     @Logged(value = "box")
-    public List<OsmElement> elements(OsmBox box) {
-        return queryElements(new OverpassQueryBuilder().node(box).way(box).asBody(), new ListCollectingDataHandler());
+    public List<OsmElement> elements(OsmBox box, List<OsmQueryTag> tags) {
+        return queryElements(new OverpassQueryBuilder().node(box, tags).way(box, tags).asBody(),
+                             new ListCollectingDataHandler());
+    }
+
+    @Override
+    @Logged(value = "box")
+    public List<OsmElement> ways(OsmBox box, List<OsmQueryTag> tags) {
+        return queryElements(new OverpassQueryBuilder().way(box, tags).asBody(), new ListCollectingDataHandler());
     }
 
     @Override
     @Logged(ignoreReturnValue = false, value = "box")
-    public long countElements(OsmBox box) {
-        return overpass(api -> api.queryCount(new OverpassQueryBuilder().node(box).way(box).asCount())).total;
+    public long countNodes(OsmBox box, List<OsmQueryTag> tags) {
+        var query = new OverpassQueryBuilder().node(box, tags).asCount();
+
+        return overpass(api -> api.queryCount(query)).nodes;
     }
 
     private <T extends OsmElement> List<T> queryElements(String overpassQuery, WestNordOstHandler<T> handler) {

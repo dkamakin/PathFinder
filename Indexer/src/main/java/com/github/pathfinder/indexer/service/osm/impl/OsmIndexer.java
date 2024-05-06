@@ -1,9 +1,12 @@
 package com.github.pathfinder.indexer.service.osm.impl;
 
 import java.util.List;
+import static com.github.pathfinder.indexer.data.OsmMapper.MAPPER;
 import com.github.pathfinder.core.aspect.Logged;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
+import com.github.pathfinder.indexer.configuration.osm.OsmConfigurationProperties;
 import com.github.pathfinder.indexer.data.EntityMapper;
+import com.github.pathfinder.indexer.data.osm.OsmElement;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import com.github.pathfinder.indexer.exception.IndexBoxNotFoundException;
 import com.github.pathfinder.indexer.service.Indexer;
@@ -23,10 +26,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OsmIndexer implements Indexer {
 
-    private final OsmClient               client;
-    private final OsmPointExtractor       pointExtractor;
-    private final SearcherApi             searcherApi;
-    private final IndexBoxSearcherService searcherService;
+    private final OsmClient                  client;
+    private final OsmPointExtractor          pointExtractor;
+    private final SearcherApi                searcherApi;
+    private final IndexBoxSearcherService    searcherService;
+    private final OsmConfigurationProperties osmConfigurationProperties;
 
     @Override
     @Logged("box")
@@ -38,10 +42,15 @@ public class OsmIndexer implements Indexer {
             return;
         }
 
-        var elements = client.elements(EntityMapper.MAPPER.osmBox(box));
+        var elements = elements(box);
         var points   = pointExtractor.points(elements);
 
         searcherApi.save(request(box, points));
+    }
+
+    private List<OsmElement> elements(IndexBoxEntity box) {
+        return client.elements(EntityMapper.MAPPER.osmBox(box),
+                               MAPPER.osmQueryTags(osmConfigurationProperties.getTags()));
     }
 
     private IndexBoxEntity box(int boxId) {

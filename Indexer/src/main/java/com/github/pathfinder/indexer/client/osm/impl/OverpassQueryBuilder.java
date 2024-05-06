@@ -1,8 +1,9 @@
 package com.github.pathfinder.indexer.client.osm.impl;
 
+import java.util.List;
 import com.github.pathfinder.indexer.client.osm.OsmClient;
 import com.github.pathfinder.indexer.data.osm.OsmBox;
-import java.util.List;
+import com.github.pathfinder.indexer.data.osm.OsmQueryTag;
 
 public class OverpassQueryBuilder implements OsmClient.IOverpassQueryBuilder {
 
@@ -18,13 +19,13 @@ public class OverpassQueryBuilder implements OsmClient.IOverpassQueryBuilder {
     }
 
     @Override
-    public OsmClient.IOverpassQueryBuilder node(OsmBox box) {
-        return performAndReturnThis(() -> builder.node(box));
+    public OsmClient.IOverpassQueryBuilder node(OsmBox box, List<OsmQueryTag> tags) {
+        return performAndReturnThis(() -> builder.node(box, tags));
     }
 
     @Override
-    public OsmClient.IOverpassQueryBuilder way(OsmBox box) {
-        return performAndReturnThis(() -> builder.way(box));
+    public OsmClient.IOverpassQueryBuilder way(OsmBox box, List<OsmQueryTag> tags) {
+        return performAndReturnThis(() -> builder.way(box, tags));
     }
 
     @Override

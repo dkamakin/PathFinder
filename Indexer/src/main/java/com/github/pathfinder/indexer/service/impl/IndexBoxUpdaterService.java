@@ -13,8 +13,8 @@ public class IndexBoxUpdaterService {
 
     private final IndexBoxUpdaterRepository updaterRepository;
 
+    @Logged
     @Transactional
-    @Logged("entity")
     public IndexBoxEntity save(IndexBoxEntity entity) {
         return updaterRepository.save(entity);
     }
