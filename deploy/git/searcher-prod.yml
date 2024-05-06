@@ -1,0 +1,4 @@
+coordinate:
+  distance:
+    accuracyMeters: 90
+    pathAccuracyMeters: 2000

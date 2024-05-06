@@ -1,0 +1,14 @@
+exchange:
+  searcher:
+    deadLetter:
+      name: pathfinder.exchange.searcher.deadLetter
+queue:
+  searcher:
+    save-chunks:
+      name: pathfinder.queue.searcher.save-chunks
+    connections:
+      name: pathfinder.queue.searcher.connections
+    synchronous:
+      name: pathfinder.queue.searcher.synchronous
+    deadLetter:
+      name: pathfinder.queue.searcher.deadLetter

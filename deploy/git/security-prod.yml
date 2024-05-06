@@ -1,0 +1,6 @@
+token:
+  access:
+    lifetime: P1D
+  refresh:
+    lifetime: P1D
+  secret: ""

@@ -1,0 +1,4 @@
+queue:
+  security:
+    default:
+      name: pathfinder.queue.security.api

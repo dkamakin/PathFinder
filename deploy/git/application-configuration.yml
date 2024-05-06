@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    bus:
+      enabled: true
+      refresh:
+        enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

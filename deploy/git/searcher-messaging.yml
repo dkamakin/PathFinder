@@ -1,0 +1,6 @@
+queue:
+  searcher:
+    save-chunks:
+      consumers: 5
+    connections:
+      consumers: 5

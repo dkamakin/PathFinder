@@ -5,6 +5,7 @@ path-finder-configuration:
     key: ""
     passphrase: ""
 
+# The bitnami chart is used, you can find the configuration here: https://artifacthub.io/packages/helm/bitnami/postgresql
 path-finder-postgresql:
   postgresql:
     auth:
@@ -12,6 +13,7 @@ path-finder-postgresql:
       password: ""
       database: ""
 
+# The configuration can be found in /path-finder-service-common/values.yaml
 path-finder-neo4j:
   authentication:
     credentials: ""
@@ -19,6 +21,7 @@ path-finder-neo4j:
     password: ""
   databaseName: ""
 
+# The bitnami chart is used, you can find the configuration here: https://artifacthub.io/packages/helm/bitnami/rabbitmq
 path-finder-rabbitmq:
   rabbitmq:
     auth:
