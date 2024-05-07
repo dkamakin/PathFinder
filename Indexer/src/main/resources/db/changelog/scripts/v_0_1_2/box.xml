@@ -45,4 +45,19 @@
 
     </changeSet>
 
+    <changeSet id="index-box-3"
+               author="Daniil Kamakin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FK_INDEX_BOX_ON_REGION"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint baseColumnNames="region_id"
+                                 baseTableName="index_box"
+                                 constraintName="FK_INDEX_BOX_ON_REGION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="region"/>
+    </changeSet>
+
 </databaseChangeLog>
