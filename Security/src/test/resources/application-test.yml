@@ -6,7 +6,7 @@ exchange:
     name: pathfinder.exchange.direct
 spring:
   liquibase:
-    change-log: classpath:db/changelog/changelog.xml
+    change-log: classpath:db/changelog/security_changelog.xml
     enabled: true
   test:
     database:

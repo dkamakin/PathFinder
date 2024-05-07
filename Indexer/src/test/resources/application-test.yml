@@ -1,6 +1,6 @@
 spring:
   liquibase:
-    change-log: classpath:db/changelog/changelog.xml
+    change-log: classpath:db/changelog/indexer_changelog.xml
     enabled: true
   test:
     database:
