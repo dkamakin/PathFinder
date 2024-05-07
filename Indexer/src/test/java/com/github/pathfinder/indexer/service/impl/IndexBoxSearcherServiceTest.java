@@ -8,7 +8,9 @@ import com.github.pathfinder.core.tools.IDateTimeSupplier;
 import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilderConfiguration;
+import com.github.pathfinder.indexer.configuration.RegionTestTemplate;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
+import com.github.pathfinder.indexer.database.entity.RegionEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,8 +30,15 @@ class IndexBoxSearcherServiceTest {
     @MockBean
     IDateTimeSupplier dateTimeSupplier;
 
+    @Autowired
+    RegionTestTemplate regionTestTemplate;
+
     void whenNeedToGetNow(Instant now) {
         when(dateTimeSupplier.now()).thenReturn(now);
+    }
+
+    RegionEntity randomRegion() {
+        return regionTestTemplate.randomRegion();
     }
 
     @Test
@@ -44,6 +53,7 @@ class IndexBoxSearcherServiceTest {
                                                  .connectionRequestTimestamp(Instant.now())
                                                  .saved(true)
                                                  .connected(false)
+                                                 .region(randomRegion())
                                                  .max(12, 23)
                                                  .min(32, 43)
                                                  .build());
@@ -65,6 +75,7 @@ class IndexBoxSearcherServiceTest {
                                                  .connectionRequestTimestamp(Instant.now())
                                                  .saved(true)
                                                  .connected(false)
+                                                 .region(randomRegion())
                                                  .max(12, 23)
                                                  .min(32, 43)
                                                  .build());
@@ -82,12 +93,14 @@ class IndexBoxSearcherServiceTest {
         stateBuilder.save(IndexBoxEntity.builder()
                                   .saved(true)
                                   .connected(true)
+                                  .region(randomRegion())
                                   .max(12, 23)
                                   .min(32, 43)
                                   .build());
         var expected = stateBuilder.save(IndexBoxEntity.builder()
                                                  .saved(false)
                                                  .connected(false)
+                                                 .region(randomRegion())
                                                  .max(12, 23)
                                                  .min(32, 43)
                                                  .build());
@@ -110,6 +123,7 @@ class IndexBoxSearcherServiceTest {
         stateBuilder.save(IndexBoxEntity.builder()
                                   .saved(true)
                                   .connected(true)
+                                  .region(randomRegion())
                                   .max(12, 23)
                                   .min(32, 43)
                                   .build());
@@ -118,6 +132,7 @@ class IndexBoxSearcherServiceTest {
                                   .connectionRequestTimestamp(now)
                                   .saved(false)
                                   .connected(false)
+                                  .region(randomRegion())
                                   .max(12, 23)
                                   .min(32, 43)
                                   .build());
@@ -137,6 +152,7 @@ class IndexBoxSearcherServiceTest {
         stateBuilder.save(IndexBoxEntity.builder()
                                   .saved(true)
                                   .connected(true)
+                                  .region(randomRegion())
                                   .max(12, 23)
                                   .min(32, 43)
                                   .build());
@@ -144,6 +160,7 @@ class IndexBoxSearcherServiceTest {
                                                  .saveRequestTimestamp(now)
                                                  .saved(false)
                                                  .connected(false)
+                                                 .region(randomRegion())
                                                  .max(12, 23)
                                                  .min(32, 43)
                                                  .build());
@@ -166,6 +183,7 @@ class IndexBoxSearcherServiceTest {
         stateBuilder.save(IndexBoxEntity.builder()
                                   .saved(true)
                                   .connected(true)
+                                  .region(randomRegion())
                                   .max(12, 23)
                                   .min(32, 43)
                                   .build());
@@ -173,6 +191,7 @@ class IndexBoxSearcherServiceTest {
                                                  .connectionRequestTimestamp(now)
                                                  .saved(true)
                                                  .connected(false)
+                                                 .region(randomRegion())
                                                  .max(12, 23)
                                                  .min(32, 43)
                                                  .build());
@@ -192,11 +211,13 @@ class IndexBoxSearcherServiceTest {
         stateBuilder.save(IndexBoxEntity.builder()
                                   .saved(true)
                                   .connected(true)
+                                  .region(randomRegion())
                                   .max(12, 23)
                                   .min(32, 43)
                                   .build());
         var expected = stateBuilder.save(IndexBoxEntity.builder()
                                                  .saved(true)
+                                                 .region(randomRegion())
                                                  .max(12, 23)
                                                  .min(32, 43)
                                                  .build());
@@ -216,12 +237,14 @@ class IndexBoxSearcherServiceTest {
         stateBuilder.save(IndexBoxEntity.builder()
                                   .saved(true)
                                   .connected(true)
+                                  .region(randomRegion())
                                   .max(12, 23)
                                   .min(32, 43)
                                   .build());
         stateBuilder.save(IndexBoxEntity.builder()
                                   .connectionRequestTimestamp(now)
                                   .connected(true)
+                                  .region(randomRegion())
                                   .max(12, 23)
                                   .min(32, 43)
                                   .build());
@@ -241,12 +264,14 @@ class IndexBoxSearcherServiceTest {
         stateBuilder.save(IndexBoxEntity.builder()
                                   .saved(true)
                                   .connected(true)
+                                  .region(randomRegion())
                                   .max(12, 23)
                                   .min(32, 43)
                                   .build());
         stateBuilder.save(IndexBoxEntity.builder()
                                   .saved(false)
                                   .connected(false)
+                                  .region(randomRegion())
                                   .max(12, 23)
                                   .min(32, 43)
                                   .build());
@@ -265,6 +290,7 @@ class IndexBoxSearcherServiceTest {
         stateBuilder.save(IndexBoxEntity.builder()
                                   .saved(true)
                                   .connected(true)
+                                  .region(randomRegion())
                                   .max(12, 23)
                                   .min(32, 43)
                                   .build());
@@ -272,6 +298,7 @@ class IndexBoxSearcherServiceTest {
                                   .saveRequestTimestamp(now)
                                   .connectionRequestTimestamp(now)
                                   .connected(false)
+                                  .region(randomRegion())
                                   .max(12, 23)
                                   .min(32, 43)
                                   .build());
@@ -290,12 +317,14 @@ class IndexBoxSearcherServiceTest {
         stateBuilder.save(IndexBoxEntity.builder()
                                   .saved(false)
                                   .connected(false)
+                                  .region(randomRegion())
                                   .max(12, 23)
                                   .min(32, 43)
                                   .build());
         stateBuilder.save(IndexBoxEntity.builder()
                                   .saved(true)
                                   .connected(false)
+                                  .region(randomRegion())
                                   .max(12, 23)
                                   .min(32, 43)
                                   .build());

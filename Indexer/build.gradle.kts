@@ -19,6 +19,7 @@ dependencies {
 
     testImplementation(libs.spring.test)
     testImplementation(libs.spring.security.test)
+    testImplementation(libs.liquibase)
 
     testImplementation(testFixtures(project(":Messaging-Test")))
     testImplementation(testFixtures(project(":Core-Test")))

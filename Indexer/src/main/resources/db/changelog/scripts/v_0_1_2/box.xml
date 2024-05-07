@@ -30,14 +30,17 @@
             <column name="ID" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="PK_INDEX_BOX" nullable="false"/>
             </column>
-            <column name="SAVED" type="BOOLEAN"/>
-            <column name="CONNECTED" type="BOOLEAN"/>
-            <column name="SAVE_REQUEST_TIMESTAMP" type="TIMESTAMP"/>
-            <column name="CONNECTION_REQUEST_TIMESTAMP" type="TIMESTAMP"/>
-            <column name="MIN_LATITUDE" type="DOUBLE"/>
-            <column name="MIN_LONGITUDE" type="DOUBLE"/>
-            <column name="MAX_LATITUDE" type="DOUBLE"/>
-            <column name="MAX_LONGITUDE" type="DOUBLE"/>
+            <column name="saved" type="BOOLEAN"/>
+            <column name="connected" type="BOOLEAN"/>
+            <column name="save_request_timestamp" type="TIMESTAMP"/>
+            <column name="connection_request_timestamp" type="TIMESTAMP"/>
+            <column name="min_latitude" type="DOUBLE"/>
+            <column name="min_longitude" type="DOUBLE"/>
+            <column name="max_latitude" type="DOUBLE"/>
+            <column name="max_longitude" type="DOUBLE"/>
+            <column name="region_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
     </changeSet>

@@ -11,7 +11,9 @@ import com.github.pathfinder.indexer.configuration.IndexerConfiguration;
 import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilderConfiguration;
+import com.github.pathfinder.indexer.configuration.RegionTestTemplate;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
+import com.github.pathfinder.indexer.database.entity.RegionEntity;
 import com.github.pathfinder.indexer.service.Indexer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ class IndexTaskTest {
     IndexerStateBuilder stateBuilder;
 
     @Autowired
+    RegionTestTemplate regionTestTemplate;
+
+    @Autowired
     IndexBoxSearcherService boxSearcherService;
 
     @Autowired
@@ -42,10 +47,15 @@ class IndexTaskTest {
         when(dateTimeSupplier.now()).thenReturn(now);
     }
 
-    IndexBoxEntity indexBoxEntity() {
+    RegionEntity regionEntity() {
+        return regionTestTemplate.randomRegion();
+    }
+
+    IndexBoxEntity indexBoxEntity(RegionEntity region) {
         return stateBuilder.save(IndexBoxEntity.builder()
                                          .max(12, 23)
                                          .min(32, 43)
+                                         .region(region)
                                          .build());
     }
 
@@ -56,7 +66,7 @@ class IndexTaskTest {
     @Test
     void accept_HappyPath_CallIndexer() {
         var now      = Instant.now();
-        var expected = indexBoxEntity();
+        var expected = indexBoxEntity(regionEntity());
 
         whenNeedToGetNow(now);
 
@@ -74,7 +84,7 @@ class IndexTaskTest {
 
     @Test
     void accept_FailedToProcess_NoException() {
-        var expected = indexBoxEntity();
+        var expected = indexBoxEntity(regionEntity());
 
         whenNeedToThrowOnProcess(expected.getId(), new IllegalArgumentException());
 

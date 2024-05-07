@@ -22,18 +22,21 @@ public class RegionSplitProcessor {
 
     @Logged
     @Transactional
-    public void split(RegionEntity entity) {
+    public void split(RegionEntity region) {
         var splitter = splitterFactory.create();
 
-        splitter.split(MAPPER.boundingBox(entity)).stream().map(this::indexBoxEntity).forEach(boxUpdaterService::save);
+        splitter.split(MAPPER.boundingBox(region)).stream()
+                .map(box -> indexBoxEntity(box, region))
+                .forEach(boxUpdaterService::save);
 
-        regionUpdaterRepository.save(entity.processed());
+        regionUpdaterRepository.save(region.processed());
     }
 
-    private IndexBoxEntity indexBoxEntity(BoundingBox box) {
+    private IndexBoxEntity indexBoxEntity(BoundingBox box, RegionEntity region) {
         return IndexBoxEntity.builder()
                 .min(box.min().latitude(), box.min().longitude())
                 .max(box.max().latitude(), box.max().longitude())
+                .region(region)
                 .build();
     }
 

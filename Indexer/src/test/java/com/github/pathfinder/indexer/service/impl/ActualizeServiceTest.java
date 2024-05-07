@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilderConfiguration;
+import com.github.pathfinder.indexer.configuration.RegionTestTemplate;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.Chunk;
@@ -27,6 +28,9 @@ class ActualizeServiceTest {
     @Autowired
     ActualizeService target;
 
+    @Autowired
+    RegionTestTemplate regionTestTemplate;
+
     @MockBean
     SearcherApi searcherApi;
 
@@ -42,11 +46,11 @@ class ActualizeServiceTest {
 
     @Test
     void perform_DuplicateChunk_GetTheLastOne() {
-        var id = stateBuilder.randomCoords(IndexBoxEntity.builder()
-                                                   .connected(false)
-                                                   .saved(false)
-                                                   .connectionRequestTimestamp(Instant.now())
-                                                   .saveRequestTimestamp(Instant.now())).getId();
+        var id = stateBuilder.randomize(IndexBoxEntity.builder()
+                                                .connected(false)
+                                                .saved(false)
+                                                .connectionRequestTimestamp(Instant.now())
+                                                .saveRequestTimestamp(Instant.now())).getId();
 
         whenNeedToGetChunks(new GetChunksMessage(List.of(id)),
                             new GetChunksResponse(List.of(new Chunk(id, true),
@@ -79,7 +83,7 @@ class ActualizeServiceTest {
 
     @Test
     void perform_BoxWasNotFoundSinceLastTry_UpdateBoxState() {
-        var id = stateBuilder.randomCoords(IndexBoxEntity.builder().connected(true).saved(true)).getId();
+        var id = stateBuilder.randomize(IndexBoxEntity.builder().connected(true).saved(true)).getId();
 
         whenNeedToGetChunks(new GetChunksMessage(List.of(id)), new GetChunksResponse(List.of()));
 
@@ -102,7 +106,7 @@ class ActualizeServiceTest {
 
     @Test
     void perform_ChunkWasSavedSinceTheLastTry_UpdateChunkState() {
-        var id = stateBuilder.randomCoords(IndexBoxEntity.builder().connected(false).saved(false)).getId();
+        var id = stateBuilder.randomize(IndexBoxEntity.builder().connected(false).saved(false)).getId();
 
         whenNeedToGetChunks(new GetChunksMessage(List.of(id)),
                             new GetChunksResponse(List.of(new Chunk(id, false))));
@@ -126,7 +130,7 @@ class ActualizeServiceTest {
 
     @Test
     void perform_ChunkWasSavedAndConnectedSinceLastTry_UpdateChunkState() {
-        var id = stateBuilder.randomCoords(IndexBoxEntity.builder().connected(false).saved(false)).getId();
+        var id = stateBuilder.randomize(IndexBoxEntity.builder().connected(false).saved(false)).getId();
 
         whenNeedToGetChunks(new GetChunksMessage(List.of(id)), new GetChunksResponse(List.of(new Chunk(id, true))));
 
@@ -149,11 +153,11 @@ class ActualizeServiceTest {
 
     @Test
     void perform_ChunkWasSavedAndConnectedRecently_CheckStateAgain() {
-        var id = stateBuilder.randomCoords(IndexBoxEntity.builder()
-                                                   .connected(false)
-                                                   .saved(false)
-                                                   .connectionRequestTimestamp(Instant.now())
-                                                   .saveRequestTimestamp(Instant.now())).getId();
+        var id = stateBuilder.randomize(IndexBoxEntity.builder()
+                                                .connected(false)
+                                                .saved(false)
+                                                .connectionRequestTimestamp(Instant.now())
+                                                .saveRequestTimestamp(Instant.now())).getId();
 
         whenNeedToGetChunks(new GetChunksMessage(List.of(id)), new GetChunksResponse(List.of(new Chunk(id, false))));
 

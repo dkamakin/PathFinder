@@ -1,5 +1,6 @@
 package com.github.pathfinder.indexer.database.entity;
 
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class RegionEntityBuilder {
@@ -21,7 +22,7 @@ public class RegionEntityBuilder {
     }
 
     public RegionEntity build() {
-        return new RegionEntity(null, processed, min, max);
+        return new RegionEntity(null, processed, Set.of(), min, max);
     }
 
     private <T> RegionEntityBuilder setAndReturnThis(T value, Consumer<T> consumer) {
