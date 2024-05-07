@@ -6,10 +6,12 @@ ARG POSTGRES_PASSWORD
 ARG NEO4J_BOLT_URI
 ARG NEO4J_USERNAME
 ARG NEO4J_PASSWORD
+ARG MIGRATION_FOLDER_PATH=./migration
 
-ADD . /usr/local/liquibase
-COPY ../Indexer/src/main/resources/db/changelog /usr/local/liquibase/scripts/relational/indexer
-COPY ../Security/src/main/resources/db/changelog /usr/local/liquibase/scripts/relational/security
+ADD $MIGRATION_FOLDER_PATH /usr/local/liquibase
+COPY /Indexer/src/main/resources/db/changelog \
+/Security/src/main/resources/db/changelog \
+/usr/local/liquibase/scripts/relational/
 WORKDIR /usr/local/liquibase
 RUN mvn clean package
 
