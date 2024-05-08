@@ -9,9 +9,8 @@ ARG NEO4J_PASSWORD
 ARG MIGRATION_FOLDER_PATH=./migration
 
 ADD $MIGRATION_FOLDER_PATH /usr/local/liquibase
-COPY /Indexer/src/main/resources/db/changelog/ \
-/Security/src/main/resources/db/changelog/ \
-/usr/local/liquibase/scripts/relational/
+COPY /Indexer/src/main/resources/db/changelog/ /usr/local/liquibase/scripts/relational/indexer
+COPY /Security/src/main/resources/db/changelog/ /usr/local/liquibase/scripts/relational/security
 WORKDIR /usr/local/liquibase
 RUN mvn clean install
 
