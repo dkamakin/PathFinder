@@ -5,6 +5,9 @@ exchange:
   direct:
     name: pathfinder.exchange.direct
 spring:
+  liquibase:
+    change-log: classpath:db/changelog/changelog.xml
+    enabled: true
   test:
     database:
       replace: none
@@ -13,7 +16,7 @@ spring:
       enabled: false
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:

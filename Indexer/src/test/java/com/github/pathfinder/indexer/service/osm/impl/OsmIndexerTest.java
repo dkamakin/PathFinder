@@ -8,8 +8,10 @@ import com.github.pathfinder.indexer.client.osm.OsmClient;
 import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilderConfiguration;
+import com.github.pathfinder.indexer.configuration.RegionTestTemplate;
 import com.github.pathfinder.indexer.configuration.osm.OsmConfigurationProperties;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
+import com.github.pathfinder.indexer.database.entity.RegionEntity;
 import com.github.pathfinder.indexer.exception.IndexBoxNotFoundException;
 import com.github.pathfinder.indexer.service.impl.IndexBoxSearcherService;
 import com.github.pathfinder.searcher.api.SearcherApi;
@@ -38,17 +40,26 @@ class OsmIndexerTest {
     @MockBean
     SearcherApi searcherApi;
 
+    @Autowired
+    RegionTestTemplate regionTestTemplate;
+
+    RegionEntity randomRegion() {
+        return regionTestTemplate.randomRegion();
+    }
+
     @Test
     void process_HappyPath_IndexBox() {
         stateBuilder.save(IndexBoxEntity.builder()
                                   .saved(true)
                                   .connected(true)
+                                  .region(randomRegion())
                                   .max(12, 23)
                                   .min(32, 43)
                                   .build());
         var expected = stateBuilder.save(IndexBoxEntity.builder()
                                                  .saved(false)
                                                  .connected(false)
+                                                 .region(randomRegion())
                                                  .max(12, 23)
                                                  .min(32, 43)
                                                  .build());
@@ -63,6 +74,7 @@ class OsmIndexerTest {
         var expected = stateBuilder.save(IndexBoxEntity.builder()
                                                  .saved(true)
                                                  .connected(false)
+                                                 .region(randomRegion())
                                                  .max(12, 23)
                                                  .min(32, 43)
                                                  .build());

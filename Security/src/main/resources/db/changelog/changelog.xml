@@ -6,7 +6,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <!-- These scripts are loaded during Docker build from the appropriate services (Indexer, Security). -->
-    <includeAll path="/scripts/relational"/>
+    <includeAll path="/db/changelog/v_0_1_2"/>
 
 </databaseChangeLog>

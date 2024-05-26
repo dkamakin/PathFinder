@@ -1,17 +1,21 @@
 package com.github.pathfinder.indexer.database.entity;
 
+import java.util.Set;
+import java.util.function.Consumer;
 import com.google.common.base.Objects;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import java.util.function.Consumer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,6 +50,10 @@ public class RegionEntity {
 
     @Column(name = Token.PROCESSED)
     private boolean processed;
+
+    @ToString.Exclude
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "region", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<IndexBoxEntity> boxes;
 
     @Valid
     @NotNull

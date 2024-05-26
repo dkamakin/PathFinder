@@ -11,6 +11,7 @@ public class IndexBoxEntityBuilder {
     private Instant          connectionRequestTimestamp;
     private MaxBoxCoordinate max;
     private MinBoxCoordinate min;
+    private RegionEntity     region;
 
     public IndexBoxEntityBuilder connectionRequestTimestamp(Instant connectionRequestTimestamp) {
         return setAndReturnThis(connectionRequestTimestamp, x -> this.connectionRequestTimestamp = x);
@@ -36,8 +37,13 @@ public class IndexBoxEntityBuilder {
         return setAndReturnThis(new MaxBoxCoordinate(latitude, longitude), x -> this.max = x);
     }
 
+    public IndexBoxEntityBuilder region(RegionEntity region) {
+        return setAndReturnThis(region, x -> this.region = x);
+    }
+
     public IndexBoxEntity build() {
-        return new IndexBoxEntity(null, saved, connected, saveRequestTimestamp, connectionRequestTimestamp, min, max);
+        return new IndexBoxEntity(null, saved, connected, saveRequestTimestamp, connectionRequestTimestamp, region, min,
+                                  max);
     }
 
     private <T> IndexBoxEntityBuilder setAndReturnThis(T value, Consumer<T> consumer) {

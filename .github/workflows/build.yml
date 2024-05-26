@@ -48,7 +48,8 @@ jobs:
         run: ./gradlew jib
 
       - name: Migration build and push
-        uses: dkamakin/pathfinder-docker-publish-action@v1
+        uses: dkamakin/pathfinder-docker-publish-action@v2
         with:
-          context: ./migration
+          context: .
+          file: ./migration/Dockerfile
           tags: dkamakin/path-finder-migration:${{ env.TAG_NAME }}

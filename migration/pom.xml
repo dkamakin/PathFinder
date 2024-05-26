@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.pathfinder</groupId>
@@ -10,8 +10,8 @@
     <packaging>pom</packaging>
 
     <properties>
-        <liquibase.version>4.25.1</liquibase.version>
-        <postgresql.version>42.7.2</postgresql.version>
+        <liquibase.version>4.27.0</liquibase.version>
+        <postgresql.version>42.7.3</postgresql.version>
     </properties>
 
     <dependencies>

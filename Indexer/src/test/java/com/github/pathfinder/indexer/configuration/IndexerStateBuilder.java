@@ -11,14 +11,16 @@ import org.springframework.boot.test.context.TestComponent;
 public class IndexerStateBuilder {
 
     private final IndexBoxUpdaterService updaterService;
+    private final RegionTestTemplate     regionTestTemplate;
 
     public IndexBoxEntity save(IndexBoxEntity box) {
         return updaterService.save(box);
     }
 
-    public IndexBoxEntity randomCoords(IndexBoxEntityBuilder builder) {
+    public IndexBoxEntity randomize(IndexBoxEntityBuilder builder) {
         return updaterService.save(builder.max(Math.random(), Math.random())
                                            .min(Math.random(), Math.random())
+                                           .region(regionTestTemplate.randomRegion())
                                            .build());
     }
 

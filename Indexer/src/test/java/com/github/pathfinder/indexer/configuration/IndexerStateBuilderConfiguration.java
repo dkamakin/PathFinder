@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Import;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Import({IndexBoxUpdaterService.class,
+        RegionTestTemplate.class,
         IndexerStateBuilder.class})
 public @interface IndexerStateBuilderConfiguration {
 }

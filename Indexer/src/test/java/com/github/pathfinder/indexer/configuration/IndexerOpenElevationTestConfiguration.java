@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Import;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Import({
+        HttpConfiguration.class,
         OpenElevationConfiguration.class
 })
 public @interface IndexerOpenElevationTestConfiguration {

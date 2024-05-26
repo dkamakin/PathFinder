@@ -19,10 +19,10 @@ public class SplitterConfiguration {
 
     @Positive
     @Value("${splitter.elementsLimit:5000}")
-    long elementsLimit;
+    private long elementsLimit;
 
     @Positive
     @Value("${splitter.additionalSpaceMeters:50}")
-    double additionalSpaceMeters;
+    private double additionalSpaceMeters;
 
 }

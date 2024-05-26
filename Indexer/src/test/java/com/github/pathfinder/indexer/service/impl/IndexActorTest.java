@@ -15,7 +15,9 @@ import com.github.pathfinder.indexer.configuration.IndexerRetryConfiguration;
 import com.github.pathfinder.indexer.configuration.IndexerServiceDatabaseTest;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilder;
 import com.github.pathfinder.indexer.configuration.IndexerStateBuilderConfiguration;
+import com.github.pathfinder.indexer.configuration.RegionTestTemplate;
 import com.github.pathfinder.indexer.database.entity.IndexBoxEntity;
+import com.github.pathfinder.indexer.database.entity.RegionEntity;
 import com.github.pathfinder.searcher.api.SearcherApi;
 import com.github.pathfinder.searcher.api.data.ConnectChunkMessage;
 import org.junit.jupiter.api.Test;
@@ -41,6 +43,9 @@ class IndexActorTest {
     IndexerStateBuilder stateBuilder;
 
     @Autowired
+    RegionTestTemplate regionTestTemplate;
+
+    @Autowired
     IndexerRetryConfiguration retryConfiguration;
 
     @MockBean
@@ -51,6 +56,10 @@ class IndexActorTest {
 
     void whenNeedToGetNow(Instant now) {
         when(dateTimeSupplier.now()).thenReturn(now);
+    }
+
+    RegionEntity randomRegion() {
+        return regionTestTemplate.randomRegion();
     }
 
     @Test
@@ -66,6 +75,7 @@ class IndexActorTest {
         var entity = stateBuilder.save(IndexBoxEntity.builder()
                                                .min(1, 2)
                                                .max(3, 4)
+                                               .region(randomRegion())
                                                .saved(false).build());
 
         target.perform();
@@ -80,10 +90,12 @@ class IndexActorTest {
                                                  .min(1, 2)
                                                  .max(3, 4)
                                                  .connected(false)
+                                                 .region(randomRegion())
                                                  .saved(true).build());
         stateBuilder.save(IndexBoxEntity.builder()
                                   .min(1, 2)
                                   .max(3, 4)
+                                  .region(randomRegion())
                                   .connected(true)
                                   .saved(true).build());
         var now = Instant.now();
@@ -108,6 +120,7 @@ class IndexActorTest {
     @Test
     void perform_FoundOneForConnectionSecondForSave_DoNotConnectIfSomeOfTheBoxesAreNotSaved() {
         var forSave = stateBuilder.save(IndexBoxEntity.builder()
+                                                .region(randomRegion())
                                                 .min(1, 2)
                                                 .max(3, 4)
                                                 .connected(false)
@@ -115,6 +128,7 @@ class IndexActorTest {
         var forConnection = stateBuilder.save(IndexBoxEntity.builder()
                                                       .min(1, 2)
                                                       .max(3, 4)
+                                                      .region(randomRegion())
                                                       .connected(false)
                                                       .saved(true).build());
         var now = Instant.now();

@@ -6,9 +6,11 @@ import com.google.common.base.Objects;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
@@ -58,6 +60,10 @@ public class IndexBoxEntity {
 
     @Column(name = Token.CONNECTION_REQUEST_TIMESTAMP)
     private Instant connectionRequestTimestamp;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
+    private RegionEntity region;
 
     @Valid
     @NotNull

@@ -9,6 +9,7 @@ import com.github.pathfinder.indexer.client.osm.impl.OsmClientRetryable;
 import com.github.pathfinder.indexer.client.osm.impl.OverpassQueryBuilder;
 import com.github.pathfinder.indexer.data.osm.OsmBox;
 import com.github.pathfinder.indexer.data.osm.OsmElement;
+import com.github.pathfinder.indexer.data.osm.OsmElementType;
 import com.github.pathfinder.indexer.data.osm.OsmNode;
 import com.github.pathfinder.indexer.data.osm.OsmQueryTag;
 import com.github.pathfinder.indexer.exception.ApiExecutionException;
@@ -49,10 +50,11 @@ public class WestNordOstOsmClient implements OsmClient {
 
     @Override
     @Logged(ignoreReturnValue = false, value = "box")
-    public long countNodes(OsmBox box, List<OsmQueryTag> tags) {
-        var query = new OverpassQueryBuilder().node(box, tags).asCount();
+    public long count(OsmElementType element, OsmBox box, List<OsmQueryTag> tags) {
+        var query = new OverpassQueryBuilder().element(element, box, tags).asCount();
+        var count = overpass(api -> api.queryCount(query));
 
-        return overpass(api -> api.queryCount(query)).nodes;
+        return WestNordOstTools.extractElementsCount(element, count);
     }
 
     private <T extends OsmElement> List<T> queryElements(String overpassQuery, WestNordOstHandler<T> handler) {

@@ -36,11 +36,19 @@ public class BoundingBoxOsmElementsSplitter implements BoundingBoxSplitter {
         log.info("Working with the box: {}", box);
 
         var osmBox     = MAPPER.osmBox(box);
-        var nodesCount = osmClient.countNodes(osmBox, tags);
+        var nodesCount = osmClient.count(OsmElementType.NODE, osmBox, tags);
 
         log.info("Nodes count: {}", nodesCount);
 
         if (nodesCount >= elementsLimit) {
+            return performSplit(box);
+        }
+
+        var waysCount = osmClient.count(OsmElementType.WAY, osmBox, tags);
+
+        log.info("Ways count: {}", waysCount);
+
+        if (sumElements(nodesCount, waysCount) >= elementsLimit) {
             return performSplit(box);
         }
 
@@ -60,6 +68,13 @@ public class BoundingBoxOsmElementsSplitter implements BoundingBoxSplitter {
         }
 
         return performSplit(box);
+    }
+
+    /**
+     * A way can have between 2 and 2,000 nodes, although it's possible that faulty ways with zero or a single node exist.
+     */
+    private long sumElements(long nodesCount, long waysCount) {
+        return nodesCount + waysCount * 2;
     }
 
     private List<BoundingBox> performSplit(BoundingBox box) {

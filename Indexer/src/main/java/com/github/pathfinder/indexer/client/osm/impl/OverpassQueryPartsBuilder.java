@@ -2,13 +2,12 @@ package com.github.pathfinder.indexer.client.osm.impl;
 
 import java.util.List;
 import com.github.pathfinder.indexer.data.osm.OsmBox;
+import com.github.pathfinder.indexer.data.osm.OsmElementType;
 import com.github.pathfinder.indexer.data.osm.OsmQueryTag;
 import com.github.pathfinder.indexer.tools.OsmTools;
 
 public class OverpassQueryPartsBuilder {
 
-    private static final String NODE                   = "node";
-    private static final String WAY                    = "way";
     private static final char   REGEX                  = '~';
     private static final String REGEX_OR_DELIMITER     = "|";
     private static final char   OPENING_BRACKET        = '(';
@@ -27,18 +26,8 @@ public class OverpassQueryPartsBuilder {
         this.query = new StringBuilder().append(OPENING_BRACKET);
     }
 
-    public OverpassQueryPartsBuilder way(OsmBox box, List<OsmQueryTag> tags) {
-        tags.forEach(tag -> geometry(WAY, box, tag));
-        return this;
-    }
-
-    public OverpassQueryPartsBuilder node(OsmBox box, List<OsmQueryTag> tags) {
-        tags.forEach(tag -> geometry(NODE, box, tag));
-        return this;
-    }
-
-    public OverpassQueryPartsBuilder geometry(String geometry, OsmBox box, OsmQueryTag tag) {
-        return geometry(geometry, box)
+    public OverpassQueryPartsBuilder appendGeometry(OsmElementType element, OsmBox box, OsmQueryTag tag) {
+        return appendGeometry(element.getOverpassValue(), box)
                 .append(OPENING_SQUARE_BRACKET)
                 .append(tag.name())
                 .append(REGEX)
@@ -49,13 +38,13 @@ public class OverpassQueryPartsBuilder {
                 .append(DELIMITER);
     }
 
-    public OverpassQueryPartsBuilder nodes(List<Long> ids) {
+    public OverpassQueryPartsBuilder appendNodes(List<Long> ids) {
         ids.forEach(this::appendNode);
         return this;
     }
 
     public void appendNode(Long id) {
-        append(NODE)
+        append(OsmElementType.NODE.getOverpassValue())
                 .append(OPENING_BRACKET)
                 .append(id.toString())
                 .append(CLOSING_BRACKET)
@@ -70,7 +59,7 @@ public class OverpassQueryPartsBuilder {
         return append(CLOSING_BRACKET).append(DELIMITER).append(OUT_COUNT).append(DELIMITER).toString();
     }
 
-    private OverpassQueryPartsBuilder geometry(String geometry, OsmBox box) {
+    private OverpassQueryPartsBuilder appendGeometry(String geometry, OsmBox box) {
         return append(geometry)
                 .append(OPENING_BRACKET)
                 .append(OsmTools.latitudeLongitude(box.min()))
