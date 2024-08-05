@@ -21,7 +21,7 @@ jobs:
           java-version: 21
 
       - name: Validate Gradle wrapper
-        uses: gradle/actions/wrapper-validation@v3
+        uses: gradle/actions/wrapper-validation@v4
 
       - name: Execute build and run tests
         run: ./gradlew build test
